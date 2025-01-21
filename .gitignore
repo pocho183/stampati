@@ -13,5 +13,5 @@
 /etc/local/**
 /build/
 src/ui/dist/**
-/crm.pid
+/stampati.pid
 node_modules/
