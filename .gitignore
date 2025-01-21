@@ -1,0 +1,17 @@
+.gradle/**
+.settings/**
+/bin/**
+/.project
+/.classpath
+**/.angular/**
+/.gradle/
+/.DS_Store
+/bin/
+/local/**
+/WEB-INF/
+**/.gradle_home/**
+/etc/local/**
+/build/
+src/ui/dist/**
+/crm.pid
+node_modules/
