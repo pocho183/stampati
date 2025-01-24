@@ -51,7 +51,7 @@ dependencies {
 	implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.18.2'
 	implementation group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-xml', version: '2.18.2'
 	implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.5'
-	implementation group: 'org.eclipse.persistence', name: 'org.eclipse.persistence.jpa', version: '4.0.5'
+	//implementation group: 'org.eclipse.persistence', name: 'org.eclipse.persistence.jpa', version: '4.0.5'
 	implementation group: 'io.github.classgraph', name: 'classgraph', version: '4.8.179'
 	implementation group: 'ma.glasnost.orika', name: 'orika-core', version: '1.5.4'
 	// Il vecchio implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.14'
