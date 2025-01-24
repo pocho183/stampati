@@ -1,0 +1,22 @@
+<div class="toolbar">
+	<p-toolbar>
+	<h1 class="app-name">
+		<img src="/assets/img/logo-camera.png" />
+		<span>Stampati</span>
+		<span class="version">(v. {{version}})</span>
+	</h1>
+	</p-toolbar>
+</div>
+<div class="wrapper">
+	<p-splitter>
+		<ng-template #panel>
+			<app-text-search />
+		</ng-template>
+		<ng-template #panel>
+			<router-outlet></router-outlet>
+		</ng-template>
+	</p-splitter>
+</div>
+<div class="spinner" *ngIf="showSpinner">
+	<p-progress-spinner styleClass="w-4rem h-4rem" animationDuration=".5s" />
+</div>
