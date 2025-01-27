@@ -5,7 +5,7 @@
 /.classpath
 **/.angular/**
 /.gradle/
-/.DS_Store
+**/.DS_Store**
 /bin/
 /local/**
 /WEB-INF/
