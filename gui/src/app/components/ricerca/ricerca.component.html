@@ -1,0 +1,27 @@
+<div class="search">
+	<p-card header="Menu di Ricerca">
+		<div class="search-container">
+			<p-toast></p-toast>
+			<div class="search-act-container">
+				<p-inputgroup>
+		    		<input pInputText placeholder="Ricerca numero atto" type="text" pSize="large" />
+		    		<p-inputgroup-addon>
+		        		<p-button icon="pi pi-search" severity="secondary" variant="text"/>
+		    		</p-inputgroup-addon>
+				</p-inputgroup>
+			</div>
+			<div class="search-text-container">
+				<div>
+					<p-select [options]="xhtml" [(ngModel)]="selectedXHTML" [checkmark]="true" optionLabel="label" size="large" [showClear]="true" placeholder="Stampato XHTML" class="w-full md:w-56">
+    					<ng-template #dropdownicon><img src="assets/img/xhtml.png" style="width: 35px"/></ng-template>
+			    	</p-select>
+				</div>
+				<div>
+    				<p-select [options]="pdf" [(ngModel)]="selectedPDF" [checkmark]="true" optionLabel="label" size="large" [showClear]="true" placeholder="Stampato PDF" class="w-full md:w-56">
+    					<ng-template #dropdownicon><img src="assets/img/sheet.png" style="width: 25px"/></ng-template>
+			    	</p-select>
+				</div>
+			</div>
+		</div>
+	</p-card>	
+</div>

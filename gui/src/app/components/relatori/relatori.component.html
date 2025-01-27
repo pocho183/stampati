@@ -1,0 +1,19 @@
+<div class="relatori">
+	<p-card>
+		<div class="relatori-title"><span>Menu di gestione dei Relatori</span></div>
+		<div class="relatori-container">
+    		<div>
+    			<label class="font-bold block mb-2" style="color: red;">Relatori proposti</label>
+    			<p-listbox [options]="cities" [(ngModel)]="selectedCity" optionLabel="name" scrollHeight="10vw"/>
+    		</div>
+    		<div>
+    			<label class="font-bold block mb-2">Relatori selezionati</label>
+    			<p-listbox [options]="cities" [(ngModel)]="selectedCity" optionLabel="name" scrollHeight="10vw" />
+    		</div>
+    		<div>
+    			<label class="font-bold block mb-2">Gestione Relatori</label>
+    			<div class="button" pTooltip="Modifica Relatori"><img src="assets/img/pencil.png" style="width: 40px" alt="Right Arrow Icon"/></div>
+    		</div>
+		</div>
+	</p-card>
+</div>

@@ -1,0 +1,83 @@
+<div class=barcode>
+	<p-card>
+		<div class="text-header">
+			<div>
+				<div class="stampato-menu"><span>Menu di gestione dello Stampato</span></div>
+			</div>
+			<div class="text-button-container">
+				<div class="button" pTooltip="Inserisci" tooltipPosition="top"><img src="assets/img/add-button.png" style="width: 35px" alt="Email Icon"/></div>
+				<div class="button" pTooltip="Salva" tooltipPosition="top"><img src="assets/img/diskette.png" style="width: 35px" alt="Email Icon"/></div>
+				<div class="button" pTooltip="Sospendi" tooltipPosition="top"><img src="assets/img/pause-button.png" style="width: 35px" alt="Email Icon"/></div>
+				<div class="button" pTooltip="Pulisci form" tooltipPosition="top"><img src="assets/img/clean.png" style="width: 35px" alt="Email Icon"/></div>
+			</div>
+		</div>
+		<div class="barcode-container">
+			<div>
+				<p-inputgroup>
+	    			<input pInputText id="barcode" class="text-number" placeholder="Codice a barre"/>
+	    			<p-inputgroup-addon><div class="button" pTooltip="Codice a barre" tooltipPosition="right"><img src="assets/img/tag.png" style="width: 25px" alt="Barcode Icon"/></div></p-inputgroup-addon>
+				</p-inputgroup>
+			</div>
+			<div>
+				<p-inputgroup>
+	    			<p-inputgroup-addon><p-checkbox [binary]="true"/></p-inputgroup-addon>
+	    			<input pInputText placeholder="PDF presente" readonly/>
+	    			<p-inputgroup-addon><div class="button" pTooltip="Preview PDF" tooltipPosition="right"><img src="assets/img/sheet.png" style="width: 25px" alt="PDF Icon"/></div></p-inputgroup-addon>
+				</p-inputgroup>
+			</div>
+			<div>
+				<p-inputgroup>
+	    			<p-inputgroup-addon><p-checkbox [binary]="true"/></p-inputgroup-addon>
+	    			<input pInputText placeholder="XHTML presente" readonly/>
+	    			<p-inputgroup-addon><div class="button" pTooltip="Preview XHTML" tooltipPosition="right"><img src="assets/img/xhtml.png" style="width: 25px" alt="XHTML Icon"/></div></p-inputgroup-addon>
+				</p-inputgroup>
+			</div>
+			<div>
+				<p-inputgroup>
+	    			<input pInputText placeholder="Data di creazione" readonly/>
+	    			<p-inputgroup-addon><div class="button" pTooltip="Data  Creazione" tooltipPosition="right"><img src="assets/img/clock.png" style="width: 25px" alt="Clock Icon"/></div></p-inputgroup-addon>
+				</p-inputgroup>
+			</div>
+			<div>
+				<p-inputgroup>
+	    			<input pInputText placeholder="Data ultimo salvataggio" readonly/>
+	    			<p-inputgroup-addon><div class="button" pTooltip="Data  ultimo salvataggio" tooltipPosition="right"><img src="assets/img/last_clock.png" style="width: 25px" alt="Clock Icon"/></div></p-inputgroup-addon>
+				</p-inputgroup>
+			</div>
+		</div>
+		<div class="text-title-container">
+			<div>
+				<label class="font-bold block mb-2" style="color: red;">Titolo eFel</label>
+				<p-editor [(ngModel)]="text" [style]="{ height: '90px' }">
+				    <ng-template #header>
+				        <span class="ql-formats">
+				            <button type="button" class="ql-bold" aria-label="Bold"></button>
+				            <button type="button" class="ql-italic" aria-label="Italic"></button>
+				            <button type="button" class="ql-underline" aria-label="Underline"></button>
+				        </span>
+				    </ng-template>
+				</p-editor>
+			</div>
+			<div class="envelope-container">
+				<div class="button" pTooltip="Invia Email a Testi Normativi" tooltipPosition="top"><img src="assets/img/email.png" style="width: 35px" alt="Email Icon"/></div>
+				<div class="button" pTooltip="Copia il testo di eFel"><img src="assets/img/right-arrow.png" style="width: 38px" alt="Right Arrow Icon"/></div>
+				<div class="button">
+					<img src="assets/img/is-not-equal-to.png" pTooltip="Titoli diversi" tooltipPosition="bottom" style="width: 38px" alt="Not Equal Icon"/>
+					<img src="assets/img/equal.png" pTooltip="Titoli uguali" tooltipPosition="bottom" style="width: 38px" alt="Equal Icon"/>
+				</div>
+			</div>
+			<div>
+				<label class="font-bold block mb-2">Titolo Tipografia</label>
+				<p-editor [(ngModel)]="text" [style]="{ height: '90px' }">
+				    <ng-template #header>
+				        <span class="ql-formats">
+				            <button type="button" class="ql-bold" aria-label="Bold"></button>
+				            <button type="button" class="ql-italic" aria-label="Italic"></button>
+				            <button type="button" class="ql-underline" aria-label="Underline"></button>
+				        </span>
+				    </ng-template>
+				</p-editor>
+			</div>
+		</div>
+	</p-card>
+</div>

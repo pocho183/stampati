@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { environment } from 'environments/environment.develop';
 import { PrimeNG } from 'primeng/config';
-import { SearchComponent } from './components/search.component';
+import { StampatoComponent } from './components/stampato.component';
 import { NgIf } from '@angular/common';
 import { ToolbarModule } from 'primeng/toolbar';
 import { SplitterModule } from 'primeng/splitter';
@@ -11,7 +11,7 @@ import { ProgressSpinner } from 'primeng/progressspinner';
 @Component({
 	standalone: true,
 	selector: 'app-root',
-	imports: [SearchComponent, NgIf, ToolbarModule, SplitterModule, ProgressSpinner, RouterModule],
+	imports: [StampatoComponent, NgIf, ToolbarModule, SplitterModule, ProgressSpinner, RouterModule],
 	templateUrl: './app.component.html',
 	styleUrls: ['./app.component.css']
 })

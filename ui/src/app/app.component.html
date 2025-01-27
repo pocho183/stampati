@@ -14,7 +14,7 @@
 			<!-- Accept maximum 50 Mb -->
 		   <p-fileupload (onUpload)="onBasicUploadAuto($event)" mode="basic" name="demo[]" url="http://your-backend-url/api/upload" chooseIcon="pi pi-upload" accept=".pdf, .doc, .docx, .xls, .xlsx, .jpg, .jpeg, .png, .html, .xhtml" maxFileSize="50000000" [auto]="true" chooseLabel="Browse"></p-fileupload>
 		</div>
-		<p-select [options]="groupedCities" [(ngModel)]="selectedCity" [group]="true" [checkmark]="true" size="large" variant="filled" [showClear]="true" [filter]="true" filterBy="label"  placeholder="Select a file" class="w-full">
+		<p-select [(ngModel)]="selectedCity" [options]="groupedCities"  [group]="true" [checkmark]="true" size="large" variant="filled" [showClear]="true" [filter]="true" filterBy="label"  placeholder="Select a file" class="w-full">
 			<ng-template let-group #group>
 		        <div class="flex items-center">
 		            <img src="assets/sheet.png" [class]="'mr-2 flag flag-' + group.value"  style="width: 20px" />

@@ -1,0 +1,42 @@
+<div class="frontespizio">
+	<p-card>
+		<div class="frontespizio-title"><span>Menu di gestione del Frontespizio</span></div>
+		<div class="frontespizio-container">
+			<div>
+				<input pInputText placeholder="Nome del Frontespizio" readonly/>
+			</div>
+			<div>
+				<input pInputText placeholder="Nome file" readonly/>
+			</div>
+		</div>
+		<div class="frontespizio-manage">
+			<div class="numeriPDLFrontespizio">
+				<div>
+					<label class="font-bold block mb-2">Numeri PDL del frontespizio</label>
+           			<input pInputText />
+				</div>
+           		<div class="button" pTooltip="Modifica numeri PDL"><img src="assets/img/pencil.png" style="width: 35px" alt="PencilIcon"/></div>
+       		</div>
+       		<div>
+           		<label class="font-bold block mb-2">Pagine</label>
+	    		<input pInputText />
+           	</div>
+       		<div>
+           		<label class="font-bold block mb-2">Lettera</label>
+           		<p-select [options]="cities" [(ngModel)]="selectedCity" optionLabel="name" placeholder="Select a City" class="w-full md:w-56" />
+			</div>
+       		<div>
+           		<label class="font-bold block mb-2">Rinvio in Commissione</label>
+           		<p-checkbox [binary]="true" />
+       		</div>
+       		<div>
+           		<label class="font-bold block mb-2">Maggioranza</label>
+           		<p-checkbox [binary]="true" />
+       		</div>
+       		<div>
+           		<label class="font-bold block mb-2">Minoranza</label>
+           		<p-select [options]="cities" [(ngModel)]="selectedCity" optionLabel="name" placeholder="Select a City" class="w-full md:w-56" />
+			</div>
+		</div>
+	</p-card>
+</div>

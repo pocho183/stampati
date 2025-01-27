@@ -2,13 +2,15 @@ import { ApplicationConfig } from "@angular/core";
 import { provideRouter, Routes } from "@angular/router";
 import { provideHttpClient, withInterceptors } from "@angular/common/http";
 import { backEndInterceptor } from "./extension/back-end-interceptor";
-import { TextComponent } from "./components/text.component";
+import { StampatoComponent } from "./components/stampato.component";
 import { providePrimeNG } from "primeng/config";
 import Nora from "@primeng/themes/nora";
 import { definePreset } from "@primeng/themes";
 
+import { ConfirmationService, MessageService } from 'primeng/api';
+
 const routes: Routes = [
-	{ path: '', component: TextComponent },
+	{ path: '', component: StampatoComponent },
 	// otherwise redirect to home
 	{ path: '**', redirectTo: '' }
 ];
@@ -42,6 +44,8 @@ export const appConfig: ApplicationConfig = {
 				darkModeSelector: '.my-app-dark'
 			}
 		}
-	})
+	}),
+	ConfirmationService,
+	MessageService,
   ]
 };

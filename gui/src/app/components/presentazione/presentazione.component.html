@@ -1,0 +1,44 @@
+<div class="presentazione">
+	<p-card>
+		<div class="presentazione-title"><span>Menu di gestione di Presentazione</span></div>
+		<div class="presentazione-container">
+			<div class="suffisso">
+				<div class="suffisso-input-container">
+	           		<label class="font-bold block mb-2">Suffisso</label>
+		    		<input pInputText />
+	           	</div>
+	           	<div class="suffisso-input-container">
+	           		<label class="font-bold block mb-2">Denominazione stampato</label>
+		    		<input pInputText />
+	           	</div>
+			</div>
+			<div class="tipo-presentazione">
+				<div class="horizontal-container">
+				    <label class="font-bold block mb-2" style="color: red;">Tipo Presentazione</label>
+				    <div class="inputs-container">
+				        <div class="select-container">
+				            <p-select [options]="cities" [(ngModel)]="selectedCity" optionLabel="name" placeholder="Select a City"></p-select>
+				        </div>
+				        <div class="datepicker-container">
+				            <p-datepicker [showIcon]="true"></p-datepicker>
+				        </div>
+				    </div>
+				</div>
+	           	<div>
+	           		<label class="font-bold block mb-2">Relazione Orale</label>
+		    		<p-datepicker [showIcon]="true" />
+	           	</div>
+	           	<div>
+	           		<label class="font-bold block mb-2">Data Stampa</label>
+		    		<p-datepicker [showIcon]="true" />
+	           	</div>
+			</div>
+		</div>
+		<div class="text-button-container">
+			<div class="button" pTooltip="Inserisci" tooltipPosition="top"><img src="assets/img/add-button.png" style="width: 35px" alt="Email Icon"/></div>
+			<div class="button" pTooltip="Salva" tooltipPosition="top"><img src="assets/img/diskette.png" style="width: 35px" alt="Email Icon"/></div>
+			<div class="button" pTooltip="Sospendi" tooltipPosition="top"><img src="assets/img/pause-button.png" style="width: 35px" alt="Email Icon"/></div>
+			<div class="button" pTooltip="Pulisci form" tooltipPosition="top"><img src="assets/img/clean.png" style="width: 35px" alt="Email Icon"/></div>
+		</div>
+	</p-card>
+</div>
