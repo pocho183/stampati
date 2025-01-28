@@ -38,25 +38,24 @@
 
 .horizontal-container {
     display: flex;
-    flex-direction: column; /* Keep the label on top */
-    gap: 8px; /* Space between label and inputs */
+    flex-direction: column;
 }
 
 .inputs-container {
     display: flex;
-    flex-direction: row; /* Arrange inputs horizontally */
-    gap: 16px; /* Space between the select and datepicker */
-    align-items: center; /* Align inputs vertically if they differ in height */
+    flex-direction: row; 
+    gap: 16px;
+    align-items: center;
 }
 
 .select-container,
 .datepicker-container {
-    flex: 1; /* Adjust widths equally; remove if not needed */
+    flex: 1;
 }
 
 p-select,
 p-datepicker {
-    width: 100%; /* Ensure components fill their containers */
+    width: 100%;
 }
 
 

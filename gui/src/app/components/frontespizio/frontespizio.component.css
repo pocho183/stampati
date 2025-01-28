@@ -40,6 +40,12 @@
     align-items:flex-end;
 }
 
+.center-checkbox {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
 .button {
     display: inline-flex;
     align-items: center;
