@@ -2,7 +2,6 @@ import { Component, OnInit } from "@angular/core";
 import { TableModule } from "primeng/table";
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
-import { EditorModule } from 'primeng/editor';
 import { FormsModule } from "@angular/forms";
 import { TooltipModule } from 'primeng/tooltip';
 import { InputGroupModule } from 'primeng/inputgroup';
@@ -12,6 +11,8 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { SelectModule } from 'primeng/select';
 import { InputTextModule } from 'primeng/inputtext';
 import { DatePickerModule } from 'primeng/datepicker';
+import { CKEditorModule } from "@ckeditor/ckeditor5-angular";
+import { CommonModule } from "@angular/common";
 
 interface City {
     name: string;
@@ -21,7 +22,7 @@ interface City {
 @Component({
 	standalone: true,
 	selector: 'barcode',
-	imports: [TableModule, CardModule, ButtonModule, EditorModule, FormsModule, TooltipModule, InputGroupModule,
+	imports: [CommonModule, CKEditorModule, TableModule, CardModule, ButtonModule, FormsModule, TooltipModule, InputGroupModule,
 		InputGroupAddonModule, IftaLabelModule, CheckboxModule, SelectModule, InputTextModule, DatePickerModule],
 	templateUrl: './barcode.component.html',
 	styleUrl: './barcode.component.css'

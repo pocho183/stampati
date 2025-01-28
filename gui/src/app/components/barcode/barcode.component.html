@@ -48,7 +48,7 @@
 		<div class="text-title-container">
 			<div>
 				<label class="font-bold block mb-2" style="color: red;">Titolo eFel</label>
-				<p-editor [(ngModel)]="text" [style]="{ height: '90px' }">
+				<ckeditor [(ngModel)]="text" [style]="{ height: '90px' }">
 				    <ng-template #header>
 				        <span class="ql-formats">
 				            <button type="button" class="ql-bold" aria-label="Bold"></button>
@@ -56,7 +56,7 @@
 				            <button type="button" class="ql-underline" aria-label="Underline"></button>
 				        </span>
 				    </ng-template>
-				</p-editor>
+				</ckeditor>
 			</div>
 			<div class="envelope-container">
 				<div class="button" pTooltip="Invia Email a Testi Normativi" tooltipPosition="top"><img src="assets/img/email.png" style="width: 35px" alt="Email Icon"/></div>
@@ -68,7 +68,7 @@
 			</div>
 			<div>
 				<label class="font-bold block mb-2">Titolo Tipografia</label>
-				<p-editor [(ngModel)]="text" [style]="{ height: '90px' }">
+				<ckeditor [(ngModel)]="text" [style]="{ height: '90px' }">
 				    <ng-template #header>
 				        <span class="ql-formats">
 				            <button type="button" class="ql-bold" aria-label="Bold"></button>
@@ -76,7 +76,7 @@
 				            <button type="button" class="ql-underline" aria-label="Underline"></button>
 				        </span>
 				    </ng-template>
-				</p-editor>
+				</ckeditor>
 			</div>
 		</div>
 	</p-card>

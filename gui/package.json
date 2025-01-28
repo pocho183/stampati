@@ -29,7 +29,8 @@
     "primeflex": "3.3.1",
     "primeicons": "7.0.0",
     "primeng": "19.0.5",
-    "quill": "^2.0.3",
+	"@ckeditor/ckeditor5-angular": "9.1.0",
+	"@ckeditor/ckeditor5-build-decoupled-document": "44.1.0",
     "rxjs": "7.8.1"
   },
   "devDependencies": {
