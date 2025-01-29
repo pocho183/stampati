@@ -1,7 +1,15 @@
-<div>
-	<ricerca/>
-	<barcode/>
-	<frontespizio/>
-	<relatori/>
-	<presentazione/>
-</div>		
+<div class="container">
+	<p-splitter [panelSizes]="[14, 86]" styleClass="mb-12">
+    	<ng-template #panel>
+      		<div class="flex flex-column h-full p-2"><ricerca/></div>
+    	</ng-template>
+    	<ng-template #panel>
+      		<div class="flex flex-column h-full p-4">
+        		<barcode class="w-full"></barcode>
+        		<frontespizio class="w-full"></frontespizio>
+       			<relatori class="w-full"></relatori>
+        		<presentazione class="w-full"></presentazione>
+      		</div>
+    	</ng-template>
+  	</p-splitter>
+</div>

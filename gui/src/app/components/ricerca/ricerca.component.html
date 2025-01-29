@@ -1,27 +1,31 @@
-<div class="search">
-	<p-card header="Menu di Ricerca">
-		<div class="search-container">
-			<p-toast></p-toast>
-			<div class="search-act-container">
-				<p-inputgroup>
-		    		<input pInputText placeholder="Ricerca numero atto" type="text" pSize="large" />
-		    		<p-inputgroup-addon>
-		        		<p-button icon="pi pi-search" severity="secondary" variant="text"/>
-		    		</p-inputgroup-addon>
-				</p-inputgroup>
-			</div>
-			<div class="search-text-container">
-				<div>
-					<p-select [options]="xhtml" [(ngModel)]="selectedXHTML" [checkmark]="true" optionLabel="label" size="large" [showClear]="true" placeholder="Stampato XHTML" class="w-full md:w-56">
-    					<ng-template #dropdownicon><img src="assets/img/xhtml.png" style="width: 35px"/></ng-template>
-			    	</p-select>
-				</div>
-				<div>
-    				<p-select [options]="pdf" [(ngModel)]="selectedPDF" [checkmark]="true" optionLabel="label" size="large" [showClear]="true" placeholder="Stampato PDF" class="w-full md:w-56">
-    					<ng-template #dropdownicon><img src="assets/img/sheet.png" style="width: 25px"/></ng-template>
-			    	</p-select>
-				</div>
-			</div>
-		</div>
-	</p-card>	
-</div>
+<!--  p-card header="Carica Stampato" styleClass="w-full text-sm">
+    <div class="flex flex-column">
+        <div class="flex flex-column md:flex-row gap-2 w-full">
+            <div class="w-full">
+                <p-select [options]="xhtml" [(ngModel)]="selectedXHTML" [checkmark]="true" optionLabel="label" [showClear]="true" placeholder="Stampato XHTML" class="w-full">
+                    <ng-template #dropdownicon><img src="assets/img/xhtml.png" style="width: 35px"/></ng-template>
+                </p-select>
+            </div>
+            <div class="w-full">
+                <p-select [options]="pdf" [(ngModel)]="selectedPDF" [checkmark]="true" optionLabel="label"  [showClear]="true" placeholder="Stampato PDF" class="w-full">
+                    <ng-template #dropdownicon><img src="assets/img/sheet.png" style="width: 25px"/></ng-template>
+                </p-select>
+            </div>
+        </div>
+    </div>
+</p-card-->
+<p-card styleClass="w-full text-sm">
+    <div class="flex justify-content-center flex-wrap">
+        <p-button label="Carica Stampato" severity="info" styleClass="w-full"/>
+    </div>
+</p-card>
+<p-card header="Menu di Ricerca" styleClass="w-full text-sm">
+    <div class="flex flex-column">
+        <div class="w-full">
+            <p-inputgroup class="w-full">
+                <input pInputText placeholder="Ricerca atto" type="text" class="w-full"/>
+                <p-inputgroup-addon><p-button icon="pi pi-search" severity="secondary" variant="text"/></p-inputgroup-addon>
+            </p-inputgroup>
+        </div>
+    </div>
+</p-card>
