@@ -1,14 +1,14 @@
-<div class=barcode>
+<div>
 	<p-card>
-		<div class="text-header">
-			<div>
-				<div class="stampato-menu"><span>Menu di gestione dello Stampato</span></div>
-			</div>
-			<div class="text-button-container">
-				<div class="button" pTooltip="Inserisci" tooltipPosition="top"><img src="assets/img/add-button.png" style="width: 35px" alt="Email Icon"/></div>
-				<div class="button" pTooltip="Salva" tooltipPosition="top"><img src="assets/img/diskette.png" style="width: 35px" alt="Email Icon"/></div>
-				<div class="button" pTooltip="Sospendi" tooltipPosition="top"><img src="assets/img/pause-button.png" style="width: 35px" alt="Email Icon"/></div>
-				<div class="button" pTooltip="Pulisci form" tooltipPosition="top"><img src="assets/img/clean.png" style="width: 35px" alt="Email Icon"/></div>
+		<div>
+			<div class="flex justify-content-between flex-wrap">
+				<div><span class="text-2xl text-left font-bold">Menu di gestione dello Stampato</span></div>
+				<div class="flex justify-content-end flex-wrap">
+					<div class="m-2"><p-button pTooltip="Inserisci" tooltipPosition="top" icon="pi pi-plus" severity="info"/></div>
+					<div class="m-2"><p-button pTooltip="Salva" tooltipPosition="top" icon="pi pi-save" severity="success"/></div>
+					<div class="m-2"><p-button pTooltip="Sospendi" tooltipPosition="top" icon="pi pi-pause" severity="warn"/></div>
+					<div class="m-2"><p-button pTooltip="Cancella" tooltipPosition="top" icon="pi pi-eraser" severity="danger"/></div> 			
+				</div>
 			</div>
 		</div>
 		<div class="barcode-container">
