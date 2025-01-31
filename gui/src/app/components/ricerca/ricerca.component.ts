@@ -9,11 +9,11 @@ import { SelectModule } from 'primeng/select';
 import { CardModule } from 'primeng/card';
 import { FileUploadModule } from 'primeng/fileupload';
 import { ToastModule } from 'primeng/toast';
-
+import { DynamicDialogModule } from 'primeng/dynamicdialog';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
-
+import { DialogRicercaComponent } from 'app/components/ricerca/dialog.ricerca.component'
 import { TextTypography, TextType, TextFileType } from 'app/models/text.tipography.model';
-
 import { SelectItemGroup } from 'primeng/api';
 
 @Component({
@@ -21,7 +21,8 @@ import { SelectItemGroup } from 'primeng/api';
 	selector: 'ricerca',
 	imports: [IftaLabelModule, InputTextModule, ButtonModule, FormsModule, ReactiveFormsModule, 
 		SelectModule, InputGroupModule, InputGroupAddonModule, CardModule, FileUploadModule, ToastModule,
-		],
+		DynamicDialogModule],
+	providers: [DialogService, MessageService],
 	templateUrl: './ricerca.component.html',
 	styleUrl: './ricerca.component.css'
 })
@@ -33,9 +34,12 @@ export class RicercaComponent implements OnInit {
 	xhtml: SelectItemGroup[] = [];
 	pdf: SelectItemGroup[] = [];
 	
+	ref: DynamicDialogRef | undefined;
+	
 	constructor(
-			private messageService: MessageService,
-			private confirmationService: ConfirmationService) {}
+		private dialogService: DialogService,
+		private messageService: MessageService,
+		private confirmationService: ConfirmationService) {}
 	
 	ngOnInit() {
 		this.xhtml = [
@@ -84,6 +88,27 @@ export class RicercaComponent implements OnInit {
 			}
 		];
 	}
+	
+	
+
+	showDialog() {
+	        this.ref = this.dialogService.open(DialogRicercaComponent, {
+	            header: 'Carica Stampato',
+	            width: '70%',
+				height: '50%',
+				modal: true,
+	            contentStyle: { overflow: 'auto' },
+	            baseZIndex: 10000
+	        });
+
+	        this.ref.onClose.subscribe((res: boolean) => {
+				console.log(res);
+	            if (res) {
+	                this.messageService.add({ severity: 'info', summary: 'Stampato caricato', detail: "sssss" });
+	            }
+				this.ref = undefined;
+	        });
+	    }
 	
 	onUploadXHTML(event: any) {
 		console.log('Upload Event:', event);

@@ -15,8 +15,9 @@
     </div>
 </p-card-->
 <p-card styleClass="w-full text-sm">
+<p-toast />
     <div class="flex justify-content-center flex-wrap">
-        <p-button label="Carica Stampato" severity="info" styleClass="w-full"/>
+        <p-button (click)="showDialog()" label="Carica Stampato" icon="pi pi-external-link" severity="info" styleClass="w-full"/>
     </div>
 </p-card>
 <p-card header="Menu di Ricerca" styleClass="w-full text-sm">

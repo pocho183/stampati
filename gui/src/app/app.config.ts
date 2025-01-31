@@ -6,8 +6,8 @@ import { StampatoComponent } from "./components/stampato.component";
 import { providePrimeNG } from "primeng/config";
 import Nora from "@primeng/themes/nora";
 import { definePreset } from "@primeng/themes";
-
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { DialogService } from 'primeng/dynamicdialog';
 
 const routes: Routes = [
 	{ path: '', component: StampatoComponent },
@@ -47,5 +47,6 @@ export const appConfig: ApplicationConfig = {
 	}),
 	ConfirmationService,
 	MessageService,
+	DialogService
   ]
 };
