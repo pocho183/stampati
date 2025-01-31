@@ -1,18 +1,18 @@
-<div class="relatori">
+<div>
 	<p-card>
-		<div class="relatori-title"><span>Menu di gestione dei Relatori</span></div>
-		<div class="relatori-container">
-    		<div>
-    			<label class="font-bold block mb-2" style="color: red;">Relatori proposti</label>
-    			<p-listbox [options]="cities" [(ngModel)]="selectedCity" optionLabel="name" scrollHeight="10vw"/>
+		<div><span class="text-2xl text-left font-bold">Menu di gestione dei Relatori</span></div>
+		<div class="flex justify-content-start flex-wrap mt-2 gap-4">
+    		<div class="flex flex-column w-30rem">
+    			<label class="text-xl text-left font-bold" style="color:red">Relatori proposti</label>
+    			<p-listbox [options]="cities" [(ngModel)]="selectedCity" optionLabel="name" scrollHeight="20rem" class="w-full"/>
+    		</div>
+    		<div class="flex flex-column w-30rem">
+    			<label class="text-xl text-left font-bold">Relatori selezionati</label>
+    			<p-listbox [options]="cities" [(ngModel)]="selectedCity" optionLabel="name" scrollHeight="20rem" class="w-full"/>
     		</div>
     		<div>
-    			<label class="font-bold block mb-2">Relatori selezionati</label>
-    			<p-listbox [options]="cities" [(ngModel)]="selectedCity" optionLabel="name" scrollHeight="10vw" />
-    		</div>
-    		<div>
-    			<label class="font-bold block mb-2">Gestione Relatori</label>
-    			<div class="button" pTooltip="Modifica Relatori"><img src="assets/img/pencil.png" style="width: 35px" alt="Right Arrow Icon"/></div>
+    			<label class="text-xl text-left font-bold">Gestione Relatori</label>
+    			<div><p-button pTooltip="Modifica Relatori" tooltipPosition="top" icon="pi pi-pencil" severity="info"/></div>
     		</div>
 		</div>
 	</p-card>

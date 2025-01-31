@@ -15,11 +15,6 @@ import { CKEditorModule } from "@ckeditor/ckeditor5-angular";
 import { CommonModule } from "@angular/common";
 import { Autosave, Bold, ClassicEditor, EditorConfig, Essentials, Indent, Italic, Paragraph, Subscript, Superscript, Undo } from "ckeditor5";
 
-interface City {
-    name: string;
-    code: string;
-}
-
 @Component({
 	standalone: true,
 	selector: 'barcode',
@@ -32,29 +27,22 @@ export class BarcodeComponent implements OnInit {
 
 	public Editor = ClassicEditor;
 	public config : EditorConfig;
-	cities: City[] | undefined;
 
 	text: string = '<div>Hello World!</div><div>PrimeNG <b>Editor</b> Rocks</div><div><br></div>';
 
-    selectedCity: City | undefined;
-
     ngOnInit() {
-        this.cities = [
-            { name: 'New York', code: 'NY' },
-            { name: 'Rome', code: 'RM' },
-            { name: 'London', code: 'LDN' },
-            { name: 'Istanbul', code: 'IST' },
-            { name: 'Paris', code: 'PRS' }
-        ];
-			this.config = {
-				toolbar: {
-					items: ['bold', 'italic', 'subscript', 'superscript', '|', 'undo', 'redo'],
-					shouldNotGroupWhenFull: false
-				},
-				initialData: '',
-				plugins: [ Autosave, Bold, Essentials, Italic, Paragraph, Subscript, Superscript, Undo],
-				language: 'it',
-			};
+	
+		this.config = {
+			licenseKey: 'GPL',
+			toolbar: {
+				items: ['bold', 'italic', '|', 'undo', 'redo'],
+				shouldNotGroupWhenFull: false
+			},
+			initialData: '',
+			plugins: [ Autosave, Bold, Essentials, Italic, Paragraph, Subscript, Superscript, Undo],
+			language: 'it',
+		};
+	
     }
 	
 }

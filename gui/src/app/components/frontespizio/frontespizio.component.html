@@ -1,22 +1,20 @@
-<div class="frontespizio">
+<div>
 	<p-card>
-		<div class="frontespizio-title"><span>Menu di gestione del Frontespizio</span></div>
-		<div class="frontespizio-container">
-			<div>
-				<input pInputText placeholder="Nome del Frontespizio" readonly/>
-			</div>
-			<div>
-				<input pInputText placeholder="Nome file" readonly/>
-			</div>
+		<div><span class="text-2xl text-left font-bold">Menu di gestione del Frontespizio</span></div>
+		<div class="flex justify-content-between flex-wrap mt-2 gap-4">
+			<div class="flex flex-column w-30rem"><input pInputText placeholder="Nome del Frontespizio" readonly/></div>
+			<div class="flex flex-column flex-grow-1 w-20rem"><input pInputText placeholder="Nome file" readonly class="w-full"/></div>
 		</div>
-		<div class="frontespizio-manage">
-			<div class="numeriPDLFrontespizio">
+		<div class="flex justify-content-between flex-wrap mt-2 gap-2">
+			<div class="flex flex-row">
 				<div>
 					<label class="font-bold block mb-2">Numeri PDL del frontespizio</label>
-           			<input pInputText />
+           			<p-inputgroup>
+		    			<input pInputText/>
+		    			<p-inputgroup-addon><div><p-button pTooltip="Modifica" tooltipPosition="top" icon="pi pi-pencil" severity="info"/></div></p-inputgroup-addon>
+					</p-inputgroup>
 				</div>
-           		<div class="button" pTooltip="Modifica numeri PDL"><img src="assets/img/pencil.png" style="width: 35px" alt="PencilIcon"/></div>
-       		</div>
+           	</div>
        		<div>
            		<label class="font-bold block mb-2">Pagine</label>
 	    		<input pInputText />
@@ -25,13 +23,13 @@
            		<label class="font-bold block mb-2">Lettera</label>
            		<p-select [options]="cities" [(ngModel)]="selectedCity" optionLabel="name" placeholder="Select a City" class="w-full md:w-56" />
 			</div>
-       		<div class="center-checkbox">
-           		<label class="font-bold block mb-2">Rinvio in Commissione</label>
-           		<p-checkbox [binary]="true" />
+       		<div class="flex flex-column items-center">
+           		<div class="flex align-items-center justify-content-center"><label class="font-bold block mb-2">Rinvio in Commissione</label></div>
+           		<div class="flex align-items-center justify-content-center"><p-checkbox [binary]="true" /></div>
        		</div>
-       		<div class="center-checkbox">
-           		<label class="font-bold block mb-2">Maggioranza</label>
-           		<p-checkbox [binary]="true" />
+       		<div class="flex flex-column">
+           		<div class="flex align-items-center justify-content-center"><label class="font-bold block mb-2">Maggioranza</label></div>
+           		<div class="flex align-items-center justify-content-center"><p-checkbox [binary]="true" /></div>
        		</div>
        		<div>
            		<label class="font-bold block mb-2">Minoranza</label>
