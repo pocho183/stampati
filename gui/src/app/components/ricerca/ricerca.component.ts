@@ -9,12 +9,10 @@ import { SelectModule } from 'primeng/select';
 import { CardModule } from 'primeng/card';
 import { FileUploadModule } from 'primeng/fileupload';
 import { ToastModule } from 'primeng/toast';
-import { DynamicDialogModule } from 'primeng/dynamicdialog';
-import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { DialogService, DynamicDialogRef, DynamicDialogModule } from 'primeng/dynamicdialog';
+import { ConfirmationService, MessageService, SelectItemGroup } from 'primeng/api';
 import { DialogRicercaComponent } from 'app/components/ricerca/dialog.ricerca.component'
 import { TextTypography, TextType, TextFileType } from 'app/models/text.tipography.model';
-import { SelectItemGroup } from 'primeng/api';
 
 @Component({
 	standalone: true,
@@ -98,7 +96,8 @@ export class RicercaComponent implements OnInit {
 				height: '50%',
 				modal: true,
 	            contentStyle: { overflow: 'auto' },
-	            baseZIndex: 10000
+	            baseZIndex: 10000,
+				closable: true
 	        });
 
 	        this.ref.onClose.subscribe((res: boolean) => {

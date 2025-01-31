@@ -1,6 +1,7 @@
 import { ApplicationConfig } from "@angular/core";
 import { provideRouter, Routes } from "@angular/router";
 import { provideHttpClient, withInterceptors } from "@angular/common/http";
+import { provideAnimations } from "@angular/platform-browser/animations";
 import { backEndInterceptor } from "./extension/back-end-interceptor";
 import { StampatoComponent } from "./components/stampato.component";
 import { providePrimeNG } from "primeng/config";
@@ -36,6 +37,7 @@ const customStyle = definePreset(Nora, {
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
+	provideAnimations(),
     provideHttpClient(withInterceptors([backEndInterceptor])),	
 	providePrimeNG({
 		theme: {

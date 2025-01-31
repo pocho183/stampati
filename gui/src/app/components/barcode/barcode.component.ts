@@ -13,6 +13,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { DatePickerModule } from 'primeng/datepicker';
 import { CKEditorModule } from "@ckeditor/ckeditor5-angular";
 import { CommonModule } from "@angular/common";
+import { Autosave, Bold, ClassicEditor, EditorConfig, Essentials, Indent, Italic, Paragraph, Subscript, Superscript, Undo } from "ckeditor5";
 
 interface City {
     name: string;
@@ -28,7 +29,12 @@ interface City {
 	styleUrl: './barcode.component.css'
 })
 export class BarcodeComponent implements OnInit {
-    cities: City[] | undefined;
+
+	public Editor = ClassicEditor;
+	public config : EditorConfig;
+	cities: City[] | undefined;
+
+	text: string = '<div>Hello World!</div><div>PrimeNG <b>Editor</b> Rocks</div><div><br></div>';
 
     selectedCity: City | undefined;
 
@@ -40,8 +46,15 @@ export class BarcodeComponent implements OnInit {
             { name: 'Istanbul', code: 'IST' },
             { name: 'Paris', code: 'PRS' }
         ];
+			this.config = {
+				toolbar: {
+					items: ['bold', 'italic', 'subscript', 'superscript', '|', 'undo', 'redo'],
+					shouldNotGroupWhenFull: false
+				},
+				initialData: '',
+				plugins: [ Autosave, Bold, Essentials, Italic, Paragraph, Subscript, Superscript, Undo],
+				language: 'it',
+			};
     }
-	
-	text: string = '<div>Hello World!</div><div>PrimeNG <b>Editor</b> Rocks</div><div><br></div>';
 	
 }
