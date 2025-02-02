@@ -12,6 +12,7 @@ import { ToastModule } from 'primeng/toast';
 import { DialogService, DynamicDialogRef, DynamicDialogModule } from 'primeng/dynamicdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { DialogRicercaComponent } from 'app/components/ricerca/dialog.ricerca.component'
+import { BarcodeTypography } from "app/models/typography.model";
 
 @Component({
 	standalone: true,
@@ -25,8 +26,7 @@ import { DialogRicercaComponent } from 'app/components/ricerca/dialog.ricerca.co
 })
 export class RicercaComponent implements OnInit {
 
-	
-	ref: DynamicDialogRef | undefined;
+	private ref: DynamicDialogRef | undefined;
 	
 	constructor(
 		private dialogService: DialogService,
@@ -34,32 +34,18 @@ export class RicercaComponent implements OnInit {
 		private confirmationService: ConfirmationService) {}
 	
 	ngOnInit() {
-		
-		
-		}
-	
-	
+			
+	}
 
 	showDialog() {
-	        this.ref = this.dialogService.open(DialogRicercaComponent, {
-	            header: 'Carica Stampato',
-	            width: '70%',
-				height: '50%',
-				modal: true,
-	            contentStyle: { overflow: 'auto' },
-	            baseZIndex: 10000,
-				closable: true
-	        });
-
-	        this.ref.onClose.subscribe((res: boolean) => {
-				console.log(res);
-	            if (res) {
-	                this.messageService.add({ severity: 'info', summary: 'Stampato caricato', detail: "sssss" });
-	            }
-				this.ref = undefined;
-	        });
-	    }
-	
-	
+		this.ref = this.dialogService.open(DialogRicercaComponent, {header: 'Carica Stampato', width: '40%', height: '60%',
+			modal: true, contentStyle: { overflow: 'auto' }, baseZIndex: 10000, closable: true });
+	    this.ref.onClose.subscribe((stampato: BarcodeTypography) => {
+	    	if (stampato) {
+	        	this.messageService.add({ severity: 'info', summary: 'Stampato caricato', detail: stampato.barcode });
+	        }
+	    });
+	}
+		
 
 }

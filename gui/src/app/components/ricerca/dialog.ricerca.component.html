@@ -1,9 +1,24 @@
-<div>
-	<div class="flex justify-content-center flex-wrap">
-    	<p-selectbutton (ngModelChange)="onSelectionChange($event)" [options]="stateOptions" [(ngModel)]="initialValue" optionLabel="label" optionValue="initialValue" aria-labelledby="basic" dataKey="initialValue">
-	  		<ng-template let-item pTemplate="item">
-	  			<img [src]="item.icon" style="width: 25px; margin-right: 5px;" /> {{ item.label }}
-	  		</ng-template>
-		</p-selectbutton>
-	</div>
+<div class="flex justify-content-center flex-wrap">
+	<p-selectbutton (ngModelChange)="onSelectionChange($event)" [options]="stateOptions" [(ngModel)]="initialValue" optionLabel="label" optionValue="initialValue" aria-labelledby="basic" dataKey="initialValue">
+  		<ng-template let-item pTemplate="item">
+	  		<img [src]="item.icon" style="width: 25px; margin-right: 5px;" /> {{ item.label }}
+	  	</ng-template>
+	</p-selectbutton>
 </div>
+<p-table [value]="stampati" selectionMode="single" showGridlines stripedRows [scrollable]="true" class="m-4" size="large">
+    <ng-template #header>
+        <tr>
+            <th>Barcode</th>
+            <th style="width:25%">Opzioni</th>
+        </tr>
+    </ng-template>
+    <ng-template #body let-stampato>
+        <tr>
+            <td>{{ stampato.barcode }}</td>
+            <td>
+            	<p-button icon="pi pi-plus" (click)="selectBarcode(stampato)" class="m-2" severity="info" rounded />
+            	<p-button icon="pi pi-eye" (click)="previewStampato(stampato)" class="m-2" severity="info" rounded />
+            </td>
+       	</tr>
+    </ng-template>
+</p-table>

@@ -4,11 +4,16 @@ import { ButtonModule } from "primeng/button";
 import { DialogModule } from 'primeng/dialog';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { SelectButtonModule } from 'primeng/selectbutton';
+import { TableModule } from 'primeng/table';
+
+import { TypographyService } from 'app/services/typography.service';
+import { BarcodeTypography } from "app/models/typography.model";
 
 @Component({
 	standalone: true,
 	selector: 'dialog-ricerca',
-	imports: [ButtonModule, FormsModule, ReactiveFormsModule, DialogModule, SelectButtonModule],
+	imports: [ButtonModule, FormsModule, ReactiveFormsModule, DialogModule, SelectButtonModule, TableModule],
+	providers: [TypographyService],
 	templateUrl: './dialog.ricerca.component.html',
 	styleUrl: './dialog.ricerca.component.css'
 })
@@ -19,21 +24,29 @@ export class DialogRicercaComponent implements OnInit {
 	  { label: 'PDF', initialValue: 'pdf', icon: 'assets/img/sheet.png' }
 	];
 	initialValue: string = 'xhtml';
+	stampati!: BarcodeTypography[];
 
-  	constructor(private dialogService: DialogService, private ref: DynamicDialogRef) {}
+  	constructor(private dialogService: DialogService,
+		private ref: DynamicDialogRef,
+		private typographyService: TypographyService) {}
 
 	ngOnInit() {
+		this.typographyService.getStampatiXHTML().then((data) => { this.stampati = data; });
   	}
 
 	onSelectionChange(selectedValue: string) {
-	    console.log("Selected format:", selectedValue);
-
 	    if (selectedValue === 'xhtml') {
-	        alert("XHTML selected!");
-	        // Add any logic specific to XHTML
+	        this.typographyService.getStampatiXHTML().then((data) => { this.stampati = data; });
 	    } else if (selectedValue === 'pdf') {
-	        alert("PDF selected!");
-	        // Add any logic specific to PDF
+	        this.typographyService.getStampatiPDF().then((data) => { this.stampati = data; });
 	    }
+	}
+	
+	selectBarcode(stampato: BarcodeTypography) {
+		this.ref.close(stampato);
+	}
+	
+	previewStampato(stampato: BarcodeTypography) {
+		
 	}
 }
