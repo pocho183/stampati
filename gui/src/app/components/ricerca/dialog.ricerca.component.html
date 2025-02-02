@@ -1,5 +1,9 @@
 <div>
 	<div class="flex justify-content-center flex-wrap">
-    	<p-selectbutton [options]="stateOptions" [(ngModel)]="initialValue" optionLabel="label" optionValue="initialValue" aria-labelledby="basic" />
+    	<p-selectbutton (ngModelChange)="onSelectionChange($event)" [options]="stateOptions" [(ngModel)]="initialValue" optionLabel="label" optionValue="initialValue" aria-labelledby="basic" dataKey="initialValue">
+	  		<ng-template let-item pTemplate="item">
+	  			<img [src]="item.icon" style="width: 25px; margin-right: 5px;" /> {{ item.label }}
+	  		</ng-template>
+		</p-selectbutton>
 	</div>
 </div>

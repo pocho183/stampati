@@ -3,3 +3,10 @@
 body {
 	margin: 0px;
 }
+
+/* Color icon dialog.ricerca.component */
+:root {
+  --p-togglebutton-checked-background: #dddddd !important;
+  --p-togglebutton-checked-border-color: #0056b3 !important;
+  --p-togglebutton-checked-color: black !important;
+}

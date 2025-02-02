@@ -14,7 +14,10 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 })
 export class DialogRicercaComponent implements OnInit {
 	
-	stateOptions: any[] = [{ label: 'XHTML', initialValue: 'xhtml' },{ label: 'PDF', initialValue: 'pdf' }];
+	stateOptions: any[] = [
+	  { label: 'XHTML', initialValue: 'xhtml', icon: 'assets/img/xhtml.png' },
+	  { label: 'PDF', initialValue: 'pdf', icon: 'assets/img/sheet.png' }
+	];
 	initialValue: string = 'xhtml';
 
   	constructor(private dialogService: DialogService, private ref: DynamicDialogRef) {}
@@ -22,7 +25,15 @@ export class DialogRicercaComponent implements OnInit {
 	ngOnInit() {
   	}
 
-	closeDialog() {
-	    this.ref.close(true);
-	  }
+	onSelectionChange(selectedValue: string) {
+	    console.log("Selected format:", selectedValue);
+
+	    if (selectedValue === 'xhtml') {
+	        alert("XHTML selected!");
+	        // Add any logic specific to XHTML
+	    } else if (selectedValue === 'pdf') {
+	        alert("PDF selected!");
+	        // Add any logic specific to PDF
+	    }
+	}
 }

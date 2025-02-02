@@ -10,9 +10,8 @@ import { CardModule } from 'primeng/card';
 import { FileUploadModule } from 'primeng/fileupload';
 import { ToastModule } from 'primeng/toast';
 import { DialogService, DynamicDialogRef, DynamicDialogModule } from 'primeng/dynamicdialog';
-import { ConfirmationService, MessageService, SelectItemGroup } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { DialogRicercaComponent } from 'app/components/ricerca/dialog.ricerca.component'
-import { TextTypography, TextType, TextFileType } from 'app/models/text.tipography.model';
 
 @Component({
 	standalone: true,
@@ -25,12 +24,7 @@ import { TextTypography, TextType, TextFileType } from 'app/models/text.tipograp
 	styleUrl: './ricerca.component.css'
 })
 export class RicercaComponent implements OnInit {
-	
-	selectedXHTML: TextTypography | undefined;
-	selectedPDF: TextTypography | undefined;
-	
-	xhtml: SelectItemGroup[] = [];
-	pdf: SelectItemGroup[] = [];
+
 	
 	ref: DynamicDialogRef | undefined;
 	
@@ -40,52 +34,9 @@ export class RicercaComponent implements OnInit {
 		private confirmationService: ConfirmationService) {}
 	
 	ngOnInit() {
-		this.xhtml = [
-			{
-				label: '19PDL0003150',
-				value: TextFileType.XHTML,
-				items: []
-			},
-			{
-				label: '19PDL0003151',
-				value: TextFileType.XHTML,
-				items: []
-			},
-			{
-				label: '19MSG0115410',
-				value: TextFileType.XHTML,
-				items: []
-			},
-			{
-				label: '19PDL0007823',
-				value: TextFileType.XHTML,
-				items: []
-			}
-		];
 		
-		this.pdf = [
-			{
-				label: '19PDL0003150',
-				value: TextFileType.PDF,
-				items: []
-			},
-			{
-				label: '19PDL0003151',
-				value: TextFileType.PDF,
-				items: []
-			},
-			{
-				label: '19MSG0115410',
-				value: TextFileType.PDF,
-				items: []
-			},
-			{
-				label: '19PDL0007823',
-				value: TextFileType.PDF,
-				items: []
-			}
-		];
-	}
+		
+		}
 	
 	
 
@@ -109,14 +60,6 @@ export class RicercaComponent implements OnInit {
 	        });
 	    }
 	
-	onUploadXHTML(event: any) {
-		console.log('Upload Event:', event);
-		this.messageService.add({ severity: 'info', summary: 'Success', detail: 'File Uploaded with Auto Mode' });
-	}
 	
-	onUploadPDF(event: any) {
-		console.log('Upload Event:', event);
-		this.messageService.add({ severity: 'info', summary: 'Success', detail: 'File Uploaded with Auto Mode' });
-	}
 
 }
