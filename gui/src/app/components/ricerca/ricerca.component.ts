@@ -12,7 +12,7 @@ import { ToastModule } from 'primeng/toast';
 import { DialogService, DynamicDialogRef, DynamicDialogModule } from 'primeng/dynamicdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { DialogRicercaComponent } from 'app/components/ricerca/dialog.ricerca.component'
-import { BarcodeTypography } from "app/models/typography.model";
+import { TypographyToProcessModel } from "app/models/typography.model";
 
 @Component({
 	standalone: true,
@@ -38,9 +38,9 @@ export class RicercaComponent implements OnInit {
 	}
 
 	showDialog() {
-		this.ref = this.dialogService.open(DialogRicercaComponent, {header: 'Carica Stampato', width: '40%', height: '60%',
+		this.ref = this.dialogService.open(DialogRicercaComponent, {header: 'Carica Stampato da Elaborare', width: '40%', height: '60%',
 			modal: true, contentStyle: { overflow: 'auto' }, baseZIndex: 10000, closable: true });
-	    this.ref.onClose.subscribe((stampato: BarcodeTypography) => {
+	    this.ref.onClose.subscribe((stampato: TypographyToProcessModel) => {
 	    	if (stampato) {
 	        	this.messageService.add({ severity: 'info', summary: 'Stampato caricato', detail: stampato.barcode });
 	        }

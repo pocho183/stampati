@@ -8,13 +8,13 @@
 <p-table [value]="stampati" selectionMode="single" showGridlines stripedRows [scrollable]="true" class="m-4" size="large">
     <ng-template #header>
         <tr>
-            <th>Barcode</th>
+            <th>Barcode da elaborare</th>
             <th style="width:25%">Opzioni</th>
         </tr>
     </ng-template>
     <ng-template #body let-stampato>
         <tr>
-            <td>{{ stampato.barcode }}</td>
+            <td class="space-letter">{{ stampato.barcode }}</td>
             <td>
             	<p-button icon="pi pi-plus" (click)="selectBarcode(stampato)" class="m-2" severity="info" rounded />
             	<p-button icon="pi pi-eye" (click)="previewStampato(stampato)" class="m-2" severity="info" rounded />

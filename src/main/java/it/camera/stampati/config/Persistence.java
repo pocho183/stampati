@@ -5,7 +5,6 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import org.eclipse.persistence.config.PersistenceUnitProperties;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -41,13 +40,13 @@ public class Persistence extends JpaBaseConfiguration {
 	protected Map<String, Object> getVendorProperties() {
 		Map<String, Object> prop = new HashMap<>();
 		/* Clean cache first level with sharedCache and WEAVING_INTERNAL */
-		prop.put(PersistenceUnitProperties.SHARED_CACHE_MODE, "NONE");
-		prop.put(PersistenceUnitProperties.WEAVING, "static");
-		prop.put(PersistenceUnitProperties.WEAVING_INTERNAL, "false");
-		prop.put(PersistenceUnitProperties.DDL_GENERATION, env.getProperty("spring.datasource.dataTable"));
-		if(env.getProperty("spring.datasource.dataTable").equals("drop-and-create-tables") || env.getProperty("spring.datasource.dataTable").equals("create")) {
-			prop.put(PersistenceUnitProperties.SCHEMA_GENERATION_SQL_LOAD_SCRIPT_SOURCE, "classpath:src/main/resources/initdb.sql");
-		}
+		//prop.put(PersistenceUnitProperties.SHARED_CACHE_MODE, "NONE");
+		//prop.put(PersistenceUnitProperties.WEAVING, "static");
+		//prop.put(PersistenceUnitProperties.WEAVING_INTERNAL, "false");
+		//prop.put(PersistenceUnitProperties.DDL_GENERATION, env.getProperty("spring.datasource.dataTable"));
+		//if(env.getProperty("spring.datasource.dataTable").equals("drop-and-create-tables") || env.getProperty("spring.datasource.dataTable").equals("create")) {
+		//	prop.put(PersistenceUnitProperties.SCHEMA_GENERATION_SQL_LOAD_SCRIPT_SOURCE, "classpath:src/main/resources/initdb.sql");
+		//}
 		return prop;
 	}
 }

@@ -7,7 +7,7 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { TableModule } from 'primeng/table';
 
 import { TypographyService } from 'app/services/typography.service';
-import { BarcodeTypography } from "app/models/typography.model";
+import { TypographyToProcessModel } from "app/models/typography.model";
 
 @Component({
 	standalone: true,
@@ -24,7 +24,7 @@ export class DialogRicercaComponent implements OnInit {
 	  { label: 'PDF', initialValue: 'pdf', icon: 'assets/img/sheet.png' }
 	];
 	initialValue: string = 'xhtml';
-	stampati!: BarcodeTypography[];
+	stampati!: TypographyToProcessModel[];
 
   	constructor(private dialogService: DialogService,
 		private ref: DynamicDialogRef,
@@ -42,11 +42,11 @@ export class DialogRicercaComponent implements OnInit {
 	    }
 	}
 	
-	selectBarcode(stampato: BarcodeTypography) {
+	selectBarcode(stampato: TypographyToProcessModel) {
 		this.ref.close(stampato);
 	}
 	
-	previewStampato(stampato: BarcodeTypography) {
+	previewStampato(stampato: TypographyToProcessModel) {
 		
 	}
 }

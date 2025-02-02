@@ -11,11 +11,6 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { SelectModule } from 'primeng/select';
 import { InputTextModule } from 'primeng/inputtext';
 
-interface City {
-    name: string;
-    code: string;
-}
-
 @Component({
 	standalone: true,
 	selector: 'frontespizio',
@@ -25,18 +20,21 @@ interface City {
 	styleUrl: './frontespizio.component.css'
 })
 export class FrontespizioComponent implements OnInit {
-    cities: City[] | undefined;
-
-    selectedCity: City | undefined;
+	
+	letters: { name: string; value: string }[] = [];
+    selectedLetter: string | null = null;
 
     ngOnInit() {
-        this.cities = [
-            { name: 'New York', code: 'NY' },
-            { name: 'Rome', code: 'RM' },
-            { name: 'London', code: 'LDN' },
-            { name: 'Istanbul', code: 'IST' },
-            { name: 'Paris', code: 'PRS' }
-        ];
+		this.letters = [
+			{ name: 'A', value: 'A' }, { name: 'C', value: 'C' }, { name: 'E', value: 'E' },
+		    { name: 'G', value: 'G' }, { name: 'I', value: 'I' }, { name: 'M', value: 'M' },
+		    { name: 'O', value: 'O' }, { name: 'Q', value: 'Q' }, { name: 'S', value: 'S' },
+		    { name: 'U', value: 'U' }, { name: 'Z', value: 'Z' }   
+		];
     }
+	
+	onLetterSelect(letter: string) {
+	    console.log("Selected Letter:", letter);
+	}
 	
 }

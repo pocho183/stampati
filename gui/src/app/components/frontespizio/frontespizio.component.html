@@ -20,8 +20,8 @@
 	    		<input pInputText />
            	</div>
        		<div>
-           		<label class="font-bold block mb-2">Lettera</label>
-           		<p-select [options]="cities" [(ngModel)]="selectedCity" optionLabel="name" placeholder="Select a City" class="w-full md:w-56" />
+           		<label class="font-bold block mb-2">Lettera (Navette)</label>
+           		<p-select [options]="letters" [(ngModel)]="selectedLetter" (ngModelChange)="onLetterSelect($event)" optionLabel="name" [showClear]="true" placeholder="Seleziona Lettera" class="w-14rem" />
 			</div>
        		<div class="flex flex-column items-center">
            		<div class="flex align-items-center justify-content-center"><label class="font-bold block mb-2">Rinvio in Commissione</label></div>
@@ -33,7 +33,7 @@
        		</div>
        		<div>
            		<label class="font-bold block mb-2">Minoranza</label>
-           		<p-select [options]="cities" [(ngModel)]="selectedCity" optionLabel="name" placeholder="Select a City" class="w-full md:w-56" />
+           		<p-select [options]="letters" [(ngModel)]="selectedLetter" optionLabel="name" [showClear]="true" placeholder="Seleziona Minoranza" class="w-14rem"/>
 			</div>
 		</div>
 	</p-card>
