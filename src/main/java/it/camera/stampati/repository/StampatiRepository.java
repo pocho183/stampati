@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import it.camera.stampati.domani.Stampato;
+import it.camera.stampati.domain.Stampato;
 
 import java.util.List;
 

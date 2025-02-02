@@ -8,17 +8,13 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class TypographyToProcessModel {
+public class StampatoModel {
 
 	private String barcode;
     private String legislaturaId;
     private StampatoFormat format;
     private Date dataDeleted;
+    private Date createdAt;
+    private Date updatedAt;
     
-	public TypographyToProcessModel(String fileName, String leg, StampatoFormat format) {
-		this.barcode = fileName;
-		this.legislaturaId = leg;
-		this.format = format;		
-	}
-
 }

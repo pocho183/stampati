@@ -1,4 +1,4 @@
-package it.camera.stampati.domani;
+package it.camera.stampati.domain;
 
 import java.util.Date;
 

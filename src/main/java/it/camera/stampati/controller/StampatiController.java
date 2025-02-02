@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import it.camera.stampati.enumerator.StampatoFormat;
 import it.camera.stampati.model.TypographyToProcessModel;
 import it.camera.stampati.service.StampatiService;
 
@@ -24,20 +25,28 @@ public class StampatiController {
     @Autowired
     private StampatiService stampatiService;
 
+    
+    //TODO Call this or with PDF or HTML noXHTML !!!!
+    
     @GetMapping(path = "/newtoprocess/{leg}/{format}")
-    public ResponseEntity<List<TypographyToProcessModel>> newToProcess(@PathVariable("leg") String leg, @PathVariable("format") String format) {
-    	logger.debug("Entering StampatoController newToProcess method with leg: {}, format: {}", leg, format);
-    	try {
-            List<TypographyToProcessModel> stampatiToProcess = stampatiService.getStampatiToProcess(leg, format);
+    public ResponseEntity<List<TypographyToProcessModel>> newToProcess(@PathVariable("leg") String leg, @PathVariable("format") int format) {
+        logger.debug("Entering StampatoController newToProcess method with leg: {}, format: {}", leg, format);
+        try {
+            StampatoFormat stampatoFormat = StampatoFormat.fromValue(format);
+            List<TypographyToProcessModel> stampatiToProcess = stampatiService.getStampatiToProcess(leg, stampatoFormat);
             logger.debug("Found {} stampati to process.", stampatiToProcess.size());
             if (stampatiToProcess == null || stampatiToProcess.isEmpty())
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             return new ResponseEntity<>(stampatiToProcess, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            logger.error("Invalid format: {}", format);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             logger.error("Error in StampatoController newToProcess: {}", e.getMessage(), e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 }
 
 	
