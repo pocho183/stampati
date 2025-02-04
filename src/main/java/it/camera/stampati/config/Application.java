@@ -18,7 +18,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import it.esinware.mapping.BeanMapper;
 
 @Configuration
-@PropertySource(value = {"classpath:/application.properties"})
+@PropertySource(value = {"classpath:/application.properties", "classpath:persistence.properties"})
 public class Application {
 
 	@Bean
@@ -46,8 +46,8 @@ public class Application {
 	}
 
 	@Bean
-	@ConfigurationProperties(prefix = "spring.datasource")
-	public HikariDataSource dataSource() {
-		return DataSourceBuilder.create().type(HikariDataSource.class).build();
-	}
+    @ConfigurationProperties(prefix = "spring.datasource")
+    public HikariDataSource dataSource() {
+        return DataSourceBuilder.create().type(HikariDataSource.class).build();
+    }
 }

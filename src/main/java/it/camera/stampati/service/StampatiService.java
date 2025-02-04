@@ -7,8 +7,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import it.camera.stampati.domain.Stampato;
 import it.camera.stampati.enumerator.StampatoFormat;
@@ -17,7 +20,10 @@ import it.camera.stampati.model.TypographyToProcessModel;
 import it.camera.stampati.repository.StampatiRepository;
 import it.esinware.mapping.BeanMapper;
 
+@Service
 public class StampatiService {
+	
+	private static final Logger logger = LoggerFactory.getLogger(StampatiService.class);
 	
 	@Autowired
 	private BeanMapper beanMapper;
@@ -29,11 +35,16 @@ public class StampatiService {
 	private final String BARCODE_REGEXP = "[1-9][0-9]*(PDL|MSG)[0-9]{7}";
 	
 	public List<TypographyToProcessModel> getStampatiToProcess(String leg, StampatoFormat format) {
+		logger.info("Starting to process stampati for legislatura {} and format {}", leg, format);
 	    List<Stampato> barcodes = stampatiRepository.findByLegislaturaIdAndNotDeleted(leg);
+	    logger.debug("Found {} barcodes for legislatura {}", barcodes.size(), leg);
 	    List<StampatoModel> barcodeModels = beanMapper.map(barcodes, Stampato.class, StampatoModel.class);
-	    Set<String> existingBarcodeIds = barcodeModels.stream().map(StampatoModel::getBarcode).collect(Collectors.toSet());  
+	    Set<String> existingBarcodeIds = barcodeModels.stream().map(st -> st.getBarcode()).collect(Collectors.toSet());  
 	    List<TypographyToProcessModel> stampatiFromShared = getStampatiFromShared(leg, format);
-	    return stampatiFromShared.stream().filter(stampato -> !existingBarcodeIds.contains(stampato.getBarcode())).collect(Collectors.toList());
+	    logger.debug("Found {} stampati from shared path", stampatiFromShared.size());
+	    List<TypographyToProcessModel> result = stampatiFromShared.stream().filter(stampato -> !existingBarcodeIds.contains(stampato.getBarcode())).collect(Collectors.toList());
+	    logger.info("Processed {} stampati to process", result.size());
+	    return result;
 	}
 
 	

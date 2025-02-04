@@ -15,3 +15,4 @@
 src/ui/dist/**
 /stampati.pid
 node_modules/
+/.apt_generated/

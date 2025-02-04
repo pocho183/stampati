@@ -10,11 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.orm.jpa.vendor.AbstractJpaVendorAdapter;
-import org.springframework.orm.jpa.vendor.EclipseLinkJpaVendorAdapter;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.jta.JtaTransactionManager;
 
@@ -24,29 +25,26 @@ import org.springframework.transaction.jta.JtaTransactionManager;
 @EntityScan(basePackages = {"it.camera.stampati.domain"})
 public class Persistence extends JpaBaseConfiguration {
 
-	@Autowired
-	Environment env;
-	
-	protected Persistence(DataSource dataSource, JpaProperties properties, ObjectProvider<JtaTransactionManager> jtaTransactionManager) {
-		super(dataSource, properties, jtaTransactionManager);
-	}
+    private final Environment env;
 
-	@Override
-	protected AbstractJpaVendorAdapter createJpaVendorAdapter() {
-		return new EclipseLinkJpaVendorAdapter();
-	}
+    @Autowired
+    public Persistence(DataSource dataSource, JpaProperties jpaProperties, Environment env, ObjectProvider<JtaTransactionManager> jtaTransactionManager) {
+        super(dataSource, jpaProperties, jtaTransactionManager);
+        this.env = env;
+    }
 
-	@Override
-	protected Map<String, Object> getVendorProperties() {
-		Map<String, Object> prop = new HashMap<>();
-		/* Clean cache first level with sharedCache and WEAVING_INTERNAL */
-		//prop.put(PersistenceUnitProperties.SHARED_CACHE_MODE, "NONE");
-		//prop.put(PersistenceUnitProperties.WEAVING, "static");
-		//prop.put(PersistenceUnitProperties.WEAVING_INTERNAL, "false");
-		//prop.put(PersistenceUnitProperties.DDL_GENERATION, env.getProperty("spring.datasource.dataTable"));
-		//if(env.getProperty("spring.datasource.dataTable").equals("drop-and-create-tables") || env.getProperty("spring.datasource.dataTable").equals("create")) {
-		//	prop.put(PersistenceUnitProperties.SCHEMA_GENERATION_SQL_LOAD_SCRIPT_SOURCE, "classpath:src/main/resources/initdb.sql");
-		//}
-		return prop;
-	}
+    @Bean
+    public AbstractJpaVendorAdapter createJpaVendorAdapter() {
+        return new HibernateJpaVendorAdapter();
+    }
+
+    @Bean
+    public Map<String, Object> getVendorProperties() {
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
+        properties.put("hibernate.hbm2ddl.auto", env.getProperty("spring.jpa.hibernate.ddl-auto"));
+        properties.put("hibernate.show_sql", env.getProperty("spring.jpa.show-sql"));
+        properties.put("hibernate.format_sql", env.getProperty("spring.jpa.properties.hibernate.format_sql"));
+        return properties;
+    }
 }
