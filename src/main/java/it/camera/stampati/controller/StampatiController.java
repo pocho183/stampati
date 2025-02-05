@@ -25,14 +25,11 @@ public class StampatiController {
     @Autowired
     private StampatiService stampatiService;
 
-    
-    //TODO Call this or with PDF or HTML noXHTML !!!!
-    
     @GetMapping(path = "/newtoprocess/{leg}/{format}")
-    public ResponseEntity<List<TypographyToProcessModel>> newToProcess(@PathVariable("leg") String leg, @PathVariable("format") int format) {
+    public ResponseEntity<List<TypographyToProcessModel>> newToProcess(@PathVariable("leg") String leg, @PathVariable("format") String format) {
         logger.debug("Entering StampatoController newToProcess method with leg: {}, format: {}", leg, format);
         try {
-            StampatoFormat stampatoFormat = StampatoFormat.fromValue(format);
+            StampatoFormat stampatoFormat = StampatoFormat.fromString(format);
             List<TypographyToProcessModel> stampatiToProcess = stampatiService.getStampatiToProcess(leg, stampatoFormat);
             logger.debug("Found {} stampati to process.", stampatiToProcess.size());
             if (stampatiToProcess == null || stampatiToProcess.isEmpty())

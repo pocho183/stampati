@@ -16,5 +16,8 @@ public interface StampatiRepository extends JpaRepository<Stampato, String> {
 	
     @Query("SELECT s FROM Stampato s WHERE s.legislaturaId = :legislaturaId AND s.dataDeleted IS NULL")
     List<Stampato> findByLegislaturaIdAndNotDeleted(@Param("legislaturaId") String legislaturaId);
+    
+    @Query("SELECT s FROM Stampato s WHERE s.legislaturaId = :legislaturaId AND s.dataDeleted IS NOT NULL")
+    List<Stampato> findByLegislaturaIdAndDeleted(@Param("legislaturaId") String legislaturaId);
 
 }

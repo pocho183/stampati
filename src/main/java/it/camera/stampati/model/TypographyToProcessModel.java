@@ -15,10 +15,11 @@ public class TypographyToProcessModel {
     private StampatoFormat format;
     private Date dataDeleted;
     
-	public TypographyToProcessModel(String fileName, String leg, StampatoFormat format) {
+	public TypographyToProcessModel(String fileName, String leg, StampatoFormat format, Date dataDeleted) {
 		this.barcode = fileName;
 		this.legislaturaId = leg;
 		this.format = format;		
+		this.dataDeleted = dataDeleted;
 	}
 
 }

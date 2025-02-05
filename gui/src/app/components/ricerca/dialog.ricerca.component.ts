@@ -31,14 +31,14 @@ export class DialogRicercaComponent implements OnInit {
 		private typographyService: TypographyService) {}
 
 	ngOnInit() {
-		this.typographyService.getStampatiXHTML().then((data) => { this.stampati = data; });
+		this.typographyService.getStampatiXHTML("19").then((data) => { this.stampati = data; });
   	}
 
 	onSelectionChange(selectedValue: string) {
 	    if (selectedValue === 'xhtml') {
-	        this.typographyService.getStampatiXHTML().then((data) => { this.stampati = data; });
+	        this.typographyService.getStampatiXHTML("19").then((data) => { this.stampati = data; });
 	    } else if (selectedValue === 'pdf') {
-	        this.typographyService.getStampatiPDF().then((data) => { this.stampati = data; });
+	        this.typographyService.getStampatiPDF("19").then((data) => { this.stampati = data; });
 	    }
 	}
 	

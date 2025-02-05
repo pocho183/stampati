@@ -9,6 +9,7 @@ import Nora from "@primeng/themes/nora";
 import { definePreset } from "@primeng/themes";
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
+import { WINDOW_PROVIDERS } from './extension/window.provider';
 
 const routes: Routes = [
 	{ path: '', component: StampatoComponent },
@@ -47,6 +48,7 @@ export const appConfig: ApplicationConfig = {
 			}
 		}
 	}),
+	WINDOW_PROVIDERS,
 	ConfirmationService,
 	MessageService,
 	DialogService
