@@ -5,6 +5,7 @@ import { DialogModule } from 'primeng/dialog';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { TableModule } from 'primeng/table';
+import { BadgeModule } from 'primeng/badge';
 
 import { TypographyService } from 'app/services/typography.service';
 import { TypographyToProcessModel } from "app/models/typography.model";
@@ -12,7 +13,9 @@ import { TypographyToProcessModel } from "app/models/typography.model";
 @Component({
 	standalone: true,
 	selector: 'dialog-ricerca',
-	imports: [ButtonModule, FormsModule, ReactiveFormsModule, DialogModule, SelectButtonModule, TableModule],
+	imports: [ButtonModule, FormsModule, ReactiveFormsModule, DialogModule, SelectButtonModule, TableModule, 
+		BadgeModule
+	],
 	providers: [TypographyService],
 	templateUrl: './dialog.ricerca.component.html',
 	styleUrl: './dialog.ricerca.component.css'
@@ -40,6 +43,10 @@ export class DialogRicercaComponent implements OnInit {
 	    } else if (selectedValue === 'pdf') {
 	        this.typographyService.getStampatiPDF("19").then((data) => { this.stampati = data; });
 	    }
+	}
+	
+	getSeverity(dataDeleted: string | null): 'success' | 'danger' {
+	    return dataDeleted ? 'danger' : 'success';
 	}
 	
 	selectBarcode(stampato: TypographyToProcessModel) {
