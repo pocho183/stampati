@@ -5,8 +5,9 @@ import { CardModule } from 'primeng/card';
 import { ToastModule } from 'primeng/toast';
 import { ListboxModule } from 'primeng/listbox';
 import { TooltipModule } from 'primeng/tooltip';
-
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { DialogRelatoriComponent } from "./dialog.relatori.component";
 
 interface City {
     name: string,
@@ -26,6 +27,12 @@ export class RelatoriComponent implements OnInit {
 
     selectedCity!: City;
 	selectedCity1!: City;
+	
+	private ref: DynamicDialogRef | undefined;
+	
+	constructor(private dialogService: DialogService,
+			private messageService: MessageService,
+			private confirmationService: ConfirmationService) {}
 
     ngOnInit() {
         this.cities = [
@@ -37,4 +44,13 @@ export class RelatoriComponent implements OnInit {
 		            { name: 'CIRIELLI Edmondo per la maggioranza', code: 'NY' }
 		        ];
     }
+	
+	showDialog() {
+		this.ref = this.dialogService.open(DialogRelatoriComponent, {header: 'Gestione Relatori', width: '30%', height: '60%',
+				modal: true, contentStyle: { overflow: 'auto' }, baseZIndex: 10000, closable: true });
+		this.ref.onClose.subscribe((atto: boolean) => {
+		if (atto)
+		       	this.messageService.add({ severity: 'info', summary: 'Relatori associati' });
+		});
+	}
 }

@@ -48,11 +48,10 @@ export class FrontespizioComponent implements OnInit {
 		this.ref = this.dialogService.open(DialogFrontespizioComponent, {header: 'Atti Associati', width: '40%', height: '60%',
 				modal: true, contentStyle: { overflow: 'auto' }, baseZIndex: 10000, closable: true });
 		    this.ref.onClose.subscribe((atto: boolean) => {
-		    	if (atto) {
+		    	if (atto)
 		        	this.messageService.add({ severity: 'info', summary: 'Atto associato' });
-		        }
-		    });
-		}
+		});
+	}
 	
 	onLetterSelect(letter: string) {
 	    console.log("Selected Letter:", letter);
