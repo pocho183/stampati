@@ -32,7 +32,8 @@ export class BarcodeComponent implements OnInit {
 	public config = {
 		licenseKey: 'GPL',
 	    plugins: [ Essentials, Paragraph, Bold, Italic ],
-	    toolbar: [ 'undo', 'redo', '|', 'bold', 'italic', '|' ]
+	    toolbar: [ 'undo', 'redo', '|', 'bold', 'italic', '|' ],
+		removePlugins: ['CKBox', 'EasyImage', 'CloudServices']
 	}
 	text: string = '<p>Conversione in legge del decreto-legge 2 gennaio 2023, n. 1, recante disposizioni urgenti per la gestione dei flussi migrator</p>';
 	text1: string = '<p>Conversione in legge del decreto-legge 2 gennaio 2023, n. 1, recante disposizioni urgenti per la gestione dei flussi migrator</p>';
