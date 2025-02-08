@@ -22,16 +22,19 @@ interface City {
 })
 export class RelatoriComponent implements OnInit {
     cities!: City[];
+	cities1!: City[];
 
     selectedCity!: City;
+	selectedCity1!: City;
 
     ngOnInit() {
         this.cities = [
-            { name: 'New York', code: 'NY' },
-            { name: 'Rome', code: 'RM' },
-            { name: 'London', code: 'LDN' },
-            { name: 'Istanbul', code: 'IST' },
-            { name: 'Paris', code: 'PRS' }
+            { name: 'RAIMONDO Carmine Fabio', code: 'NY' },
+            { name: 'ZIELLO Edoardo', code: 'RM' },
         ];
+		
+		this.cities1 = [
+		            { name: 'CIRIELLI Edmondo per la maggioranza', code: 'NY' }
+		        ];
     }
 }
