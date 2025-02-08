@@ -37,7 +37,7 @@
 			<div class="flex-grow-1">
 				<label class="text-xl text-left font-bold mt-4" style="color:red">Titolo eFel</label>
 				<div class="ckeditor-container">
-					<ckeditor [(ngModel)]="text" [editor]="Editor" [config]="config"></ckeditor>
+					<ckeditor [editor]="Editor" [config]="config" [data]="text"></ckeditor>
 				</div>
 			</div>
 			<div class="flex justify-content-between flex-column m-4">
@@ -50,7 +50,7 @@
 			</div>
 			<div class="flex-grow-1">
 				<label class="text-xl text-left font-bold mt-4">Titolo Tipografia</label>
-				<ckeditor [(ngModel)]="text" [editor]="Editor" [config]="config"></ckeditor>
+				<ckeditor [editor]="Editor" [config]="config" [data]="text1"></ckeditor>
 			</div>
 		</div>
 	</p-card>

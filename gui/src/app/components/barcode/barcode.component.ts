@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, ViewEncapsulation, OnInit } from "@angular/core";
 import { TableModule } from "primeng/table";
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
@@ -11,13 +11,16 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { SelectModule } from 'primeng/select';
 import { InputTextModule } from 'primeng/inputtext';
 import { DatePickerModule } from 'primeng/datepicker';
-import { CKEditorModule } from "@ckeditor/ckeditor5-angular";
 import { CommonModule } from "@angular/common";
-import { Autosave, Bold, ClassicEditor, EditorConfig, Essentials, Indent, Italic, Paragraph, Subscript, Superscript, Undo } from "ckeditor5";
+
+
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
+import { ClassicEditor, Bold, Essentials, Italic, Paragraph } from 'ckeditor5';
 
 @Component({
 	standalone: true,
 	selector: 'barcode',
+	encapsulation: ViewEncapsulation.None,
 	imports: [CommonModule, CKEditorModule, TableModule, CardModule, ButtonModule, FormsModule, TooltipModule, InputGroupModule,
 		InputGroupAddonModule, IftaLabelModule, CheckboxModule, SelectModule, InputTextModule, DatePickerModule],
 	templateUrl: './barcode.component.html',
@@ -26,22 +29,17 @@ import { Autosave, Bold, ClassicEditor, EditorConfig, Essentials, Indent, Italic
 export class BarcodeComponent implements OnInit {
 
 	public Editor = ClassicEditor;
-	public config : EditorConfig;
-
-	text: string = '<div>Hello World!</div><div>PrimeNG <b>Editor</b> Rocks</div><div><br></div>';
+	public config = {
+		licenseKey: 'GPL',
+	    plugins: [ Essentials, Paragraph, Bold, Italic ],
+	    toolbar: [ 'undo', 'redo', '|', 'bold', 'italic', '|' ]
+	}
+	text: string = '<p>Conversione in legge del decreto-legge 2 gennaio 2023, n. 1, recante disposizioni urgenti per la gestione dei flussi migrator</p>';
+	text1: string = '<p>Conversione in legge del decreto-legge 2 gennaio 2023, n. 1, recante disposizioni urgenti per la gestione dei flussi migrator</p>';
 
     ngOnInit() {
 	
-		this.config = {
-			licenseKey: 'GPL',
-			toolbar: {
-				items: ['bold', 'italic', '|', 'undo', 'redo'],
-				shouldNotGroupWhenFull: false
-			},
-			initialData: '',
-			plugins: [ Autosave, Bold, Essentials, Italic, Paragraph, Subscript, Superscript, Undo],
-			language: 'it',
-		};
+	
 	
     }
 	
