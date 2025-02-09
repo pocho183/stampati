@@ -12,9 +12,8 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 @Component({
 	standalone: true,
 	selector: 'presentazione',
-	imports: [ButtonModule, FormsModule, ReactiveFormsModule, CardModule, ToastModule, InputTextModule, DatePickerModule,
-		SelectModule
-	],
+	imports: [ButtonModule, FormsModule, ReactiveFormsModule, CardModule, ToastModule, InputTextModule, 
+		DatePickerModule, SelectModule ],
 	templateUrl: './presentazione.component.html',
 	styleUrl: './presentazione.component.css'
 })

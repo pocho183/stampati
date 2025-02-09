@@ -10,7 +10,32 @@
             <p-inputgroup class="w-full">
                 <input pInputText placeholder="Ricerca atto" type="text" class="w-full"/>
                 <p-inputgroup-addon><p-button icon="pi pi-search" severity="secondary" variant="text"/></p-inputgroup-addon>
+                <p-inputgroup-addon><p-button icon="pi pi-times" severity="secondary" variant="text"/></p-inputgroup-addon>
             </p-inputgroup>
         </div>
     </div>
+    <div class="bg-gray-100 text-lg mt-4">Risultati</div>
+    <div>
+    	<p-table [value]="products" showGridlines size="small" scrollHeight="700px" [scrollable]="true" selectionMode="single">
+		    <ng-template pTemplate="header">
+		        <tr>
+		            <th>Barcode</th>
+		            <th>Numero atto</th>
+		            <th>Errata Corrige</th>
+		            <th>Rigo Nero</th>
+		        </tr>
+		    </ng-template>
+		    <ng-template pTemplate="body" let-product>
+		        <tr>
+		            <td>{{ product.code }}</td>
+		            <td>{{ product.name }}</td>
+		            <td><i class="pi pi-check" style="color: green; font-size: 1.5rem"></i></td>
+		            <td><i class="pi pi-check" style="color: black; font-size: 1.5rem"></i></td>
+		        </tr>
+		    </ng-template>
+		    <ng-template #emptymessage>
+				<tr><td colspan="4">Non ci sono risultati</td></tr>
+			</ng-template>
+		</p-table>
+	</div>
 </p-card>

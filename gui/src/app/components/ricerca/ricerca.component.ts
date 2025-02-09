@@ -13,28 +13,37 @@ import { DialogService, DynamicDialogRef, DynamicDialogModule } from 'primeng/dy
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { DialogRicercaComponent } from 'app/components/ricerca/dialog.ricerca.component'
 import { TypographyToProcessModel } from "app/models/typography.model";
+import { TableModule } from 'primeng/table';
+import { RicercaService } from "app/services/ricerca.service";
+
+import { Product } from "app/models/product";
 
 @Component({
 	standalone: true,
 	selector: 'ricerca',
 	imports: [IftaLabelModule, InputTextModule, ButtonModule, FormsModule, ReactiveFormsModule, 
 		SelectModule, InputGroupModule, InputGroupAddonModule, CardModule, FileUploadModule, ToastModule,
-		DynamicDialogModule],
-	providers: [DialogService, MessageService],
+		DynamicDialogModule, TableModule],
+	providers: [DialogService, MessageService, RicercaService],
 	templateUrl: './ricerca.component.html',
 	styleUrl: './ricerca.component.css'
 })
 export class RicercaComponent implements OnInit {
 
 	private ref: DynamicDialogRef | undefined;
+	products!: Product[];
+
 	
 	constructor(
 		private dialogService: DialogService,
+		private ricercaService: RicercaService,
 		private messageService: MessageService,
 		private confirmationService: ConfirmationService) {}
 	
 	ngOnInit() {
-			
+		this.ricercaService.getProducts().then((data) => {
+		           this.products = data;
+		       });
 	}
 
 	showDialog() {
