@@ -14,7 +14,7 @@
     </ng-template>
     <ng-template #body let-stampato>
         <tr>
-			<td><p-badge class="text-2xl space-letter" [value]="stampato.barcode"  [severity]="getSeverity(stampato.dataDeleted)"></p-badge></td>
+			<td class="space-letter">{{stampato.barcode}}</td>
             <td>
             	<p-button icon="pi pi-plus" (click)="selectBarcode(stampato)" [disabled]="stampato.dataDeleted !== null" class="m-2" severity="info" rounded />
             	<p-button icon="pi pi-eye" (click)="previewStampato(stampato)" [disabled]="stampato.dataDeleted !== null" class="m-2" severity="info" rounded />

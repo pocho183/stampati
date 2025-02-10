@@ -5,18 +5,17 @@ import { DialogModule } from 'primeng/dialog';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { TableModule } from 'primeng/table';
-import { BadgeModule } from 'primeng/badge';
 
 import { TypographyService } from 'app/services/typography.service';
 import { TypographyToProcessModel } from "app/models/typography.model";
+import { UtilityService } from "app/services/utility.service";
+import { firstValueFrom } from "rxjs";
 
 @Component({
 	standalone: true,
 	selector: 'dialog-ricerca',
-	imports: [ButtonModule, FormsModule, ReactiveFormsModule, DialogModule, SelectButtonModule, TableModule, 
-		BadgeModule
-	],
-	providers: [TypographyService],
+	imports: [ButtonModule, FormsModule, ReactiveFormsModule, DialogModule, SelectButtonModule, TableModule ],
+	providers: [UtilityService, TypographyService],
 	templateUrl: './dialog.ricerca.component.html',
 	styleUrl: './dialog.ricerca.component.css'
 })
@@ -28,14 +27,19 @@ export class DialogRicercaComponent implements OnInit {
 	];
 	initialValue: string = 'xhtml';
 	stampati!: TypographyToProcessModel[];
+	legislature: string = '';
 
   	constructor(private dialogService: DialogService,
 		private ref: DynamicDialogRef,
+		private utilityService: UtilityService,
 		private typographyService: TypographyService) {}
 
 	ngOnInit() {
-		this.typographyService.getStampatiXHTML("19").then((data) => { this.stampati = data; });
-  	}
+		this.utilityService.getLastLegislature().subscribe((leg) => {
+			this.legislature = leg;
+		    this.typographyService.getStampatiXHTML("19").then((data) => { this.stampati = data; });
+		});
+	}
 
 	onSelectionChange(selectedValue: string) {
 	    if (selectedValue === 'xhtml') {
