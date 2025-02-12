@@ -20,7 +20,7 @@ export function backEndInterceptor(req: HttpRequest<any>, next: HttpHandlerFn): 
 		error: err => {
 			handleError(err);
 		}
-	}), finalize(() => { console.log('Finalized') }));
+	}), finalize(() => {  }));
 }
 
 function handleError(error: HttpErrorResponse): void {

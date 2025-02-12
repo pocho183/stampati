@@ -5,11 +5,13 @@ import { PrimeNG } from 'primeng/config';
 import { NgIf } from '@angular/common';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ProgressSpinner } from 'primeng/progressspinner';
+import { UtilityService } from "app/services/utility.service";
 
 @Component({
 	standalone: true,
 	selector: 'app-root',
 	imports: [ToolbarModule, ProgressSpinner, RouterModule, NgIf],
+	providers: [UtilityService ],
 	templateUrl: './app.component.html',
 	styleUrls: ['./app.component.css']
 })
@@ -17,8 +19,9 @@ export class AppComponent implements OnInit {
 
 	version: string = environment.version;
 	showSpinner: boolean;
+	legislature: string = '';
 
-	constructor(private config: PrimeNG) { }
+	constructor(private config: PrimeNG, private utilityService: UtilityService) { }
 
 	ngOnInit(): void {
 		this.config.setTranslation({
@@ -34,5 +37,7 @@ export class AppComponent implements OnInit {
 			firstDayOfWeek: 1,
 			noFilter: 'NESSUN FILTRO'
 		});
+		
+		this.utilityService.fetchLegislature();
 	}
 }

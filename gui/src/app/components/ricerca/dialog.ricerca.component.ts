@@ -15,7 +15,7 @@ import { firstValueFrom } from "rxjs";
 	standalone: true,
 	selector: 'dialog-ricerca',
 	imports: [ButtonModule, FormsModule, ReactiveFormsModule, DialogModule, SelectButtonModule, TableModule ],
-	providers: [UtilityService, TypographyService],
+	providers: [TypographyService],
 	templateUrl: './dialog.ricerca.component.html',
 	styleUrl: './dialog.ricerca.component.css'
 })
@@ -36,16 +36,16 @@ export class DialogRicercaComponent implements OnInit {
 
 	ngOnInit() {
 		this.utilityService.getLastLegislature().subscribe((leg) => {
-			this.legislature = leg;
-		    this.typographyService.getStampatiXHTML("19").then((data) => { this.stampati = data; });
+		    this.legislature = leg;
+		    this.typographyService.getStampatiXHTML(this.legislature).then((data) => { this.stampati = data; });
 		});
 	}
 
 	onSelectionChange(selectedValue: string) {
 	    if (selectedValue === 'xhtml') {
-	        this.typographyService.getStampatiXHTML("19").then((data) => { this.stampati = data; });
+	        this.typographyService.getStampatiXHTML(this.legislature).then((data) => { this.stampati = data; });
 	    } else if (selectedValue === 'pdf') {
-	        this.typographyService.getStampatiPDF("19").then((data) => { this.stampati = data; });
+	        this.typographyService.getStampatiPDF(this.legislature).then((data) => { this.stampati = data; });
 	    }
 	}
 	
