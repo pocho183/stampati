@@ -1,5 +1,11 @@
 package it.camera.stampati.service;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.text.MessageFormat;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -24,6 +30,8 @@ private static final Logger logger = LoggerFactory.getLogger(UtilityService.clas
 	private BeanMapper beanMapper;
 	@Value("${url.legislature}")
     private String urlLegislature;
+	@Value("${stampati.shared.input}")
+	private String urlPreview;
 	
 	public String getLastLegislature() {
         try {
@@ -52,4 +60,16 @@ private static final Logger logger = LoggerFactory.getLogger(UtilityService.clas
             throw new RuntimeException("Failed to fetch legislature data", e);
         }
     }
+	
+	public byte[] getPreview(String filePath, String leg, String extension) throws IOException {
+	    String url = MessageFormat.format(urlPreview, leg, extension) + "/" + filePath;
+	    Path file = Paths.get(url);
+	    if (!Files.exists(file))
+	        throw new IOException("File not found: " + url);
+	    try {
+	        return Files.readAllBytes(file);
+	    } catch (IOException ioex) {
+	        throw new IOException("Error reading file: " + url, ioex);
+	    }
+	}
 }

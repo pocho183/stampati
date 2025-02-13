@@ -10,6 +10,8 @@ import { TypographyService } from 'app/services/typography.service';
 import { TypographyToProcessModel } from "app/models/typography.model";
 import { UtilityService } from "app/services/utility.service";
 import { firstValueFrom } from "rxjs";
+import { saveAs } from 'file-saver';
+import { PdfViewerComponent } from "../pdfviewer/pdfviewer.component";
 
 @Component({
 	standalone: true,
@@ -58,6 +60,22 @@ export class DialogRicercaComponent implements OnInit {
 	}
 	
 	previewStampato(stampato: TypographyToProcessModel) {
-		
+		let extension = stampato.format.toString().toLocaleLowerCase();
+		let filename = stampato.barcode + "." + extension;
+		this.utilityService.preview(filename, stampato.legislaturaId, extension).subscribe(response => {
+		    if (response) {
+		        if (extension === 'pdf') {
+		            this.dialogService.open(PdfViewerComponent, { 
+		                width: '50vw', height: '80vh', modal: true, baseZIndex: 10000, dismissableMask: true,
+		                data: { file: response, filename: filename }
+		            });
+		        } else {
+		            let blob = new Blob([response], { type: 'blob' });
+		            if (blob) saveAs(blob, filename);
+		        }
+		    } else {
+		        console.error("Empty response, PDF not loaded.");
+		    }
+		});
 	}
 }

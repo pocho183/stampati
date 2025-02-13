@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of, ReplaySubject } from 'rxjs';
 import { tap, shareReplay } from 'rxjs/operators';
@@ -25,6 +25,12 @@ export class UtilityService {
 
 	getLastLegislature(): Observable<string> {
 		return this.cachedLegislature ? of(this.cachedLegislature) : this.legislatureSubject.asObservable();
+	}
+	
+	preview(filename, leg, extension): Observable<any> {
+		const url = '/utility/preview';
+		const params = new HttpParams().set('filename', filename).set('leg', leg).set('extension', extension);
+		return this.http.post(url, params, { responseType: 'arraybuffer' });
 	}
 
 };

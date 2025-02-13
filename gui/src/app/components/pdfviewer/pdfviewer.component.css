@@ -1,0 +1,46 @@
+:host ::ng-deep .p-dialog {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+:host ::ng-deep .p-dialog .p-dialog-content {
+    padding: 0;
+    height: 100%;
+}
+
+ngx-extended-pdf-viewer {
+    width: 100%;
+    height: 80vh;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+}
+
+.p-dialog-content {
+    padding: 1rem;
+}
+
+.p-dialog-header {
+    font-size: 1.25rem;
+    font-weight: bold;
+    background-color: #007ad9;
+    color: white;
+    padding: 0.75rem;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+:host ::ng-deep .p-dialog-header-icon {
+    color: white;
+}
+
+@media (max-width: 768px) {
+    ngx-extended-pdf-viewer {
+        height: 60vh;
+    }
+
+    :host ::ng-deep .p-dialog {
+        width: 90vw !important;
+        height: 70vh !important;
+    }
+}

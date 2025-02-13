@@ -41,14 +41,12 @@ export class RicercaComponent implements OnInit {
 		private confirmationService: ConfirmationService) {}
 	
 	ngOnInit() {
-		this.ricercaService.getProducts().then((data) => {
-		           this.products = data;
-		       });
+		this.ricercaService.getProducts().then((data) => { this.products = data; });
 	}
 
 	showDialog() {
 		this.ref = this.dialogService.open(DialogRicercaComponent, {header: 'Carica Stampato da Elaborare', width: '40%', height: '60%',
-			modal: true, contentStyle: { overflow: 'auto' }, baseZIndex: 10000, closable: true });
+			modal: true, contentStyle: { overflow: 'auto' }, baseZIndex: 10000, closable: true, dismissableMask: true });
 	    this.ref.onClose.subscribe((stampato: TypographyToProcessModel) => {
 	    	if (stampato) {
 	        	this.messageService.add({ severity: 'info', summary: 'Stampato caricato', detail: stampato.barcode });
