@@ -9,7 +9,6 @@ import { TableModule } from 'primeng/table';
 import { TypographyService } from 'app/services/typography.service';
 import { TypographyToProcessModel } from "app/models/typography.model";
 import { UtilityService } from "app/services/utility.service";
-import { firstValueFrom } from "rxjs";
 import { saveAs } from 'file-saver';
 import { PdfViewerComponent } from "../pdfviewer/pdfviewer.component";
 
@@ -37,7 +36,7 @@ export class DialogRicercaComponent implements OnInit {
 		private typographyService: TypographyService) {}
 
 	ngOnInit() {
-		this.utilityService.getLastLegislature().subscribe((leg) => {
+		this.utilityService.getWorkingLegislature().subscribe((leg) => {
 		    this.legislature = leg;
 		    this.typographyService.getStampatiXHTML(this.legislature).then((data) => { this.stampati = data; });
 		});
@@ -69,12 +68,19 @@ export class DialogRicercaComponent implements OnInit {
 		                width: '50vw', height: '80vh', modal: true, baseZIndex: 10000, dismissableMask: true,
 		                data: { file: response, filename: filename }
 		            });
+				} else if (extension === 'html') {
+					const newWindow = window.open('', '_blank');
+					if (newWindow) {
+						newWindow.document.open();
+						newWindow.document.write(new TextDecoder().decode(response));
+						newWindow.document.close();
+					}
 		        } else {
 		            let blob = new Blob([response], { type: 'blob' });
 		            if (blob) saveAs(blob, filename);
 		        }
 		    } else {
-		        console.error("Empty response, PDF not loaded.");
+		        console.error("Empty response, file not loaded.");
 		    }
 		});
 	}

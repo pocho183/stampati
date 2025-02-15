@@ -29,7 +29,9 @@ export class FrontespizioComponent implements OnInit {
 	
 	private ref: DynamicDialogRef | undefined;
 	letters: { name: string; value: string }[] = [];
-    selectedLetter: string | null = null;
+	selectedLetter: string | null = null;
+	minoranza: { name: string; value: string }[] = [];
+    selectedMinoranza: string | null = null;
 	
 	constructor(private dialogService: DialogService,
 		private messageService: MessageService,
@@ -41,6 +43,25 @@ export class FrontespizioComponent implements OnInit {
 		    { name: 'G', value: 'G' }, { name: 'I', value: 'I' }, { name: 'M', value: 'M' },
 		    { name: 'O', value: 'O' }, { name: 'Q', value: 'Q' }, { name: 'S', value: 'S' },
 		    { name: 'U', value: 'U' }, { name: 'Z', value: 'Z' }   
+		];
+		this.minoranza = [
+			{ name: 'bis', value: 'bis' }, { name: 'ter', value: 'ter' }, { name: 'quater', value: 'quater' },
+			{ name: 'quinquies', value: 'quinquies' }, { name: 'sexies', value: 'sexies' }, { name: 'septies', value: 'septies' },
+		    { name: 'octies', value: 'octies' }, { name: 'novies', value: 'novies' }, { name: 'decies', value: 'decies' },
+			{ name: 'undecies', value: 'undecies' }, { name: 'duodecies', value: 'duodecies' }, { name: 'terdecies', value: 'terdecies' },
+			{ name: 'quaterdecies', value: 'quaterdecies' }, { name: 'quindecies', value: 'quindecies' }, { name: 'sedecies', value: 'sedecies' },
+		    { name: 'septies decies', value: 'septiesdecies' }, { name: 'duodevicies', value: 'duodevicies' }, { name: 'undevicies', value: 'undevicies' },
+			{ name: 'vicies', value: 'vicies' }, { name: 'semel et vicies', value: 'semeletvicies' }, { name: 'bis et vicies', value: 'bisetvicies' },
+			{ name: 'ter et vicies', value: 'teretvicies' }, { name: 'quater et vicies', value: 'quateretvicies' }, { name: 'quinquies et vicies', value: 'quinquiesetvicies' },
+			{ name: 'sexies et vicies', value: 'sexiesetvicies' }, { name: 'septies et vicies', value: 'septiesetvicies' }, { name: 'octies et vicies', value: 'octiesetvicies' },
+			{ name: 'novies et vicies', value: 'noviesetvicies' }, { name: 'tricies', value: 'tricies' }, { name: 'semel et tricies', value: 'semelettricies' },
+			{ name: 'bis et tricies', value: 'bisettricies' }, { name: 'ter et tricies', value: 'terettricies' }, { name: 'quater et tricies', value: 'quaterettricies' },
+			{ name: 'quinquies et tricies', value: 'quinquiesettricies' }, { name: 'sexies et tricies', value: 'sexiesettricies' }, { name: 'septies et tricies', value: 'septiesettricies' },
+			{ name: 'octies et tricies', value: 'octiesettricies' }, { name: 'novies et tricies', value: 'noviesettricies' }, { name: 'quadragies', value: 'quadragies' },
+			{ name: 'semel et quadragies', value: 'semeletquadragies' }, { name: 'bis et quadragies', value: 'bisetquadragies' }, { name: 'teretquadragies', value: 'ter et quadragies' },
+			{ name: 'quater et quadragies', value: 'quateretquadragies' }, { name: 'quinquiesetquadragies', value: 'quinquies et quadragies' }, { name: 'sexies et quadragies', value: 'sexiesetquadragies' },
+			{ name: 'septies et quadragies', value: 'septiesetquadragies' }, { name: 'octies et quadragies', value: 'octiesetquadragies' }, { name: 'novies et quadragies', value: 'noviesetquadragies' },
+			{ name: 'quinquagies', value: 'quinquagies' }
 		];
     }
 	

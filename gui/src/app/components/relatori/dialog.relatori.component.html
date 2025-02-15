@@ -1,8 +1,8 @@
 <div>
-	<div><p-listbox [options]="cities" [(ngModel)]="selectedCity" optionLabel="name" class="w-full md:w-56" /></div>
+	<div><p-listbox  optionLabel="name" class="w-full md:w-56" /></div>
 	<div class="mt-4">
 		<label class="text-xl text-left font-bold mb-2">Menu di modifica dei Relatori</label> 
-		<p-select [options]="cities" [(ngModel)]="selectedCity" optionLabel="name" placeholder="Seleziona un relatore" class="w-full md:w-56" />
+		<p-select  optionLabel="name" placeholder="Seleziona un relatore" class="w-full md:w-56" />
 	</div>
 	<div class="flex justify-content-start flex-wrap mt-4 gap-4">
 		<div>
@@ -15,7 +15,7 @@
 		</div>
 	</div>
 	<div class="mt-4">
-		<p-select [options]="cities" [(ngModel)]="selectedCity" optionLabel="name" placeholder="Seleziona la commissione" class="w-full md:w-56" />
+		<p-select [options]="commissions"  optionLabel="denominazione" [showClear]="true" placeholder="Seleziona la commissione" class="w-full md:w-56" />
 	</div>
 	<div class="w-full mt-4">
   		<label class="text-lg text-left mb-2">altro</label> 

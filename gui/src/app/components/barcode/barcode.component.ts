@@ -12,8 +12,6 @@ import { SelectModule } from 'primeng/select';
 import { InputTextModule } from 'primeng/inputtext';
 import { DatePickerModule } from 'primeng/datepicker';
 import { CommonModule } from "@angular/common";
-
-
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { ClassicEditor, Bold, Essentials, Italic, Paragraph } from 'ckeditor5';
 
@@ -22,7 +20,8 @@ import { ClassicEditor, Bold, Essentials, Italic, Paragraph } from 'ckeditor5';
 	selector: 'barcode',
 	encapsulation: ViewEncapsulation.None,
 	imports: [CommonModule, CKEditorModule, TableModule, CardModule, ButtonModule, FormsModule, TooltipModule, InputGroupModule,
-		InputGroupAddonModule, IftaLabelModule, CheckboxModule, SelectModule, InputTextModule, DatePickerModule],
+		InputGroupAddonModule, IftaLabelModule, CheckboxModule, SelectModule, InputTextModule, DatePickerModule, 
+		],
 	templateUrl: './barcode.component.html',
 	styleUrl: './barcode.component.css'
 })

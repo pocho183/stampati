@@ -18,6 +18,7 @@ interface City {
 	standalone: true,
 	selector: 'relatori',
 	imports: [ButtonModule, FormsModule, ReactiveFormsModule, CardModule, ToastModule, ListboxModule, TooltipModule],
+	providers: [DialogService, MessageService],
 	templateUrl: './relatori.component.html',
 	styleUrl: './relatori.component.css'
 })
@@ -49,8 +50,9 @@ export class RelatoriComponent implements OnInit {
 		this.ref = this.dialogService.open(DialogRelatoriComponent, {header: 'Gestione Relatori', width: '30%', height: '60%',
 				modal: true, contentStyle: { overflow: 'auto' }, baseZIndex: 10000, closable: true });
 		this.ref.onClose.subscribe((atto: boolean) => {
-		if (atto)
+			if (atto)
 		       	this.messageService.add({ severity: 'info', summary: 'Relatori associati' });
 		});
 	}
+
 }

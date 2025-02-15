@@ -8,6 +8,10 @@
     <div class="flex flex-column">
         <div class="w-full">
             <p-inputgroup class="w-full">
+            	<p-floatlabel class="w-full md:w-56" variant="in">
+				    <p-select inputId="in_label" optionLabel="name" styleClass="w-full" variant="filled" />
+				    <label for="in_label">Leg</label>
+				</p-floatlabel>
                 <input pInputText placeholder="Ricerca atto" type="text" class="w-full"/>
                 <p-inputgroup-addon><p-button icon="pi pi-search" severity="secondary" variant="text"/></p-inputgroup-addon>
                 <p-inputgroup-addon><p-button icon="pi pi-times" severity="secondary" variant="text"/></p-inputgroup-addon>
@@ -15,8 +19,8 @@
         </div>
     </div>
     <div class="bg-gray-100 text-lg mt-4">Risultati</div>
-    <div>
-    	<p-table [value]="products" showGridlines size="small" scrollHeight="700px" [scrollable]="true" selectionMode="single">
+    <div class="overflow-hidden">
+    	<p-table [value]="products" showGridlines size="small" scrollHeight="700px" [scrollable]="true" selectionMode="single" class="h-full">
 		    <ng-template pTemplate="header">
 		        <tr>
 		            <th>Barcode</th>

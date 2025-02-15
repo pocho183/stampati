@@ -14,6 +14,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { DialogRicercaComponent } from 'app/components/ricerca/dialog.ricerca.component'
 import { TypographyToProcessModel } from "app/models/typography.model";
 import { TableModule } from 'primeng/table';
+import { FloatLabel } from "primeng/floatlabel"
 import { RicercaService } from "app/services/ricerca.service";
 
 import { Product } from "app/models/product";
@@ -23,7 +24,7 @@ import { Product } from "app/models/product";
 	selector: 'ricerca',
 	imports: [IftaLabelModule, InputTextModule, ButtonModule, FormsModule, ReactiveFormsModule, 
 		SelectModule, InputGroupModule, InputGroupAddonModule, CardModule, FileUploadModule, ToastModule,
-		DynamicDialogModule, TableModule],
+		DynamicDialogModule, TableModule, FloatLabel],
 	providers: [DialogService, MessageService, RicercaService],
 	templateUrl: './ricerca.component.html',
 	styleUrl: './ricerca.component.css'
@@ -54,5 +55,4 @@ export class RicercaComponent implements OnInit {
 	    });
 	}
 		
-
 }
