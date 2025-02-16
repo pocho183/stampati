@@ -12,7 +12,7 @@ import { SelectModule } from 'primeng/select';
 import { CheckboxModule } from 'primeng/checkbox';
 import { TextareaModule } from 'primeng/textarea';
 import { UtilityService } from "app/services/utility.service";
-import { CommissioniModel } from "app/models/commissioni.model";
+import { CommissioneModel } from "app/models/commissione.model";
 
 @Component({
 	standalone: true,
@@ -25,7 +25,7 @@ import { CommissioniModel } from "app/models/commissioni.model";
 })
 export class DialogRelatoriComponent implements OnInit {
 	
-	commissions: CommissioniModel[] | null = null;
+	commissions: CommissioneModel[] | null = null;
 	
 	
 	checked: boolean = false;

@@ -18,6 +18,8 @@ import { FloatLabel } from "primeng/floatlabel"
 import { RicercaService } from "app/services/ricerca.service";
 
 import { Product } from "app/models/product";
+import { UtilityService } from "app/services/utility.service";
+import { LegislaturaModel } from "app/models/legislatura.model";
 
 @Component({
 	standalone: true,
@@ -31,18 +33,28 @@ import { Product } from "app/models/product";
 })
 export class RicercaComponent implements OnInit {
 
+	legislatures: LegislaturaModel[] = [];
+	selectedLegislature: LegislaturaModel = null;
+	isChanged: boolean = false;
 	private ref: DynamicDialogRef | undefined;
+	
 	products!: Product[];
 
-	
 	constructor(
 		private dialogService: DialogService,
 		private ricercaService: RicercaService,
 		private messageService: MessageService,
+		private utilityService: UtilityService,
 		private confirmationService: ConfirmationService) {}
 	
 	ngOnInit() {
 		this.ricercaService.getProducts().then((data) => { this.products = data; });
+		
+		this.utilityService.fetchLegislature().subscribe(legs => { 
+			this.legislatures = legs;
+			if (this.legislatures.length > 0)
+				this.selectedLegislature = this.legislatures[0];
+		});
 	}
 
 	showDialog() {

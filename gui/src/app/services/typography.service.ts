@@ -9,12 +9,12 @@ export class TypographyService {
 	
 	constructor(private http: HttpClient) {}
     
-	getStampatiXHTML(leg: string): Promise<TypographyToProcessModel[]> {
+	getStampatiXHTML(leg: number): Promise<TypographyToProcessModel[]> {
 		const url = `/stampato/newtoprocess/${leg}/html`;
 		return this.http.get<TypographyToProcessModel[]>(url).toPromise();
 	}
 	
-	getStampatiPDF(leg: string): Promise<TypographyToProcessModel[]> {
+	getStampatiPDF(leg: number): Promise<TypographyToProcessModel[]> {
 	    const url = `/stampato/newtoprocess/${leg}/pdf`;
 	    return this.http.get<TypographyToProcessModel[]>(url).toPromise();
 	}

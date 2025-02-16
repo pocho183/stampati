@@ -1,6 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CommissioniModel } from 'app/models/commissioni.model';
+import { CommissioneModel } from 'app/models/commissione.model';
+import { LegislaturaModel } from 'app/models/legislatura.model';
 import { BehaviorSubject, Observable, of, ReplaySubject } from 'rxjs';
 import { tap, shareReplay, switchMap, filter } from 'rxjs/operators';
 
@@ -8,16 +9,22 @@ import { tap, shareReplay, switchMap, filter } from 'rxjs/operators';
 @Injectable({ providedIn: 'root' })
 export class UtilityService {
   
-    private cachedLegislature: string | null = null;
-    private legislatureSubject = new ReplaySubject<string>(1);
-	private commissionsSubject = new BehaviorSubject<CommissioniModel[]>([]);
+    private cachedLegislature: LegislaturaModel | null = null;
+    private legislatureSubject = new ReplaySubject<LegislaturaModel>(1);
+	private legislatures: LegislaturaModel[] = [];
+	private commissionsSubject = new BehaviorSubject<CommissioneModel[]>([]);
 
     constructor(private http: HttpClient) {}
   
-    fetchLegislature(): void {
+	fetchLegislature(): Observable<LegislaturaModel[]> {
+	    const url = '/utility/legislature';
+	    return this.http.get<LegislaturaModel[]>(url);
+	}
+	
+    fetchLastLegislature(): void {
         const url = '/utility/legislature/last';
         if (!this.cachedLegislature) {
-            this.http.get<string>(url).pipe(
+            this.http.get<LegislaturaModel>(url).pipe(
                 tap((data) => {
                     this.cachedLegislature = data;
                     this.legislatureSubject.next(data);
@@ -25,7 +32,7 @@ export class UtilityService {
         }
     }
   
-    getWorkingLegislature(): Observable<string> {
+    getWorkingLegislature(): Observable<LegislaturaModel> {
         return this.cachedLegislature ? of(this.cachedLegislature) : this.legislatureSubject.asObservable();
     }
   
@@ -33,12 +40,12 @@ export class UtilityService {
 		this.getWorkingLegislature().pipe(
 	    filter(leg => !!leg),
 	    switchMap(leg => {
-	    	const url = `/utility/commissions/${leg}`;
-	        return this.http.get<CommissioniModel[]>(url).pipe(
+	    	const url = `/utility/commissions/${leg.legArabo}`;
+	        return this.http.get<CommissioneModel[]>(url).pipe(
 	        	tap(data => { this.commissionsSubject.next(data); }), shareReplay(1) ); }) ).subscribe();
 	}
 
-	getWorkingCommissions(): Observable<CommissioniModel[]> {
+	getWorkingCommissions(): Observable<CommissioneModel[]> {
 		return this.commissionsSubject.asObservable();
 	}
   

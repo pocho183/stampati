@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import it.camera.stampati.model.CommissioneModel;
+import it.camera.stampati.model.LegislaturaModel;
 import it.camera.stampati.service.UtilityService;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -32,11 +33,11 @@ public class UtilityController {
     private UtilityService utilityService;
     
     @GetMapping(path = "/legislature/last")
-    public ResponseEntity<String> getLastLegislature() {
+    public ResponseEntity<LegislaturaModel> getLastLegislature() {
         logger.debug("Entering UtilityController to process getLastLegislature");
         try {
-            String legislature = utilityService.getLastLegislature();
-            if (legislature == null || legislature.isEmpty()) {
+        	LegislaturaModel legislature = utilityService.getLastLegislature();
+            if (legislature == null) {
                 logger.warn("No legislature data found.");
                 return ResponseEntity.noContent().build();
             }
@@ -44,15 +45,15 @@ public class UtilityController {
             return ResponseEntity.ok(legislature);
         } catch (Exception ex) {
             logger.error("Error occurred while fetching the latest legislature", ex);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while processing your request.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
     
     @GetMapping(path = "/legislature")
-    public ResponseEntity<List<String>> getLegislature() {
+    public ResponseEntity<List<LegislaturaModel>> getLegislature() {
         logger.debug("Entering getLegislature method in UtilityController");
         try {
-            List<String> legislature = utilityService.getLegislature();
+            List<LegislaturaModel> legislature = utilityService.getLegislature();
             if (legislature == null || legislature.isEmpty()) {
                 logger.warn("No legislature data found.");
                 return ResponseEntity.noContent().build();
@@ -61,7 +62,7 @@ public class UtilityController {
             return ResponseEntity.ok(legislature);
         } catch (Exception ex) {
             logger.error("Error occurred while fetching the legislature data", ex);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.singletonList("An error occurred while processing your request."));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
     

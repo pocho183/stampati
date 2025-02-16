@@ -9,8 +9,8 @@
         <div class="w-full">
             <p-inputgroup class="w-full">
             	<p-floatlabel class="w-full md:w-56" variant="in">
-				    <p-select inputId="in_label" optionLabel="name" styleClass="w-full" variant="filled" />
-				    <label for="in_label">Leg</label>
+				    <p-select [options]="legislatures" [(ngModel)]="selectedLegislature" optionLabel="legArabo" appendTo="body" variant="filled" />
+				    <label>Leg</label>
 				</p-floatlabel>
                 <input pInputText placeholder="Ricerca atto" type="text" class="w-full"/>
                 <p-inputgroup-addon><p-button icon="pi pi-search" severity="secondary" variant="text"/></p-inputgroup-addon>

@@ -39,7 +39,7 @@ export class AppComponent implements OnInit {
 			noFilter: 'NESSUN FILTRO'
 		});
 		
-		this.utilityService.fetchLegislature();
+		this.utilityService.fetchLastLegislature();
 		this.utilityService.fetchCommissions();
 	}
 }

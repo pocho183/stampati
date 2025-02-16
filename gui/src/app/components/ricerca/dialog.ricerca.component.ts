@@ -11,6 +11,7 @@ import { TypographyToProcessModel } from "app/models/typography.model";
 import { UtilityService } from "app/services/utility.service";
 import { saveAs } from 'file-saver';
 import { PdfViewerComponent } from "../pdfviewer/pdfviewer.component";
+import { LegislaturaModel } from "app/models/legislatura.model";
 
 @Component({
 	standalone: true,
@@ -28,7 +29,7 @@ export class DialogRicercaComponent implements OnInit {
 	];
 	initialValue: string = 'xhtml';
 	stampati!: TypographyToProcessModel[];
-	legislature: string = '';
+	legislature: LegislaturaModel = null;
 
   	constructor(private dialogService: DialogService,
 		private ref: DynamicDialogRef,
@@ -38,15 +39,15 @@ export class DialogRicercaComponent implements OnInit {
 	ngOnInit() {
 		this.utilityService.getWorkingLegislature().subscribe((leg) => {
 		    this.legislature = leg;
-		    this.typographyService.getStampatiXHTML(this.legislature).then((data) => { this.stampati = data; });
+		    this.typographyService.getStampatiXHTML(this.legislature.legArabo).then((data) => { this.stampati = data; });
 		});
 	}
 
 	onSelectionChange(selectedValue: string) {
 	    if (selectedValue === 'xhtml') {
-	        this.typographyService.getStampatiXHTML(this.legislature).then((data) => { this.stampati = data; });
+	        this.typographyService.getStampatiXHTML(this.legislature.legArabo).then((data) => { this.stampati = data; });
 	    } else if (selectedValue === 'pdf') {
-	        this.typographyService.getStampatiPDF(this.legislature).then((data) => { this.stampati = data; });
+	        this.typographyService.getStampatiPDF(this.legislature.legArabo).then((data) => { this.stampati = data; });
 	    }
 	}
 	

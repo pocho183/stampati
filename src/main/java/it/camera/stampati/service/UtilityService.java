@@ -35,6 +35,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import it.camera.stampati.model.CommissioneModel;
+import it.camera.stampati.model.LegislaturaModel;
 import it.camera.stampati.util.CommissioniHandler;
 import it.esinware.mapping.BeanMapper;
 
@@ -52,52 +53,36 @@ private static final Logger logger = LoggerFactory.getLogger(UtilityService.clas
 	@Value("${stampati.shared.input}")
 	private String urlPreview;
 	
-	public String getLastLegislature() {
-        try {
-            logger.debug("Fetching legislature data from URL: {}", urlLegislature);        
-            RestTemplate restTemplate = new RestTemplate();
-            String xmlResponse = restTemplate.getForObject(urlLegislature, String.class);
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            Document doc = builder.parse(new ByteArrayInputStream(xmlResponse.getBytes()));
-            NodeList legislatures = doc.getElementsByTagName("legislatura");
-            int maxLegArabo = -1;
-            String latestLegislature = "";
-            for (int i = 0; i < legislatures.getLength(); i++) {
-                Element legislatureElement = (Element) legislatures.item(i);
-                int legArabo = Integer.parseInt(legislatureElement.getAttribute("legArabo"));
-                logger.debug("Processing legislature: legArabo={}, id={}", legArabo, legislatureElement.getAttribute("id"));
-                if (legArabo > maxLegArabo) {
-                    maxLegArabo = legArabo;
-                    latestLegislature = legislatureElement.getAttribute("legArabo");
-                }
-            }
-            logger.info("Latest legislature found: {}", latestLegislature);
-            return latestLegislature;
-        } catch (Exception e) {
-            logger.error("Error occurred while fetching the latest legislature", e);
-            throw new RuntimeException("Failed to fetch legislature data", e);
-        }
+	public LegislaturaModel getLastLegislature() {
+        List<LegislaturaModel> legislatures = getLegislature();
+        return legislatures.stream().max(Comparator.comparingInt(l -> l.getLegArabo())).orElse(null); 
     }
 	
-	public List<String> getLegislature() {
+	public List<LegislaturaModel> getLegislature() {
 	    try {
 	        logger.debug("Fetching legislature data from URL: {}", urlLegislature);        
 	        RestTemplate restTemplate = new RestTemplate();
 	        String xmlResponse = restTemplate.getForObject(urlLegislature, String.class);
 	        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder builder = factory.newDocumentBuilder();
-	        Document doc = builder.parse(new ByteArrayInputStream(xmlResponse.getBytes(StandardCharsets.UTF_8)));        
+	        Document doc = builder.parse(new ByteArrayInputStream(xmlResponse.getBytes(StandardCharsets.UTF_8)));        	        
 	        NodeList legislatures = doc.getElementsByTagName("legislatura");
-	        List<String> legislatureList = new ArrayList<>();
+	        List<LegislaturaModel> legislatureList = new ArrayList<>();
 	        for (int i = 0; i < legislatures.getLength(); i++) {
 	            Element legislatureElement = (Element) legislatures.item(i);
 	            int legArabo = Integer.parseInt(legislatureElement.getAttribute("legArabo"));
-	            if (legArabo >= 17) {  // Filter from 17th legislature
-	                legislatureList.add(legislatureElement.getAttribute("legArabo"));
-	                logger.debug("Added legislature: (legArabo={})", legArabo);
+	            if (legArabo >= 17) {
+	                LegislaturaModel legislatura = new LegislaturaModel();
+	                legislatura.setId(legislatureElement.getAttribute("id"));
+	                legislatura.setLegRomano(legislatureElement.getAttribute("legRomano"));
+	                legislatura.setLegArabo(legArabo);
+	                legislatura.setDataInizio(legislatureElement.getAttribute("dataInizio"));
+	                legislatura.setDataFine(legislatureElement.getAttribute("dataFine"));               
+	                legislatureList.add(legislatura);
+	                logger.debug("Added legislature: {}", legislatura);
 	            }
 	        }
+	        legislatureList.sort(Comparator.comparingInt(LegislaturaModel::getLegArabo).reversed());
 	        logger.info("Legislatures from 17th: {}", legislatureList);
 	        return legislatureList;
 	    } catch (Exception e) {
