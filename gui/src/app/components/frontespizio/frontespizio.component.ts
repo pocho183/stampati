@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, Input } from "@angular/core";
 import { TableModule } from "primeng/table";
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
@@ -14,6 +14,7 @@ import { ToastModule } from 'primeng/toast';
 import { DialogService, DynamicDialogRef, DynamicDialogModule } from 'primeng/dynamicdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { DialogFrontespizioComponent } from "./dialog.frontespizio.component";
+import { StampatoModel } from "app/models/stampato.model";
 
 @Component({
 	standalone: true,
@@ -27,11 +28,10 @@ import { DialogFrontespizioComponent } from "./dialog.frontespizio.component";
 })
 export class FrontespizioComponent implements OnInit {
 	
+	@Input() stampato: StampatoModel;
 	private ref: DynamicDialogRef | undefined;
 	letters: { name: string; value: string }[] = [];
-	selectedLetter: string | null = null;
 	minoranza: { name: string; value: string }[] = [];
-    selectedMinoranza: string | null = null;
 	
 	constructor(private dialogService: DialogService,
 		private messageService: MessageService,

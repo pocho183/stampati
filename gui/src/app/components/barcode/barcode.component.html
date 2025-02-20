@@ -1,11 +1,12 @@
 <div>
+	<p-toast />
 	<p-card>
 		<div>
-			<div class="flex justify-content-between flex-wrap">
+			<div class="flex justify-content-between align-items-center flex-wrap mb-2">
 				<div><span class="text-2xl text-left font-bold">Menu di gestione dello Stampato</span></div>
 				<div class="flex justify-content-end flex-wrap">
 					<div class="m-2"><p-button label="Inserisci" [style]="{'background-color': '#285492'}"/></div>
-					<div class="m-2"><p-button label="Salva" severity="success"/></div>
+					<div class="m-2"><p-button (click)="save(stampato)" label="Salva" severity="success"/></div>
 					<div class="m-2"><p-button label="Pubblica" severity="info"/></div>
 					<div class="m-2"><p-button label="Sospendi ?" severity="warn"/></div>
 					<div class="m-2"><p-button label="Cancella" severity="danger"/></div>
@@ -16,20 +17,24 @@
 		<div class="flex justify-content-start flex-wrap mb-4">
 			<div class="mr-6">
 				<p-inputgroup>
-	    			<input pInputText id="barcode" class="text-2xl text-left font-bold" placeholder="Codice a barre"/>
+	    			<input [(ngModel)]="stampato.id.barcode" pInputText id="barcode" class="text-2xl text-left font-bold" placeholder="Codice a barre"/>
 	    			<p-inputgroup-addon><div class="button" pTooltip="Codice a barre" tooltipPosition="right"><img src="assets/img/tag.png" style="width: 25px" alt="Barcode Icon"/></div></p-inputgroup-addon>
 				</p-inputgroup>
 			</div>
 			<div class="mr-6">
 				<p-inputgroup>
-	    			<div class="flex align-items-center justify-content-center mr-2"><p-checkbox [binary]="true"/></div>
+	    			<div class="flex align-items-center justify-content-center mr-2">
+	    				<p-checkbox [(ngModel)]="stampato.pdfPresente" [binary]="true"/>
+	    			</div>
 	    			<input pInputText placeholder="PDF presente" readonly/>
 	    			<p-inputgroup-addon><div class="button" pTooltip="Preview PDF" tooltipPosition="right"><img src="assets/img/sheet.png" style="width: 25px" alt="PDF Icon"/></div></p-inputgroup-addon>
 				</p-inputgroup>
 			</div>
 			<div class="mr-6">
 				<p-inputgroup>
-	    			<div class="flex align-items-center justify-content-center mr-2"><p-checkbox [binary]="true"/></div>
+	    			<div class="flex align-items-center justify-content-center mr-2">
+	    				<p-checkbox [(ngModel)]="stampato.htmlPresente" [binary]="true"/>
+	    			</div>
 	    			<input pInputText placeholder="XHTML presente" readonly/>
 	    			<p-inputgroup-addon><div class="button" pTooltip="Preview XHTML" tooltipPosition="right"><img src="assets/img/xhtml.png" style="width: 25px" alt="XHTML Icon"/></div></p-inputgroup-addon>
 				</p-inputgroup>
@@ -52,7 +57,7 @@
 			</div>
 			<div class="flex-grow-1">
 				<label class="text-xl text-left font-bold mt-4">Titolo Tipografia</label>
-				<ckeditor [editor]="Editor" [config]="config" [data]="text1"></ckeditor>
+				<ckeditor [(ngModel)]="stampato.titolo" [editor]="Editor" [config]="config"></ckeditor>
 			</div>
 		</div>
 	</p-card>

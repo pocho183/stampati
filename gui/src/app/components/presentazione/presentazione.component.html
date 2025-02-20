@@ -5,28 +5,28 @@
 			<div class="flex justify-content-between flex-wrap mt-2 gap-4">
 				<div class="flex flex-column w-30rem">
 			   		<label class="font-bold block mb-2">Suffisso</label>
-					<input pInputText class="w-full"/>
+					<input [(ngModel)]="stampato.suffisso" pInputText class="w-full"/>
 			   	</div>
 			   	<div class="flex flex-column flex-grow-1 w-20rem">
 			   		<label class="font-bold block mb-2">Denominazione stampato</label>
-					<input pInputText class="w-full"/>
+					<input [(ngModel)]="stampato.denominazioneStampato" pInputText class="w-full"/>
 			   	</div>
 			</div>
 			<div class="flex justify-content-between flex-wrap mt-2">
 				<div>
 				    <label class="font-bold block mb-2" style="color:red">Tipo Presentazione</label>
 				    <div class="flex justify-content-between flex-wrap">
-				        <div><p-select [options]="tipiPresentazione" [(ngModel)]="selectedTipoPresentazione" optionLabel="name" [showClear]="true" class="w-18rem" placeholder="Seleziona tipo presentazione"></p-select></div>
-				        <div><p-datepicker [showIcon]="true" [showButtonBar]="true" sdateFormat="dd/mm/yy" /></div>
+				        <div><p-select [options]="tipiPresentazione" [(ngModel)]="stampato.tipoPresentazione" optionLabel="name" [showClear]="true" class="w-18rem" placeholder="Seleziona tipo presentazione"></p-select></div>
+				        <div><p-datepicker [(ngModel)]="stampato.dataPresentazione" [showIcon]="true" [showButtonBar]="true" sdateFormat="dd/mm/yy" /></div>
 				    </div>
 				</div>
 	           	<div>
 	           		<label class="font-bold block mb-2">Relazione Orale</label>
-		    		<div><p-datepicker [showIcon]="true" [showButtonBar]="true" dateFormat="dd/mm/yy" /></div>
+		    		<div><p-datepicker [(ngModel)]="stampato.presentazioneOrale" [showIcon]="true" [showButtonBar]="true" dateFormat="dd/mm/yy" /></div>
 	           	</div>
 	           	<div>
 	           		<label class="font-bold block mb-2">Data Stampa</label>
-		    		<div><p-datepicker [showIcon]="true" [showButtonBar]="true" dateFormat="dd/mm/yy" /></div>
+		    		<div><p-datepicker [(ngModel)]="stampato.dataStampa" [showIcon]="true" [showButtonBar]="true" dateFormat="dd/mm/yy" /></div>
 	           	</div>
 			</div>
 		</div>

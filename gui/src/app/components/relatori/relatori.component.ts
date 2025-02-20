@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, Input } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ButtonModule } from "primeng/button";
 import { CardModule } from 'primeng/card';
@@ -8,11 +8,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { DialogRelatoriComponent } from "./dialog.relatori.component";
-
-interface City {
-    name: string,
-    code: string
-}
+import { StampatoModel } from "app/models/stampato.model";
 
 @Component({
 	standalone: true,
@@ -23,12 +19,9 @@ interface City {
 	styleUrl: './relatori.component.css'
 })
 export class RelatoriComponent implements OnInit {
-    cities!: City[];
-	cities1!: City[];
-
-    selectedCity!: City;
-	selectedCity1!: City;
 	
+	@Input() stampato: StampatoModel;
+
 	private ref: DynamicDialogRef | undefined;
 	
 	constructor(private dialogService: DialogService,
@@ -36,14 +29,7 @@ export class RelatoriComponent implements OnInit {
 			private confirmationService: ConfirmationService) {}
 
     ngOnInit() {
-        this.cities = [
-            { name: 'RAIMONDO Carmine Fabio', code: 'NY' },
-            { name: 'ZIELLO Edoardo', code: 'RM' },
-        ];
-		
-		this.cities1 = [
-		            { name: 'CIRIELLI Edmondo per la maggioranza', code: 'NY' }
-		        ];
+
     }
 	
 	showDialog() {

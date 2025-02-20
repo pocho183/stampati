@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -16,7 +18,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import it.camera.stampati.domain.Stampato;
+import it.camera.stampati.domain.StampatoId;
 import it.camera.stampati.enumerator.StampatoFormat;
+import it.camera.stampati.model.StampatoIdModel;
 import it.camera.stampati.model.StampatoModel;
 import it.camera.stampati.model.TypographyToProcessModel;
 import it.camera.stampati.repository.StampatiRepository;
@@ -30,18 +34,38 @@ public class StampatiService {
 	@Autowired
 	private BeanMapper beanMapper;
 	@Autowired
+	private UtilityService utlityService;
+	@Autowired
 	private StampatiRepository stampatiRepository;
 	@Value("${stampati.shared.input}")
     private String sharedPath;
 	
 	private final String BARCODE_REGEXP = "[1-9][0-9]*(PDL|MSG)[0-9]{7}";
 	
+	public StampatoModel save(StampatoModel model) {
+		// This will throw a NullPointerException with a custom message
+	    Objects.requireNonNull(model, "StampatoModel cannot be null");
+	    Objects.requireNonNull(model.getId(), "Stampato ID cannot be null");
+	    String barcode = model.getId().getBarcode();
+	    if (barcode == null || !barcode.matches("(" + BARCODE_REGEXP + ")"))
+	        throw new IllegalArgumentException("Invalid barcode format");
+	    if (model.getId().getLegislatura() == null) {
+	        String lastLegislature = utlityService.getLastLegislature().getLegArabo().toString();
+	        model.getId().setLegislatura(lastLegislature);
+	    }
+	    Stampato stampato = beanMapper.map(model, Stampato.class);
+	    stampato = stampatiRepository.save(stampato);
+	    logger.info("Stampato saved successfully");
+        return beanMapper.map(stampato, StampatoModel.class);
+	}
+
+	
 	public List<TypographyToProcessModel> getStampatiToProcess(String leg, StampatoFormat format) {
 		logger.info("Starting to process stampati for legislatura {} and format {}", leg, format);
-	    List<Stampato> barcodes = stampatiRepository.findByLegislaturaIdAndNotDeleted(leg);
+	    List<Stampato> barcodes = stampatiRepository.findByLegislaturaAndNotDeleted(leg);
 	    logger.debug("Found {} barcodes for legislatura {}", barcodes.size(), leg);
 	    List<StampatoModel> barcodeModels = beanMapper.map(barcodes, Stampato.class, StampatoModel.class);
-	    List<Stampato> existingBarcodeDataDeleted = stampatiRepository.findByLegislaturaIdAndDeleted(leg);
+	    List<Stampato> existingBarcodeDataDeleted = stampatiRepository.findByLegislaturaAndDeleted(leg);
 	    List<StampatoModel> existingBarcodeDataDeletedModels = beanMapper.map(existingBarcodeDataDeleted, Stampato.class, StampatoModel.class);
 	    Map<String, Date> deletedBarcodeDataDeletedMap = existingBarcodeDataDeletedModels.stream().collect(Collectors.toMap(StampatoModel::getBarcode, StampatoModel::getDataDeleted));  
 	    Set<String> existingBarcodeIds = barcodeModels.stream().map(st -> st.getBarcode()).collect(Collectors.toSet());  

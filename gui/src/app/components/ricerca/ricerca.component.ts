@@ -50,7 +50,7 @@ export class RicercaComponent implements OnInit {
 	ngOnInit() {
 		this.ricercaService.getProducts().then((data) => { this.products = data; });
 		
-		this.utilityService.fetchLegislature().subscribe(legs => { 
+		this.utilityService.fetchLegislature().subscribe(legs => {
 			this.legislatures = legs;
 			if (this.legislatures.length > 0)
 				this.selectedLegislature = this.legislatures[0];
@@ -58,7 +58,7 @@ export class RicercaComponent implements OnInit {
 	}
 
 	showDialog() {
-		this.ref = this.dialogService.open(DialogRicercaComponent, {header: 'Carica Stampato da Elaborare', width: '40%', height: '60%',
+		this.ref = this.dialogService.open(DialogRicercaComponent, {header: 'Carica Stampato da Elaborare della LEGISLATURA: ' + this.legislatures[0].legArabo, width: '40%', height: '60%',
 			modal: true, contentStyle: { overflow: 'auto' }, baseZIndex: 10000, closable: true, dismissableMask: true });
 	    this.ref.onClose.subscribe((stampato: TypographyToProcessModel) => {
 	    	if (stampato) {

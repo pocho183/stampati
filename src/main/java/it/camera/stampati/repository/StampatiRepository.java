@@ -1,23 +1,26 @@
 package it.camera.stampati.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import it.camera.stampati.domain.Stampato;
-
-import java.util.List;
+import it.camera.stampati.domain.StampatoId;
 
 @Repository
-public interface StampatiRepository extends JpaRepository<Stampato, String> {
-
-	List<Stampato> findByLegislaturaId(String legislaturaId);
+public interface StampatiRepository extends JpaRepository<Stampato, StampatoId> {
 	
-    @Query("SELECT s FROM Stampato s WHERE s.legislaturaId = :legislaturaId AND s.dataDeleted IS NULL")
-    List<Stampato> findByLegislaturaIdAndNotDeleted(@Param("legislaturaId") String legislaturaId);
-    
-    @Query("SELECT s FROM Stampato s WHERE s.legislaturaId = :legislaturaId AND s.dataDeleted IS NOT NULL")
-    List<Stampato> findByLegislaturaIdAndDeleted(@Param("legislaturaId") String legislaturaId);
+	boolean existsById(StampatoId id);
 
+    List<Stampato> findById_Legislatura(String legislatura);
+
+    @Query("SELECT s FROM Stampato s WHERE s.id.legislatura = :legislatura AND s.dataDeleted IS NULL")
+    List<Stampato> findByLegislaturaAndNotDeleted(@Param("legislatura") String legislatura);
+
+    @Query("SELECT s FROM Stampato s WHERE s.id.legislatura = :legislatura AND s.dataDeleted IS NOT NULL")
+    List<Stampato> findByLegislaturaAndDeleted(@Param("legislatura") String legislatura);
 }
+

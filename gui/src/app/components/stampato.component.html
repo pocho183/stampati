@@ -6,11 +6,11 @@
             </div>
         </ng-template>
         <ng-template #panel>
-            <div class="flex flex-column h-full p-2 flex-grow-1">
-                <barcode class="w-full"></barcode>
-                <frontespizio class="w-full"></frontespizio>
-                <relatori class="w-full"></relatori>
-                <presentazione class="w-full"></presentazione>
+            <div class="flex flex-column h-full flex-grow-1">
+                <barcode [stampato]="stampato" class="w-full"></barcode>
+                <frontespizio [stampato]="stampato" class="w-full"></frontespizio>
+                <relatori [stampato]="stampato" class="w-full"></relatori>
+                <presentazione [stampato]="stampato" class="w-full"></presentazione>
             </div>
         </ng-template>
     </p-splitter>

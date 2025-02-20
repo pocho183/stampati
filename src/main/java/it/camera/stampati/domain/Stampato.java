@@ -1,15 +1,16 @@
 package it.camera.stampati.domain;
 
 import java.util.Date;
-
-import org.hibernate.annotations.Where;
+import java.util.List;
 
 import it.camera.stampati.enumerator.StampatoFormat;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -21,9 +22,27 @@ import lombok.Setter;
 @Setter
 public class Stampato {
 
-    @Id
-    private String barcode;
-    private String legislaturaId;
+	@EmbeddedId
+    private StampatoId id;
+    private Boolean pdfPresente;
+    private Boolean htmlPresente;
+    private String numeroAtto;
+    private String nomeFrontespizio;
+    private String nomeFile;
+    private String numeriPDL;
+    private Integer pagine;
+    private String lettera;
+    private Boolean rinvioInCommissione;
+    private Boolean relazioneMagg;
+    private String relazioneMin;
+    private String suffisso;
+    private String denominazioneStampato;
+    private String tipoPresentazione;
+    private Date dataPresentazione;
+    private Date presentazioneOrale;
+    private Date dataStampa;
+    @Column(length = 5000)
+    private String titolo;
     @Enumerated(EnumType.STRING)
     private StampatoFormat format;
     @Column(name = "data_deleted")
@@ -35,6 +54,10 @@ public class Stampato {
     @Column(name = "updated_at")
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
+    @OneToMany(mappedBy = "stampato", cascade = CascadeType.ALL)
+    private List<StampatoFel> stampatiFel;
+    @OneToMany(mappedBy = "stampato", cascade = CascadeType.ALL)
+    private List<StampatoRelatore> stampatiRelatori;
 
     @PreUpdate
     protected void onUpdate() {
@@ -43,6 +66,6 @@ public class Stampato {
 
     @Override
     public String toString() {
-        return "Stampato{" + "barcode='" + barcode + '\'' + ", legislaturaId=" + legislaturaId + ", format=" + format + ", dataDeleted=" + dataDeleted + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + '}';
+        return "Stampato{" + "id='" + id + '\'' + ", format=" + format + ", dataDeleted=" + dataDeleted + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + '}';
     }
 }

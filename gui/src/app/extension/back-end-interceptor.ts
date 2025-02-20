@@ -5,9 +5,12 @@ import { environment } from 'environments/environment';
 import { Observable } from 'rxjs';
 import { finalize, tap } from 'rxjs/operators';
 import { WINDOW } from './window.provider';
+import { DialogService } from 'primeng/dynamicdialog';
 
 export function backEndInterceptor(req: HttpRequest<any>, next: HttpHandlerFn): Observable<HttpEvent<any>> {
 	let window = inject(WINDOW);
+	let dialogService = inject(DialogService);
+	
 	if (req.url && !req.url.startsWith('http') && !req.url.includes('/asset')) {
 		const port = environment.backEndPort ? ':' + environment.backEndPort : window.location.port;
 		req = req.clone({
@@ -18,40 +21,28 @@ export function backEndInterceptor(req: HttpRequest<any>, next: HttpHandlerFn): 
 		next: response => {
 		},
 		error: err => {
-			handleError(err);
+			handleError(err, dialogService);
 		}
 	}), finalize(() => {  }));
 }
 
-function handleError(error: HttpErrorResponse): void {
-	console.log(error);
-	if (error.status === 0 || error.status === 404) {
-		this.dialogService.dialogComponentRefMap.forEach(dialog => {
-			dialog.destroy();
-		});
-		this.ref = this.dialogService.open(ErrorMessageComponent, {
-			header: 'Attenzione',
-			width: '70%',
-			contentStyle: { overflow: 'auto' },
-			baseZIndex: 10000,
-			data: 'Servizio attualmente non disponibile. Riprovare più tardi.',
-			closable: true
-		});
-	} else if (error.status === 400) {
-		this.ref = this.dialogService.open(ErrorMessageComponent, {
-			header: error.error.blocked === false ? "Attenzione" : "Errore",
-			width: '70%',
-			contentStyle: { overflow: 'auto' },
-			baseZIndex: 10000,
-			data: error.error,
-		});
-	} else if (error.status === 500) {
-		this.ref = this.dialogService.open(ErrorMessageComponent, {
-			header: "Errore di sistema",
-			width: '70%',
-			contentStyle: { overflow: 'auto' },
-			baseZIndex: 10000,
-			data: 'Si è verificato un errore applicativo.',
-		});
-	}
+function handleError(error: HttpErrorResponse, dialogService: DialogService): void {
+    console.log(error);
+    //dialogService.dialogComponentRefMap.forEach(dialog => { dialog.destroy(); });
+    let errorMessage: any = 'Si è verificato un errore.';
+    if (error.status === 0 || error.status === 404) {
+        errorMessage = 'Servizio attualmente non disponibile. Riprovare più tardi.';
+    } else if (error.status === 400) {
+        errorMessage = error.error || 'Richiesta non valida.';
+    } else if (error.status === 500) {
+        errorMessage = 'Si è verificato un errore applicativo.';
+    }
+    /*dialogService.open(ErrorMessageComponent, {
+        header: error.status === 400 && error.error.blocked === false ? "Attenzione" : "Errore",
+        width: '70%',
+        contentStyle: { overflow: 'auto' },
+        baseZIndex: 10000,
+        data: errorMessage ? errorMessage : [errorMessage],
+        closable: true
+    });*/
 }

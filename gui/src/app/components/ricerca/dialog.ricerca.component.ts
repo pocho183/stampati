@@ -62,7 +62,7 @@ export class DialogRicercaComponent implements OnInit {
 	previewStampato(stampato: TypographyToProcessModel) {
 		let extension = stampato.format.toString().toLocaleLowerCase();
 		let filename = stampato.barcode + "." + extension;
-		this.utilityService.preview(filename, stampato.legislaturaId, extension).subscribe(response => {
+		this.utilityService.preview(filename, stampato.legislatura, extension).subscribe(response => {
 		    if (response) {
 		        if (extension === 'pdf') {
 		            this.dialogService.open(PdfViewerComponent, { 
