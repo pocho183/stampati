@@ -23,4 +23,8 @@ export class StampatoComponent implements OnInit {
 	
     ngOnInit() { }
 	
+	updateStampato(newStampato: StampatoModel) {
+	    this.stampato = { ...newStampato }; // Force reference change
+	}
+	
 }

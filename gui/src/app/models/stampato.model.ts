@@ -38,7 +38,7 @@ export class StampatoModel {
 	presentazioneOrale?: Date;
 	@Type(() => Date)
 	dataStampa?: Date;
-	titolo?: string;
+	titolo?: string = '';
 	format?: StampatoFormat;
 	@Type(() => Date)
 	dataDeleted?: Date;

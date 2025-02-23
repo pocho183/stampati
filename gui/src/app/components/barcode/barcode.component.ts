@@ -15,7 +15,7 @@ import { CommonModule } from "@angular/common";
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { ToastModule } from 'primeng/toast';
 import { ClassicEditor, Bold, Essentials, Italic, Paragraph } from 'ckeditor5';
-import { StampatoModel } from "app/models/stampato.model";
+import { StampatoIdModel, StampatoModel } from "app/models/stampato.model";
 import { StampatoService } from "app/services/stampato.service";
 import { UtilityService } from "app/services/utility.service";
 import { MessageService } from 'primeng/api';
@@ -65,8 +65,13 @@ export class BarcodeComponent implements OnInit {
 			});
 		} else {
 			console.error("Errore: Codice a barre mancante !");
-			this.messageService.add({ severity: 'error', summary: 'Errore', detail: 'Codice a barre mancante !' });			    		    
+			this.messageService.add({ severity: 'error', sticky: true, summary: 'Errore', detail: 'Codice a barre mancante !' });			    		    
 		}
+	}
+	
+	new() {
+		let stampatoId = new StampatoIdModel();
+		this.stampato = new StampatoModel(stampatoId);
 	}
 	
 }

@@ -12,15 +12,15 @@
 				    <p-select [options]="legislatures" [(ngModel)]="selectedLegislature" optionLabel="legArabo" appendTo="body" variant="filled" />
 				    <label>Leg</label>
 				</p-floatlabel>
-                <input pInputText placeholder="Ricerca..." type="text" class="w-full"/>
-                <p-inputgroup-addon><p-button icon="pi pi-search" severity="secondary" variant="text"/></p-inputgroup-addon>
-                <p-inputgroup-addon><p-button icon="pi pi-times" severity="secondary" variant="text"/></p-inputgroup-addon>
+                <input #searchInput (keyup.enter)="search(searchInput.value)"  pInputText placeholder="Ricerca..." type="text" class="w-full"/>
+                <p-inputgroup-addon><p-button (click)="search(searchInput.value)" icon="pi pi-search" severity="secondary" variant="text"/></p-inputgroup-addon>
+                <p-inputgroup-addon><p-button (click)="clearInput()" icon="pi pi-times" severity="secondary" variant="text"/></p-inputgroup-addon>
             </p-inputgroup>
         </div>
     </div>
-    <div class="bg-gray-100 text-lg mt-4">Risultati</div>
-    <div class="overflow-hidden">
-    	<p-table [value]="products" showGridlines size="small" scrollHeight="700px" [scrollable]="true" selectionMode="single" class="h-full">
+    <div *ngIf="results?.length > 0" class="bg-gray-100 text-lg mt-4">Risultati</div>
+    <div *ngIf="results?.length > 0" class="overflow-hidden">
+    	<p-table [value]="results" showGridlines size="small" scrollHeight="700px" [scrollable]="true" selectionMode="single" class="h-full">
 		    <ng-template pTemplate="header">
 		        <tr>
 		            <th>Barcode</th>
@@ -29,13 +29,13 @@
 		            <th>Rigo Nero</th>
 		        </tr>
 		    </ng-template>
-		    <ng-template pTemplate="body" let-product>
-		        <tr>
-		            <td>{{ product.code }}</td>
-		            <td>{{ product.name }}</td>
-		            <td><i class="pi pi-check" style="color: green; font-size: 1.5rem"></i></td>
-		            <td><i class="pi pi-check" style="color: black; font-size: 1.5rem"></i></td>
-		        </tr>
+		    <ng-template pTemplate="body" let-result>
+		        <tr (click)="openPopup(result)">
+		            <td>{{ result.barcode }}</td>
+		            <td>{{ result.numeroAtto }}</td>
+		            <td><i *ngIf="result.errataCorrige" class="pi pi-check" style="color: green; font-size: 1.5rem"></i></td>
+    				<td><i *ngIf="result.rigoNero" class="pi pi-check" style="color: black; font-size: 1.5rem"></i></td> 
+    			</tr>
 		    </ng-template>
 		    <ng-template #emptymessage>
 				<tr><td colspan="4">Non ci sono risultati</td></tr>
@@ -43,3 +43,13 @@
 		</p-table>
 	</div>
 </p-card>
+<p-dialog header="Dettagli Stampato" [(visible)]="displayPopup" [modal]="true" [closable]="true">
+    <div *ngIf="selectedResult">
+    	<p>Confermi di aprire lo stampato con:</p>
+        <p><strong>Barcode:</strong> {{ selectedResult.barcode }}</p>
+    </div>
+    <ng-template #footer>
+        <p-button (click)="displayPopup = false" label="No" [text]="true" severity="secondary" />
+        <p-button (click)="loadStampato(selectedResult)" label="Si" [outlined]="true" [style]="{'background-color': '#285492', 'color': 'white'}"/>
+    </ng-template>
+</p-dialog>

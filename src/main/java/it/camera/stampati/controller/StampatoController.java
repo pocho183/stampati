@@ -20,6 +20,7 @@ import it.camera.stampati.model.StampatoModel;
 import it.camera.stampati.model.TypographyToProcessModel;
 import it.camera.stampati.service.StampatiService;
 import it.esinware.mapping.BeanMapper;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping(path = "/stampato")
@@ -52,7 +53,7 @@ public class StampatoController {
     }
     
     @PostMapping(path = "save")
-    public ResponseEntity<?> save(@RequestBody StampatoModel model) {
+    public ResponseEntity<?> save(@Valid @RequestBody StampatoModel model) {
         try {
             StampatoModel savedModel = stampatiService.save(model);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedModel);

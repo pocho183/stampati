@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, ElementRef, Input, OnInit, ViewChild, EventEmitter, Output } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ButtonModule } from "primeng/button";
 import { IftaLabelModule } from "primeng/iftalabel";
@@ -16,29 +16,35 @@ import { TypographyToProcessModel } from "app/models/typography.model";
 import { TableModule } from 'primeng/table';
 import { FloatLabel } from "primeng/floatlabel"
 import { RicercaService } from "app/services/ricerca.service";
-
-import { Product } from "app/models/product";
 import { UtilityService } from "app/services/utility.service";
 import { LegislaturaModel } from "app/models/legislatura.model";
+import { RicercaModel } from "app/models/ricerca.model";
+import { DialogModule } from 'primeng/dialog';
+import { NgIf } from '@angular/common';
+import { StampatoModel } from "app/models/stampato.model";
 
 @Component({
 	standalone: true,
 	selector: 'ricerca',
 	imports: [IftaLabelModule, InputTextModule, ButtonModule, FormsModule, ReactiveFormsModule, 
 		SelectModule, InputGroupModule, InputGroupAddonModule, CardModule, FileUploadModule, ToastModule,
-		DynamicDialogModule, TableModule, FloatLabel],
+		DynamicDialogModule, TableModule, FloatLabel, NgIf, DialogModule],
 	providers: [DialogService, MessageService, RicercaService],
 	templateUrl: './ricerca.component.html',
 	styleUrl: './ricerca.component.css'
 })
 export class RicercaComponent implements OnInit {
 
+	@Input() stampato: StampatoModel;
+	@Output() stampatoChange = new EventEmitter<StampatoModel>();
 	legislatures: LegislaturaModel[] = [];
 	selectedLegislature: LegislaturaModel = null;
+	@ViewChild('searchInput') searchInput: ElementRef;
+	displayPopup: boolean = false;
+	selectedResult: RicercaModel;
 	isChanged: boolean = false;
-	private ref: DynamicDialogRef | undefined;
-	
-	products!: Product[];
+	private ref: DynamicDialogRef | undefined;	
+	results: RicercaModel[];
 
 	constructor(
 		private dialogService: DialogService,
@@ -48,8 +54,6 @@ export class RicercaComponent implements OnInit {
 		private confirmationService: ConfirmationService) {}
 	
 	ngOnInit() {
-		this.ricercaService.getProducts().then((data) => { this.products = data; });
-		
 		this.utilityService.fetchLegislature().subscribe(legs => {
 			this.legislatures = legs;
 			if (this.legislatures.length > 0)
@@ -65,6 +69,38 @@ export class RicercaComponent implements OnInit {
 	        	this.messageService.add({ severity: 'info', summary: 'Stampato caricato', detail: stampato.barcode });
 	        }
 	    });
+	}
+	
+	search(textSearch: string) {
+		if(textSearch != null && textSearch != '') {
+			this.ricercaService.search(this.selectedLegislature.legArabo, textSearch).subscribe( res => {
+				this.results = res;
+			});
+		}
+	}
+	
+	clearInput() {
+		if(this.searchInput && this.searchInput.nativeElement)
+	    	this.searchInput.nativeElement.value = '';
+		this.results = null;
+	}
+	
+	openPopup(result: any) {
+		this.selectedResult = result;
+	    this.displayPopup = true;
+	}
+	
+	loadStampato(selectedResult: RicercaModel) {
+		this.displayPopup = false;
+		this.ricercaService.load(selectedResult.legislatura, selectedResult.barcode).subscribe( res => {
+			// New object reference
+			this.stampato = { ...res };  
+			this.stampatoChange.emit(this.stampato); 
+		});
+	}
+	
+	setStampato(newStampato: StampatoModel) {
+	    this.stampato = newStampato;
 	}
 		
 }

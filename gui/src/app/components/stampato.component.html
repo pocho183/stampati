@@ -2,7 +2,7 @@
     <p-splitter [panelSizes]="[18, 82]" styleClass="mb-12">
         <ng-template #panel>
             <div class="flex flex-column h-full p-2">
-                <ricerca/>
+                <ricerca [stampato]="stampato" (stampatoChange)="updateStampato($event)"/>
             </div>
         </ng-template>
         <ng-template #panel>

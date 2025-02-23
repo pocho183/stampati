@@ -43,9 +43,6 @@ public class StampatiService {
 	private final String BARCODE_REGEXP = "[1-9][0-9]*(PDL|MSG)[0-9]{7}";
 	
 	public StampatoModel save(StampatoModel model) {
-		// This will throw a NullPointerException with a custom message
-	    Objects.requireNonNull(model, "StampatoModel cannot be null");
-	    Objects.requireNonNull(model.getId(), "Stampato ID cannot be null");
 	    String barcode = model.getId().getBarcode();
 	    if (barcode == null || !barcode.matches("(" + BARCODE_REGEXP + ")"))
 	        throw new IllegalArgumentException("Invalid barcode format");

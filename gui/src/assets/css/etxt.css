@@ -9,4 +9,11 @@ body {
   --p-togglebutton-checked-background: #dddddd !important;
   --p-togglebutton-checked-border-color: #0056b3 !important;
   --p-togglebutton-checked-color: black !important;
+  
+  /* 🎨 Add custom PrimeNG semantic colors */
+    --primary-500: #6366F1;  /* Indigo */
+    --success-500: #22C55E;  /* Green */
+    --error-500: #EF4444;    /* Red */
+    --info-500: #3B82F6;     /* Blue */
+    --warning-500: #EAB308;  /* Yellow */
 }

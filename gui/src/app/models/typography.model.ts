@@ -3,6 +3,7 @@ import { StampatoFormat } from "./stampato.model";
 export interface TypographyToProcessModel {
   barcode: string;
   format: StampatoFormat;
-  legislatura: string;
+  legislaturaId: string;
   dataDeleted?: Date | string | null;
 }
+    

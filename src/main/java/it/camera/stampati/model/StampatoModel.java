@@ -6,16 +6,18 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import it.camera.stampati.enumerator.StampatoFormat;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 public class StampatoModel {
-
+	
+	@NotNull
 	private StampatoIdModel id;
-	private String barcode;
-    private String legislatura;
+	private Boolean errataCorrige;
+	private Boolean rigoNero;
     private Boolean pdfPresente;
     private Boolean htmlPresente;
     private String numeroAtto;
@@ -47,4 +49,7 @@ public class StampatoModel {
     private List<StampatoFelModel> stampatiFel;
     private List<StampatoRelatoreModel> stampatiRelatori;
     
+    public String getBarcode() {
+        return id != null ? id.getBarcode() : null;
+    }
 }
