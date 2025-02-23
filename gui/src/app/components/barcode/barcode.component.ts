@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, OnInit, Input } from "@angular/core";
+import { Component, ViewEncapsulation, OnInit, Input, EventEmitter, Output } from "@angular/core";
 import { TableModule } from "primeng/table";
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
@@ -35,6 +35,7 @@ import { LegislaturaModel } from "app/models/legislatura.model";
 export class BarcodeComponent implements OnInit {
 
 	@Input() stampato: StampatoModel;
+	@Output() stampatoChange = new EventEmitter<StampatoModel>();
 	legislature: LegislaturaModel = null;
 	public Editor = ClassicEditor;
 	public config = {
@@ -72,6 +73,7 @@ export class BarcodeComponent implements OnInit {
 	new() {
 		let stampatoId = new StampatoIdModel();
 		this.stampato = new StampatoModel(stampatoId);
+		this.stampatoChange.emit(this.stampato);
 	}
 	
 }

@@ -22,6 +22,8 @@ import { RicercaModel } from "app/models/ricerca.model";
 import { DialogModule } from 'primeng/dialog';
 import { NgIf } from '@angular/common';
 import { StampatoModel } from "app/models/stampato.model";
+import { DialogAnswerComponent } from "../dialog/dialog.answer.component";
+import { AnswerFooterComponent } from "../dialog/dialog.answer.footer.component";
 
 @Component({
 	standalone: true,
@@ -40,7 +42,6 @@ export class RicercaComponent implements OnInit {
 	legislatures: LegislaturaModel[] = [];
 	selectedLegislature: LegislaturaModel = null;
 	@ViewChild('searchInput') searchInput: ElementRef;
-	displayPopup: boolean = false;
 	selectedResult: RicercaModel;
 	isChanged: boolean = false;
 	private ref: DynamicDialogRef | undefined;	
@@ -84,23 +85,24 @@ export class RicercaComponent implements OnInit {
 	    	this.searchInput.nativeElement.value = '';
 		this.results = null;
 	}
-	
-	openPopup(result: any) {
-		this.selectedResult = result;
-	    this.displayPopup = true;
-	}
-	
+
 	loadStampato(selectedResult: RicercaModel) {
-		this.displayPopup = false;
-		this.ricercaService.load(selectedResult.legislatura, selectedResult.barcode).subscribe( res => {
-			// New object reference
-			this.stampato = { ...res };  
-			this.stampatoChange.emit(this.stampato); 
+		this.ref = this.dialogService.open(DialogAnswerComponent, { 
+			header: 'Dettagli Stampato', width: '30%', height: '30%', modal: true, contentStyle: { overflow: 'auto', paddingBottom: '1px' }, 
+			data: { text: 'Confermi di aprire lo stampato con BARCODE: ' + selectedResult.barcode + ' ?'},
+			templates: { footer: AnswerFooterComponent },
+			baseZIndex: 10000, closable: true });
+		this.ref.onClose.subscribe((answer: boolean) => {
+			console.log(answer);
+			if (answer) {
+				this.ricercaService.load(selectedResult.legislatura, selectedResult.barcode).subscribe( res => {
+					// New object reference
+				 	this.stampato = { ...res };  
+				 	this.stampatoChange.emit(this.stampato);
+					this.messageService.add({ severity: 'success', summary: 'Stampato caricato correttamente' });
+				});
+			}
 		});
-	}
-	
-	setStampato(newStampato: StampatoModel) {
-	    this.stampato = newStampato;
 	}
 		
 }

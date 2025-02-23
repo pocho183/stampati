@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 import { TableModule } from "primeng/table";
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
@@ -12,7 +12,7 @@ import { SelectModule } from 'primeng/select';
 import { InputTextModule } from 'primeng/inputtext';
 import { ToastModule } from 'primeng/toast';
 import { DialogService, DynamicDialogRef, DynamicDialogModule } from 'primeng/dynamicdialog';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { MessageService } from 'primeng/api';
 import { DialogFrontespizioComponent } from "./dialog.frontespizio.component";
 import { StampatoModel } from "app/models/stampato.model";
 
@@ -22,48 +22,41 @@ import { StampatoModel } from "app/models/stampato.model";
 	imports: [TableModule, CardModule, ButtonModule, FormsModule, TooltipModule, InputGroupModule,
 		InputGroupAddonModule, IftaLabelModule, CheckboxModule, SelectModule, InputTextModule, 
 	ToastModule, DynamicDialogModule],
-	providers: [DialogService, MessageService, ConfirmationService],
+	providers: [DialogService, MessageService],
 	templateUrl: './frontespizio.component.html',
 	styleUrl: './frontespizio.component.css'
 })
 export class FrontespizioComponent implements OnInit {
 	
 	@Input() stampato: StampatoModel;
+	@Output() stampatoChange = new EventEmitter<StampatoModel>();
 	private ref: DynamicDialogRef | undefined;
-	letters: { name: string; value: string }[] = [];
-	minoranza: { name: string; value: string }[] = [];
+	letters = [ { label: 'A', value: 'A' }, { label: 'C', value: 'C' }, { label: 'E', value: 'E' },
+		{ label: 'G', value: 'G' }, { label: 'I', value: 'I' }, { label: 'M', value: 'M' },
+	    { label: 'O', value: 'O' }, { label: 'Q', value: 'Q' }, { label: 'S', value: 'S' },
+	    { label: 'U', value: 'U' }, { label: 'Z', value: 'Z' }   ];
+	minoranza = [ { label: 'bis', value: 'bis' }, { label: 'ter', value: 'ter' }, { label: 'quater', value: 'quater' },
+		{ label: 'quinquies', value: 'quinquies' }, { label: 'sexies', vlabel: 'sexies' }, { label: 'septies', value: 'septies' },
+	    { label: 'octies', value: 'octies' }, { label: 'novies', value: 'novies' }, { label: 'decies', value: 'decies' },
+		{ label: 'undecies', value: 'undecies' }, { label: 'duodecies', value: 'duodecies' }, { label: 'terdecies', value: 'terdecies' },
+		{ label: 'quaterdecies', value: 'quaterdecies' }, { label: 'quindecies', value: 'quindecies' }, { label: 'sedecies', value: 'sedecies' },
+		{ label: 'septies decies', value: 'septiesdecies' }, { label: 'duodevicies', value: 'duodevicies' }, { label: 'undevicies', value: 'undevicies' },
+		{ label: 'vicies', value: 'vicies' }, { label: 'semel et vicies', value: 'semeletvicies' }, { label: 'bis et vicies', value: 'bisetvicies' },
+		{ label: 'ter et vicies', value: 'teretvicies' }, { label: 'quater et vicies', value: 'quateretvicies' }, { label: 'quinquies et vicies', value: 'quinquiesetvicies' },
+		{ label: 'sexies et vicies', value: 'sexiesetvicies' }, { label: 'septies et vicies', value: 'septiesetvicies' }, { label: 'octies et vicies', value: 'octiesetvicies' },
+		{ label: 'novies et vicies', value: 'noviesetvicies' }, { label: 'tricies', value: 'tricies' }, { label: 'semel et tricies', value: 'semelettricies' },
+		{ label: 'bis et tricies', value: 'bisettricies' }, { label: 'ter et tricies', value: 'terettricies' }, { label: 'quater et tricies', value: 'quaterettricies' },
+		{ label: 'quinquies et tricies', value: 'quinquiesettricies' }, { label: 'sexies et tricies', value: 'sexiesettricies' }, { label: 'septies et tricies', value: 'septiesettricies' },
+		{ label: 'octies et tricies', value: 'octiesettricies' }, { label: 'novies et tricies', value: 'noviesettricies' }, { label: 'quadragies', value: 'quadragies' },
+	    { label: 'semel et quadragies', value: 'semeletquadragies' }, { label: 'bis et quadragies', value: 'bisetquadragies' }, { label: 'teretquadragies', value: 'ter et quadragies' },
+		{ label: 'quater et quadragies', value: 'quateretquadragies' }, { label: 'quinquiesetquadragies', value: 'quinquies et quadragies' }, { label: 'sexies et quadragies', value: 'sexiesetquadragies' },
+		{ label: 'septies et quadragies', value: 'septiesetquadragies' }, { label: 'octies et quadragies', value: 'octiesetquadragies' }, { label: 'novies et quadragies', value: 'noviesetquadragies' },
+		{ label: 'quinquagies', value: 'quinquagies' } ];
 	
 	constructor(private dialogService: DialogService,
-		private messageService: MessageService,
-		private confirmationService: ConfirmationService) {}
+		private messageService: MessageService) {}
 
-    ngOnInit() {
-		this.letters = [
-			{ name: 'A', value: 'A' }, { name: 'C', value: 'C' }, { name: 'E', value: 'E' },
-		    { name: 'G', value: 'G' }, { name: 'I', value: 'I' }, { name: 'M', value: 'M' },
-		    { name: 'O', value: 'O' }, { name: 'Q', value: 'Q' }, { name: 'S', value: 'S' },
-		    { name: 'U', value: 'U' }, { name: 'Z', value: 'Z' }   
-		];
-		this.minoranza = [
-			{ name: 'bis', value: 'bis' }, { name: 'ter', value: 'ter' }, { name: 'quater', value: 'quater' },
-			{ name: 'quinquies', value: 'quinquies' }, { name: 'sexies', value: 'sexies' }, { name: 'septies', value: 'septies' },
-		    { name: 'octies', value: 'octies' }, { name: 'novies', value: 'novies' }, { name: 'decies', value: 'decies' },
-			{ name: 'undecies', value: 'undecies' }, { name: 'duodecies', value: 'duodecies' }, { name: 'terdecies', value: 'terdecies' },
-			{ name: 'quaterdecies', value: 'quaterdecies' }, { name: 'quindecies', value: 'quindecies' }, { name: 'sedecies', value: 'sedecies' },
-		    { name: 'septies decies', value: 'septiesdecies' }, { name: 'duodevicies', value: 'duodevicies' }, { name: 'undevicies', value: 'undevicies' },
-			{ name: 'vicies', value: 'vicies' }, { name: 'semel et vicies', value: 'semeletvicies' }, { name: 'bis et vicies', value: 'bisetvicies' },
-			{ name: 'ter et vicies', value: 'teretvicies' }, { name: 'quater et vicies', value: 'quateretvicies' }, { name: 'quinquies et vicies', value: 'quinquiesetvicies' },
-			{ name: 'sexies et vicies', value: 'sexiesetvicies' }, { name: 'septies et vicies', value: 'septiesetvicies' }, { name: 'octies et vicies', value: 'octiesetvicies' },
-			{ name: 'novies et vicies', value: 'noviesetvicies' }, { name: 'tricies', value: 'tricies' }, { name: 'semel et tricies', value: 'semelettricies' },
-			{ name: 'bis et tricies', value: 'bisettricies' }, { name: 'ter et tricies', value: 'terettricies' }, { name: 'quater et tricies', value: 'quaterettricies' },
-			{ name: 'quinquies et tricies', value: 'quinquiesettricies' }, { name: 'sexies et tricies', value: 'sexiesettricies' }, { name: 'septies et tricies', value: 'septiesettricies' },
-			{ name: 'octies et tricies', value: 'octiesettricies' }, { name: 'novies et tricies', value: 'noviesettricies' }, { name: 'quadragies', value: 'quadragies' },
-			{ name: 'semel et quadragies', value: 'semeletquadragies' }, { name: 'bis et quadragies', value: 'bisetquadragies' }, { name: 'teretquadragies', value: 'ter et quadragies' },
-			{ name: 'quater et quadragies', value: 'quateretquadragies' }, { name: 'quinquiesetquadragies', value: 'quinquies et quadragies' }, { name: 'sexies et quadragies', value: 'sexiesetquadragies' },
-			{ name: 'septies et quadragies', value: 'septiesetquadragies' }, { name: 'octies et quadragies', value: 'octiesetquadragies' }, { name: 'novies et quadragies', value: 'noviesetquadragies' },
-			{ name: 'quinquagies', value: 'quinquagies' }
-		];
-    }
+    ngOnInit() { }
 	
 	showDialog() {
 		this.ref = this.dialogService.open(DialogFrontespizioComponent, {header: 'Atti Associati', width: '40%', height: '60%',
@@ -72,10 +65,6 @@ export class FrontespizioComponent implements OnInit {
 		    	if (atto)
 		        	this.messageService.add({ severity: 'info', summary: 'Atto associato' });
 		});
-	}
-	
-	onLetterSelect(letter: string) {
-	    console.log("Selected Letter:", letter);
 	}
 	
 }

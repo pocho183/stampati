@@ -16,8 +16,8 @@
 				<div>
 				    <label class="font-bold block mb-2" style="color:red">Tipo Presentazione</label>
 				    <div class="flex justify-content-between flex-wrap">
-				        <div><p-select [options]="tipiPresentazione" [(ngModel)]="stampato.tipoPresentazione" optionLabel="name" [showClear]="true" class="w-18rem" placeholder="Seleziona tipo presentazione"></p-select></div>
-				        <div><p-datepicker [(ngModel)]="stampato.dataPresentazione" [showIcon]="true" [showButtonBar]="true" sdateFormat="dd/mm/yy" /></div>
+				        <div><p-select [options]="tipiPresentazione" [(ngModel)]="stampato.tipoPresentazione" [showClear]="true" class="w-18rem" placeholder="Seleziona tipo presentazione"></p-select></div>
+				        <div><p-datepicker [(ngModel)]="stampato.dataPresentazione" [showIcon]="true" [showButtonBar]="true" dateFormat="dd/mm/yy" /></div>
 				    </div>
 				</div>
 	           	<div>

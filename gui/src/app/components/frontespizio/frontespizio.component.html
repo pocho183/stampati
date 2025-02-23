@@ -22,7 +22,7 @@
            	</div>
        		<div>
            		<label class="font-bold block mb-2">Lettera (Navette)</label>
-           		<p-select [options]="letters" [(ngModel)]="stampato.lettera" (ngModelChange)="onLetterSelect($event)" optionLabel="name" [showClear]="true" placeholder="Seleziona Lettera" class="w-14rem" />
+           		<p-select [options]="letters" [(ngModel)]="stampato.lettera" [showClear]="true" placeholder="Seleziona Lettera" class="w-14rem" />
 			</div>
        		<div class="flex flex-column items-center">
            		<div class="flex align-items-center justify-content-center"><label class="font-bold block mb-2">Rinvio in Commissione</label></div>
@@ -38,7 +38,7 @@
        		</div>
        		<div>
            		<label class="font-bold block mb-2">Minoranza</label>
-           		<p-select [options]="minoranza" [(ngModel)]="stampato.relazioneMin" optionLabel="name" [showClear]="true" placeholder="Seleziona Minoranza" class="w-14rem"/>
+           		<p-select [options]="minoranza" [(ngModel)]="stampato.relazioneMin" [showClear]="true" placeholder="Seleziona Minoranza" class="w-14rem"/>
 			</div>
 		</div>
 	</p-card>

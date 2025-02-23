@@ -7,10 +7,10 @@
         </ng-template>
         <ng-template #panel>
             <div class="flex flex-column h-full flex-grow-1">
-                <barcode [stampato]="stampato" class="w-full"></barcode>
-                <frontespizio [stampato]="stampato" class="w-full"></frontespizio>
-                <relatori [stampato]="stampato" class="w-full"></relatori>
-                <presentazione [stampato]="stampato" class="w-full"></presentazione>
+                <barcode [stampato]="stampato" (stampatoChange)="updateStampato($event)" class="w-full"></barcode>
+                <frontespizio [stampato]="stampato" (stampatoChange)="updateStampato($event)" class="w-full"></frontespizio>
+                <relatori [stampato]="stampato" (stampatoChange)="updateStampato($event)" class="w-full"></relatori>
+                <presentazione [stampato]="stampato" (stampatoChange)="updateStampato($event)" class="w-full"></presentazione>
             </div>
         </ng-template>
     </p-splitter>

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, Input, EventEmitter, Output } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ButtonModule } from "primeng/button";
 import { CardModule } from 'primeng/card';
@@ -21,10 +21,10 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 export class PresentazioneComponent implements OnInit {
     
 	@Input() stampato: StampatoModel;
-	tipiPresentazione: { name: string; value: string }[] = [];
+	@Output() stampatoChange = new EventEmitter<StampatoModel>();
+	tipiPresentazione = [{ label: 'Presentato', value: 'presentato' }, 
+		{ label: 'Trasmesso', value: 'trasmesso' }, { label: 'Stralciato', value: 'stralciato' }];
 	selectedTipoPresentazione: string | null = null;
 
-    ngOnInit() {
-        this.tipiPresentazione = [{ name: 'Presentato', value: 'presentato' }, { name: 'Trasmesso', value: 'trasmesso' }, { name: 'Stralciato', value: 'stralciato' }];
-    }
+    ngOnInit() { }
 }

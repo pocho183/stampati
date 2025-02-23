@@ -30,7 +30,7 @@
 		        </tr>
 		    </ng-template>
 		    <ng-template pTemplate="body" let-result>
-		        <tr (click)="openPopup(result)">
+		        <tr (click)="loadStampato(result)">
 		            <td>{{ result.barcode }}</td>
 		            <td>{{ result.numeroAtto }}</td>
 		            <td><i *ngIf="result.errataCorrige" class="pi pi-check" style="color: green; font-size: 1.5rem"></i></td>
@@ -43,13 +43,3 @@
 		</p-table>
 	</div>
 </p-card>
-<p-dialog header="Dettagli Stampato" [(visible)]="displayPopup" [modal]="true" [closable]="true">
-    <div *ngIf="selectedResult">
-    	<p>Confermi di aprire lo stampato con:</p>
-        <p><strong>Barcode:</strong> {{ selectedResult.barcode }}</p>
-    </div>
-    <ng-template #footer>
-        <p-button (click)="displayPopup = false" label="No" [text]="true" severity="secondary" />
-        <p-button (click)="loadStampato(selectedResult)" label="Si" [outlined]="true" [style]="{'background-color': '#285492', 'color': 'white'}"/>
-    </ng-template>
-</p-dialog>
