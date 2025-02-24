@@ -3,6 +3,8 @@ package it.camera.stampati.domain;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import it.camera.stampati.enumerator.StampatoFormat;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -42,8 +44,11 @@ public class Stampato {
     private String suffisso;
     private String denominazioneStampato;
     private String tipoPresentazione;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "UTC")
     private Date dataPresentazione;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "UTC")
     private Date presentazioneOrale;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "UTC")
     private Date dataStampa;
     @Column(length = 5000)
     private String titolo;

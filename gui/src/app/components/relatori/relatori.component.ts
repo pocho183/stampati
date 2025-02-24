@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
+import { Component, OnInit, Input } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ButtonModule } from "primeng/button";
 import { CardModule } from 'primeng/card';
@@ -21,7 +21,6 @@ import { StampatoModel } from "app/models/stampato.model";
 export class RelatoriComponent implements OnInit {
 	
 	@Input() stampato: StampatoModel;
-	@Output() stampatoChange = new EventEmitter<StampatoModel>();
 	private ref: DynamicDialogRef | undefined;
 	
 	constructor(private dialogService: DialogService,

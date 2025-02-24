@@ -13,4 +13,13 @@ export class StampatoService {
 	  return this.http.post<StampatoModel>(url, stampato);
 	}
 	
+	delete(stampato: StampatoModel): Observable<StampatoModel> {
+		const url = '/stampato/delete';
+		return this.http.post<StampatoModel>(url, stampato);
+	}
+	
+	restore(stampato: StampatoModel): Observable<StampatoModel> {
+		const url = '/stampato/restore';
+		return this.http.post<StampatoModel>(url, stampato);
+	}
 }

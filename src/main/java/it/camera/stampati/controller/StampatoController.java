@@ -64,7 +64,29 @@ public class StampatoController {
         }
     }
 
-
+    @PostMapping(path = "delete")
+    public ResponseEntity<?> delete(@Valid @RequestBody StampatoModel model) {
+        try {
+            StampatoModel deletedModel = stampatiService.delete(model);
+            return ResponseEntity.status(HttpStatus.OK).body(deletedModel);
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid data: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+        }
+    }
+    
+    @PostMapping(path = "restore")
+    public ResponseEntity<?> restore(@Valid @RequestBody StampatoModel model) {
+        try {
+            StampatoModel restoredModel = stampatiService.restore(model);
+            return ResponseEntity.status(HttpStatus.OK).body(restoredModel);
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid data: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+        }
+    }
 }
 
 	

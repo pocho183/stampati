@@ -55,7 +55,42 @@ public class StampatiService {
 	    logger.info("Stampato saved successfully");
         return beanMapper.map(stampato, StampatoModel.class);
 	}
-
+	
+	public StampatoModel delete(StampatoModel model) {
+	    String barcode = model.getId().getBarcode();
+	    if (barcode == null || !barcode.matches("(" + BARCODE_REGEXP + ")"))
+	        throw new IllegalArgumentException("Invalid barcode format");
+	    if (model.getId().getLegislatura() == null)
+	        throw new IllegalArgumentException("Legislatura cannot be null");
+	    try {
+	        Stampato stampato = beanMapper.map(model, Stampato.class);
+	        stampato.setDataDeleted(new Date());
+	        stampato = stampatiRepository.save(stampato);
+	        logger.info("Stampato deleted successfully");
+	        return beanMapper.map(stampato, StampatoModel.class);
+	    } catch (Exception e) {
+	        logger.error("Error deleting Stampato: ", e);
+	        throw new RuntimeException("Error deleting Stampato", e);
+	    }
+	}
+	
+	public StampatoModel restore(StampatoModel model) {
+	    String barcode = model.getId().getBarcode();
+	    if (barcode == null || !barcode.matches("(" + BARCODE_REGEXP + ")"))
+	        throw new IllegalArgumentException("Invalid barcode format");
+	    if (model.getId().getLegislatura() == null)
+	        throw new IllegalArgumentException("Legislatura cannot be null");
+	    try {
+	        Stampato stampato = beanMapper.map(model, Stampato.class);
+	        stampato.setDataDeleted(null);
+	        stampato = stampatiRepository.save(stampato);
+	        logger.info("Stampato restored successfully");
+	        return beanMapper.map(stampato, StampatoModel.class);
+	    } catch (Exception e) {
+	        logger.error("Error deleting Stampato: ", e);
+	        throw new RuntimeException("Error restoring Stampato", e);
+	    }
+	}
 	
 	public List<TypographyToProcessModel> getStampatiToProcess(String leg, StampatoFormat format) {
 		logger.info("Starting to process stampati for legislatura {} and format {}", leg, format);
