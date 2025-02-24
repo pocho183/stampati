@@ -1,8 +1,9 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { ClassTransformer, plainToInstance } from 'class-transformer';
 import { RicercaModel } from 'app/models/ricerca.model';
 import { StampatoModel } from 'app/models/stampato.model';
-import { Observable } from 'rxjs';
+import { first, map, Observable } from 'rxjs';
 
 @Injectable()
 export class RicercaService {
@@ -17,7 +18,7 @@ export class RicercaService {
 	
 	load(leg:number, barcode: string): Observable<StampatoModel> {
 		const url = '/search/stampato/' + leg + '/' + barcode;
-		return this.http.get<StampatoModel>(url);
+		return this.http.get<StampatoModel>(url).pipe(first(), map(response => plainToInstance(StampatoModel, response)));
 	}
 	
 };
