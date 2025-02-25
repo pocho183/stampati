@@ -28,6 +28,7 @@
     "ckeditor5": "43.2.0",
     "class-transformer": "^0.5.1",
     "file-saver": "^2.0.5",
+    "lodash": "^4.17.21",
     "lodash-es": "4.17.21",
     "ngx-extended-pdf-viewer": "^22.3.9",
     "primeflex": "3.3.1",

@@ -1,6 +1,6 @@
 <div class="container h-screen">
 	<p-toast />
-    <p-splitter [panelSizes]="[18, 82]" styleClass="mb-12">
+    <p-splitter [panelSizes]="[18, 82]" styleClass="container w-full min-h-screen">
         <ng-template #panel>
             <div class="flex flex-column h-full p-2">
                 <ricerca [stampato]="stampato" (stampatoChange)="updateStampato($event)"/>
@@ -14,7 +14,7 @@
 						<div class="flex justify-content-end flex-wrap">
 							<div class="m-2"><p-button (click)="new()" label="Nuovo" [style]="{'background-color': '#285492'}"/></div>					
 							<div class="m-2"><p-button (click)="save(stampato)" [disabled]="stampato.id.barcode == null" label="Salva" [style]="{'background-color': '#285492'}"/></div>
-							<div class="m-2"><p-button label="Pubblica" [disabled]="stampato.id.barcode == null || stampato.dataDeleted != null" [style]="{'background-color': '#285492'}" /></div>
+							<div class="m-2"><p-button (click)="publish(stampato)" label="Pubblica" [disabled]="stampato.id.barcode == null || stampato.dataDeleted != null" [style]="{'background-color': '#285492'}" /></div>
 							<div class="m-2"><p-button label="Sospendi ?" [style]="{'background-color': '#285492'}"/></div>
 							<div class="m-2"><p-button (click)="delete(stampato)" [disabled]="stampato.dataDeleted != null || stampato.id.barcode == null" label="Cancella" severity="danger"/></div>
 							<div class="m-2"><p-button (click)="restore(stampato)" [disabled]="stampato.dataDeleted == null || stampato.id.barcode == null" label="Ripristina" [style]="{'background-color': '#285492'}"/></div>		

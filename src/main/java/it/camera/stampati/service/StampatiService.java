@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -62,12 +63,16 @@ public class StampatiService {
 	        throw new IllegalArgumentException("Invalid barcode format");
 	    if (model.getId().getLegislatura() == null)
 	        throw new IllegalArgumentException("Legislatura cannot be null");
-	    try {
-	        Stampato stampato = beanMapper.map(model, Stampato.class);
-	        stampato.setDataDeleted(new Date());
-	        stampato = stampatiRepository.save(stampato);
-	        logger.info("Stampato deleted successfully");
-	        return beanMapper.map(stampato, StampatoModel.class);
+	    try {	
+	        Optional<Stampato> stampatoOpt = stampatiRepository.findByIdLegislaturaAndIdBarcode(model.getId().getLegislatura(), model.getId().getBarcode());
+	        if(stampatoOpt.isPresent()) {
+	        	stampatoOpt.get().setDataDeleted(new Date());
+		        Stampato stampato = stampatiRepository.save(stampatoOpt.get());
+		        logger.info("Stampato deleted successfully");
+		        return beanMapper.map(stampato, StampatoModel.class);
+	        } else {
+	        	throw new NoSuchElementException("Stampato not found for the given barcode and legislatura");
+	        }
 	    } catch (Exception e) {
 	        logger.error("Error deleting Stampato: ", e);
 	        throw new RuntimeException("Error deleting Stampato", e);
@@ -81,11 +86,15 @@ public class StampatiService {
 	    if (model.getId().getLegislatura() == null)
 	        throw new IllegalArgumentException("Legislatura cannot be null");
 	    try {
-	        Stampato stampato = beanMapper.map(model, Stampato.class);
-	        stampato.setDataDeleted(null);
-	        stampato = stampatiRepository.save(stampato);
-	        logger.info("Stampato restored successfully");
-	        return beanMapper.map(stampato, StampatoModel.class);
+	    	Optional<Stampato> stampatoOpt = stampatiRepository.findByIdLegislaturaAndIdBarcode(model.getId().getLegislatura(), model.getId().getBarcode());
+	        if(stampatoOpt.isPresent()) {
+	        	stampatoOpt.get().setDataDeleted(null);
+		        Stampato stampato = stampatiRepository.save(stampatoOpt.get());
+		        logger.info("Stampato restored successfully");
+		        return beanMapper.map(stampato, StampatoModel.class);
+	        } else {
+	        	throw new NoSuchElementException("Stampato not found for the given barcode and legislatura");
+	        }
 	    } catch (Exception e) {
 	        logger.error("Error deleting Stampato: ", e);
 	        throw new RuntimeException("Error restoring Stampato", e);

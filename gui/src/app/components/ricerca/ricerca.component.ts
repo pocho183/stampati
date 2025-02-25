@@ -96,7 +96,8 @@ export class RicercaComponent implements OnInit {
 			if (answer) {*/
 				this.ricercaService.load(selectedResult.legislatura, selectedResult.barcode).subscribe( res => {
 					// New object reference
-				 	this.stampato = { ...res };  
+				 	//this.stampato = { ...res };
+					this.stampato = res;  
 				 	this.stampatoChange.emit(this.stampato);
 					this.messageService.add({ severity: 'success', summary: 'Stampato caricato correttamente' });
 				});
