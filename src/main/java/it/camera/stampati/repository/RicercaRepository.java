@@ -18,6 +18,6 @@ public interface RicercaRepository extends JpaRepository<Stampato, StampatoId> {
 	@Query("SELECT s FROM Stampato s WHERE (s.id.barcode LIKE %:text% OR s.numeroAtto LIKE %:text%) AND (s.id.legislatura LIKE %:leg%)")
 	List<Stampato> searchStampati(@Param("leg") String leg, @Param("text") String text);
 	
-	Optional<Stampato> findByIdLegislaturaOrderByIdBarcodeAsc(String legislatura, String barcode);
+	Optional<Stampato> findByIdLegislaturaAndIdBarcode(String legislatura, String barcode);
 
 }

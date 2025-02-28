@@ -1,0 +1,23 @@
+<div class="grid gap-4">
+	<div class="col-12">
+		<label class="text-xl font-bold mb-2 block">Titolo proposto</label>
+		<ckeditor [editor]="Editor" [config]="configEditor" [data]="text" [disabled]="true"></ckeditor>
+	</div>
+	<div class="flex-grow-1 col-12">
+		<label class="text-xl font-bold mb-2 block">Titolo Modificato</label> 
+		<ckeditor [(ngModel)]="stampato.titolo" (ngModelChange)="compareTexts()" [editor]="Editor" [config]="configEditor"></ckeditor>
+	</div>
+	<div class="col-12">
+		<label class="text-xl font-bold mb-2 block">Differenze</label>
+		<div [innerHTML]="diffHtml"></div>
+	</div>
+	<div class="col-12">
+  		<h2>Lista email</h2>
+  		<p-chip *ngFor="let email of emails" class="mr-2" [label]="email" [removable]="true"></p-chip>
+  		<div class="flex justify-content-between flex-wrap mt-2">
+    		<div class="flex align-items-center justify-content-center"><input #emailInput type="email" pInputText class="p-inputtext w-full" placeholder="Inserisci email" /></div>
+    		<div class="flex align-items-center justify-content-center"><button (click)="addEmail(emailInput.value)" pButton label="Aggiungi Email" icon="pi pi-plus" class="p-button-outlined ml-2"></button></div>
+  			<div class="flex align-items-center justify-content-center"><button (click)="save()" pButton label="Salva" class="ml-2"></button></div>
+  		</div>
+	</div>
+</div>

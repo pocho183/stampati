@@ -27,6 +27,7 @@
     "@types/lodash-es": "4.17.12",
     "ckeditor5": "43.2.0",
     "class-transformer": "^0.5.1",
+    "diff": "^7.0.0",
     "file-saver": "^2.0.5",
     "lodash": "^4.17.21",
     "lodash-es": "4.17.21",

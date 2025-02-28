@@ -20,7 +20,8 @@ import { StampatoService } from "app/services/stampato.service";
 import { UtilityService } from "app/services/utility.service";
 import { MessageService } from 'primeng/api';
 import { LegislaturaModel } from "app/models/legislatura.model";
-import { DialogService } from "primeng/dynamicdialog";
+import { DialogService, DynamicDialogRef } from "primeng/dynamicdialog";
+import { DialogEmailComponent } from "./dialog.email.component";
 
 @Component({
 	standalone: true,
@@ -37,6 +38,7 @@ export class BarcodeComponent implements OnInit {
 
 	@Input() stampato: StampatoModel;
 	legislature: LegislaturaModel = null;
+	private ref: DynamicDialogRef | undefined;
 	public Editor = ClassicEditor;
 	public config = {
 		licenseKey: 'GPL',
@@ -52,5 +54,16 @@ export class BarcodeComponent implements OnInit {
 		private utilityService: UtilityService) {}
 	
     ngOnInit() { }
+	
+	openEmail() {
+		this.ref = this.dialogService.open(DialogEmailComponent, 
+			{ header: 'Invia modifiche titolo', width: '50%', height: '90%', modal: true, contentStyle: { overflow: 'auto' },
+			data: this.stampato,
+			baseZIndex: 10000, closable: true });
+		this.ref.onClose.subscribe((email: boolean) => {
+			if (email)
+		        this.messageService.add({ severity: 'error', summary: 'Errore nell\'invio email' });
+		});
+	}
 	
 }

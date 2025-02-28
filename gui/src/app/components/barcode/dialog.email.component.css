@@ -1,0 +1,8 @@
+:host ::ng-deep .text-added {
+  background-color: yellow !important;
+  font-weight: bold;
+}
+:host ::ng-deep  .text-removed {
+  text-decoration: line-through;
+  color: red;
+}

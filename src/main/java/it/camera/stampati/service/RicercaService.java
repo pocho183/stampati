@@ -34,7 +34,7 @@ private static final Logger logger = LoggerFactory.getLogger(RicercaService.clas
 	
 	public Optional<StampatoModel> load(String leg, String barcode) {
 		logger.info("Loading stampato for legislatura: {}, barcode: {}", leg, barcode);
-		Optional<Stampato> stampato = searchRepository.findByIdLegislaturaOrderByIdBarcodeAsc(leg, barcode);
+		Optional<Stampato> stampato = searchRepository.findByIdLegislaturaAndIdBarcode(leg, barcode);
 		if(stampato.isPresent()) {
 			StampatoModel model = beanMapper.map(stampato.get(), StampatoModel.class);
             logger.debug("Stampato successfully loaded");
