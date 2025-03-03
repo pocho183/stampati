@@ -26,6 +26,7 @@ public class StampatoModel {
     private String numeriPDL;
     private Integer pagine;
     private String lettera;
+    private Boolean testoUnificato;
     private Boolean rinvioInCommissione;
     private Boolean relazioneMagg;
     private String relazioneMin;

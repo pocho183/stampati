@@ -4,7 +4,7 @@
 		<div class="flex justify-content-start flex-wrap mb-4">
 			<div class="mr-6">
 				<p-inputgroup>
-	    			<input [(ngModel)]="stampato.id.barcode" pInputText id="barcode" maxlength="12" class="text-2xl text-left font-bold" placeholder="Codice a barre"/>
+	    			<input [(ngModel)]="stampato.id.barcode" pInputText id="barcode" maxlength="12" class="text-2xl text-left font-bold" placeholder="Codice a barre" [pattern]="'^[A-Za-z0-9]{1,12}$'" title="Sono ammessi soltanto caratteri alfanumerici, fino a 12 caratteri." />    			
 	    			<p-inputgroup-addon><div class="button" pTooltip="Codice a barre" tooltipPosition="right"><img src="assets/img/tag.png" style="width: 25px" alt="Barcode Icon"/></div></p-inputgroup-addon>
 				</p-inputgroup>
 			</div>

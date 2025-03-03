@@ -6,18 +6,20 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { TableModule } from 'primeng/table';
 
-import { TypographyService } from 'app/services/typography.service';
+import { ExtractorService } from 'app/services/extractor.service';
 import { TypographyToProcessModel } from "app/models/typography.model";
 import { UtilityService } from "app/services/utility.service";
 import { saveAs } from 'file-saver';
 import { PdfViewerComponent } from "../pdfviewer/pdfviewer.component";
 import { LegislaturaModel } from "app/models/legislatura.model";
+import { StampatoModel } from "app/models/stampato.model";
+import { MessageService } from "primeng/api";
 
 @Component({
 	standalone: true,
 	selector: 'dialog-ricerca',
 	imports: [ButtonModule, FormsModule, ReactiveFormsModule, DialogModule, SelectButtonModule, TableModule ],
-	providers: [TypographyService],
+	providers: [ExtractorService],
 	templateUrl: './dialog.ricerca.component.html',
 	styleUrl: './dialog.ricerca.component.css'
 })
@@ -29,25 +31,27 @@ export class DialogRicercaComponent implements OnInit {
 	];
 	initialValue: string = 'xhtml';
 	stampati!: TypographyToProcessModel[];
+	stampato: StampatoModel;
 	legislature: LegislaturaModel = null;
 
   	constructor(private dialogService: DialogService,
 		private ref: DynamicDialogRef,
 		private utilityService: UtilityService,
-		private typographyService: TypographyService) {}
+		private messageService: MessageService,
+		private extractorService: ExtractorService) {}
 
 	ngOnInit() {
 		this.utilityService.getWorkingLegislature().subscribe((leg) => {
 		    this.legislature = leg;
-		    this.typographyService.getStampatiXHTML(this.legislature.legArabo).then((data) => { this.stampati = data; });
+		    this.extractorService.getStampatiXHTML(this.legislature.legArabo).then((data) => { this.stampati = data; });
 		});
 	}
 
 	onSelectionChange(selectedValue: string) {
 	    if (selectedValue === 'xhtml') {
-	        this.typographyService.getStampatiXHTML(this.legislature.legArabo).then((data) => { this.stampati = data; });
+	        this.extractorService.getStampatiXHTML(this.legislature.legArabo).then((data) => { this.stampati = data; });
 	    } else if (selectedValue === 'pdf') {
-	        this.typographyService.getStampatiPDF(this.legislature.legArabo).then((data) => { this.stampati = data; });
+	        this.extractorService.getStampatiPDF(this.legislature.legArabo).then((data) => { this.stampati = data; });
 	    }
 	}
 	
@@ -55,9 +59,18 @@ export class DialogRicercaComponent implements OnInit {
 	    return dataDeleted ? 'danger' : 'success';
 	}
 	
-	selectBarcode(stampato: TypographyToProcessModel) {
-		this.ref.close(stampato);
+	async selectBarcode(stampato: TypographyToProcessModel) {
+		try {
+			this.stampato = await this.extractorService.getStampato(stampato);
+			if (this.stampato?.id?.barcode)
+				this.ref.close(this.stampato);
+			else
+				this.messageService.add({ severity: 'error', summary: 'Errore', detail: 'Stampato non valido' });
+		} catch (error) {
+			this.messageService.add({ severity: 'error', summary: 'Errore', detail: 'Errore nel caricamento dello stampato' });
+		}
 	}
+
 	
 	previewStampato(stampato: TypographyToProcessModel) {
 		let extension = stampato.format.toString().toLocaleLowerCase();

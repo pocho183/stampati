@@ -15,6 +15,8 @@ public class TypographyToProcessModel {
     private StampatoFormat format;
     private Date dataDeleted;
     
+    public TypographyToProcessModel() {}
+    
 	public TypographyToProcessModel(String fileName, String leg, StampatoFormat format, Date dataDeleted) {
 		this.barcode = fileName;
 		this.legislaturaId = leg;

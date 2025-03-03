@@ -79,7 +79,7 @@ export class DialogEmailComponent implements OnInit {
 	    	this.emails.push(newEmail);
 	}
 	
-	save() {
+	sendEmail() {
 		
 	}
 	

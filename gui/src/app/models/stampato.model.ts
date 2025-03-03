@@ -26,6 +26,7 @@ export class StampatoModel {
 	numeriPDL?: string;
 	pagine?: number;
 	lettera?: string;
+	testoUnificato?:boolean;
 	rinvioInCommissione?: boolean;
 	relazioneMagg?: boolean;
 	relazioneMin?: string;

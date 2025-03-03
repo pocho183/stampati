@@ -57,7 +57,7 @@ export class BarcodeComponent implements OnInit {
 	
 	openEmail() {
 		this.ref = this.dialogService.open(DialogEmailComponent, 
-			{ header: 'Invia modifiche titolo', width: '50%', height: '90%', modal: true, contentStyle: { overflow: 'auto' },
+			{ header: 'Invia modifiche titolo', width: '50%', height: '70%', modal: true, contentStyle: { overflow: 'auto' },
 			data: this.stampato,
 			baseZIndex: 10000, closable: true });
 		this.ref.onClose.subscribe((email: boolean) => {

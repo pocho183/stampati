@@ -8,6 +8,7 @@ import lombok.Setter;
 public class StampatoRelatoreModel {
 
 	private Long idPersona;
+	private String cognome;
 	private Boolean maggioranza;
 	private Integer idCommissione;
 	private String altro;

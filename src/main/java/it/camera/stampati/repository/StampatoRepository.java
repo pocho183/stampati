@@ -12,7 +12,7 @@ import it.camera.stampati.domain.Stampato;
 import it.camera.stampati.domain.StampatoId;
 
 @Repository
-public interface StampatiRepository extends JpaRepository<Stampato, StampatoId> {
+public interface StampatoRepository extends JpaRepository<Stampato, StampatoId> {
 	
 	boolean existsById(StampatoId id);
 

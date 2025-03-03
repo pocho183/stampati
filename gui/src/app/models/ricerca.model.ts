@@ -2,7 +2,7 @@
 export interface RicercaModel {
   barcode: string;
   legislatura: number;
-  numeroAtto: string;
+  numeriPDL: string;
   errataCorrige: boolean;
   rigoNero: boolean;
 }

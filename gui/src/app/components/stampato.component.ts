@@ -50,6 +50,7 @@ export class StampatoComponent implements OnInit {
 		return true;
 	}
 	
+	// TODO: Togliere ed usare CanDeactive
 	// Check: close page and refresh page
 	@HostListener('window:beforeunload', ['$event'])
 	onBeforeUnload(event: any) {
@@ -82,7 +83,7 @@ export class StampatoComponent implements OnInit {
 		if(this.stampato.id.barcode != null) {
 			this.stampatoService.save(stampato).subscribe({
 		       	next: (savedStampato) => {
-			     	this.stampato = { ...savedStampato};
+			     	this.stampato = savedStampato;
 					this.originalStampato = _.cloneDeep(this.stampato);
 					this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Stampato salvato!' });
 			    },

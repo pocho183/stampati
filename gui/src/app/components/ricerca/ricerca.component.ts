@@ -22,8 +22,6 @@ import { RicercaModel } from "app/models/ricerca.model";
 import { DialogModule } from 'primeng/dialog';
 import { NgIf } from '@angular/common';
 import { StampatoModel } from "app/models/stampato.model";
-import { DialogAnswerComponent } from "../dialog/dialog.answer.component";
-import { AnswerFooterComponent } from "../dialog/dialog.answer.footer.component";
 
 @Component({
 	standalone: true,
@@ -62,12 +60,14 @@ export class RicercaComponent implements OnInit {
 		});
 	}
 
-	showDialog() {
+	showDialogRicerca() {
 		this.ref = this.dialogService.open(DialogRicercaComponent, {header: 'Carica Stampato da Elaborare della LEGISLATURA: ' + this.legislatures[0].legArabo, width: '40%', height: '60%',
 			modal: true, contentStyle: { overflow: 'auto' }, baseZIndex: 10000, closable: true, dismissableMask: true });
-	    this.ref.onClose.subscribe((stampato: TypographyToProcessModel) => {
-	    	if (stampato) {
-	        	this.messageService.add({ severity: 'info', summary: 'Stampato caricato', detail: stampato.barcode });
+	    this.ref.onClose.subscribe(stampatoLoaded => {
+	    	if (stampatoLoaded) {
+				this.stampato = stampatoLoaded;  
+				this.stampatoChange.emit(this.stampato);
+	        	this.messageService.add({ severity: 'info', summary: 'Stampato caricato correttamente', detail: this.stampato.id.barcode });
 	        }
 	    });
 	}

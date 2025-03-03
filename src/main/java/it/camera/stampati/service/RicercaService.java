@@ -22,11 +22,11 @@ private static final Logger logger = LoggerFactory.getLogger(RicercaService.clas
 	@Autowired
 	private BeanMapper beanMapper;
 	@Autowired
-	private RicercaRepository searchRepository;
+	private RicercaRepository ricercaRepository;
 	
 	public List<RicercaModel> searchStampato(String leg, String text) {
         logger.info("Searching stampati for legislatura: {}, text: {}", leg, text);
-        List<Stampato> stampati = searchRepository.searchStampati(leg, text.toUpperCase());
+        List<Stampato> stampati = ricercaRepository.searchStampati(leg, text.toUpperCase());
         if (stampati.isEmpty())
             logger.warn("No stampati found for legislatura: {}, text: {}", leg, text);
         return beanMapper.map(stampati, Stampato.class, RicercaModel.class);
@@ -34,7 +34,7 @@ private static final Logger logger = LoggerFactory.getLogger(RicercaService.clas
 	
 	public Optional<StampatoModel> load(String leg, String barcode) {
 		logger.info("Loading stampato for legislatura: {}, barcode: {}", leg, barcode);
-		Optional<Stampato> stampato = searchRepository.findByIdLegislaturaAndIdBarcode(leg, barcode);
+		Optional<Stampato> stampato = ricercaRepository.findByIdLegislaturaAndIdBarcode(leg, barcode);
 		if(stampato.isPresent()) {
 			StampatoModel model = beanMapper.map(stampato.get(), StampatoModel.class);
             logger.debug("Stampato successfully loaded");
