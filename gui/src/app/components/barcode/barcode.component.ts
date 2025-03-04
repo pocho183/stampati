@@ -22,6 +22,7 @@ import { MessageService } from 'primeng/api';
 import { LegislaturaModel } from "app/models/legislatura.model";
 import { DialogService, DynamicDialogRef } from "primeng/dynamicdialog";
 import { DialogEmailComponent } from "./dialog.email.component";
+import { PdfViewerComponent } from "../pdfviewer/pdfviewer.component";
 
 @Component({
 	standalone: true,
@@ -60,10 +61,38 @@ export class BarcodeComponent implements OnInit {
 			{ header: 'Invia modifiche titolo', width: '50%', height: '70%', modal: true, contentStyle: { overflow: 'auto' },
 			data: this.stampato,
 			baseZIndex: 10000, closable: true });
-		this.ref.onClose.subscribe((email: boolean) => {
-			if (email)
+		this.ref.onClose.subscribe((emailSuccess: boolean) => {
+			if (emailSuccess) {
+				this.messageService.add({ severity: 'success', summary: 'Email inviata con successo' });
+			} else {
 		        this.messageService.add({ severity: 'error', summary: 'Errore nell\'invio email' });
+			}
 		});
+	}
+	
+	preview(format: string) {
+		if(this.stampato && this.stampato.id && this.stampato.id.barcode) {
+			let filename = (this.stampato.id.barcode + "." + format).replace("x", "");;
+			this.utilityService.preview(filename, this.stampato.id.legislatura, format).subscribe(response => {
+				if (response) {
+					if (format === 'pdf') {
+				    	this.dialogService.open(PdfViewerComponent, { 
+					    	width: '50vw', height: '80vh', modal: true, baseZIndex: 10000, dismissableMask: true,
+					        data: { file: response, filename: filename }
+					    });
+					} else if (format === 'xhtml') {
+						const newWindow = window.open('', '_blank');
+						if (newWindow) {
+							newWindow.document.open();
+							newWindow.document.write(new TextDecoder().decode(response));
+							newWindow.document.close();
+						}
+					}
+				} else {
+					console.error("Empty response, file not loaded.");
+				}
+			});
+		}
 	}
 	
 }

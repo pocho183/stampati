@@ -14,7 +14,7 @@
 	    				<p-checkbox [(ngModel)]="stampato.pdfPresente" [binary]="true"/>
 	    			</div>
 	    			<input pInputText placeholder="PDF presente" readonly/>
-	    			<p-inputgroup-addon><div class="button" pTooltip="Preview PDF" tooltipPosition="right"><img src="assets/img/sheet.png" style="width: 25px" alt="PDF Icon"/></div></p-inputgroup-addon>
+	    			<p-inputgroup-addon><div (click)="preview('pdf')" class="button" pTooltip="Preview PDF" tooltipPosition="right"><img src="assets/img/sheet.png" style="width: 25px" alt="PDF Icon"/></div></p-inputgroup-addon>
 				</p-inputgroup>
 			</div>
 			<div class="mr-6">
@@ -23,7 +23,7 @@
 	    				<p-checkbox [(ngModel)]="stampato.htmlPresente" [binary]="true"/>
 	    			</div>
 	    			<input pInputText placeholder="XHTML presente" readonly/>
-	    			<p-inputgroup-addon><div class="button" pTooltip="Preview XHTML" tooltipPosition="right"><img src="assets/img/xhtml.png" style="width: 25px" alt="XHTML Icon"/></div></p-inputgroup-addon>
+	    			<p-inputgroup-addon><div (click)="preview('xhtml')" class="button" pTooltip="Preview XHTML" tooltipPosition="right"><img src="assets/img/xhtml.png" style="width: 25px" alt="XHTML Icon"/></div></p-inputgroup-addon>
 				</p-inputgroup>
 			</div>
 		</div>

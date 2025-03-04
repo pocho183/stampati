@@ -11,15 +11,15 @@ import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { ChipModule } from 'primeng/chip'; 
 import { ClassicEditor, Bold, Essentials, Italic, Paragraph } from 'ckeditor5';
 import { InputTextModule } from 'primeng/inputtext';
-import { Diff, diffWords } from 'diff';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { diffWords } from 'diff';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
 	standalone: true,
 	selector: 'dialog-email',
 	imports: [ButtonModule, FormsModule, ReactiveFormsModule, CommonModule, DialogModule, SelectButtonModule, 
 		TextareaModule, CKEditorModule, InputTextModule, ChipModule ],
-	providers: [],
+	providers: [DialogService],
 	templateUrl: './dialog.email.component.html',
 	styleUrl: './dialog.email.component.css'
 })
@@ -80,7 +80,10 @@ export class DialogEmailComponent implements OnInit {
 	}
 	
 	sendEmail() {
-		
+	//	this.emailService.send(this.emailData).subscribe({
+	//	        next: () => this.ref.close(true),
+	//	        error: () => this.ref.close(false)
+	//	    });
 	}
 	
 }

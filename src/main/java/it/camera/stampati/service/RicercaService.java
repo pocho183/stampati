@@ -1,5 +1,6 @@
 package it.camera.stampati.service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,7 +30,9 @@ private static final Logger logger = LoggerFactory.getLogger(RicercaService.clas
         List<Stampato> stampati = ricercaRepository.searchStampati(leg, text.toUpperCase());
         if (stampati.isEmpty())
             logger.warn("No stampati found for legislatura: {}, text: {}", leg, text);
-        return beanMapper.map(stampati, Stampato.class, RicercaModel.class);
+        List<RicercaModel> result = beanMapper.map(stampati, Stampato.class, RicercaModel.class);
+        result.sort(Comparator.comparing(RicercaModel::getBarcode).reversed());
+        return result;
     }
 	
 	public Optional<StampatoModel> load(String leg, String barcode) {

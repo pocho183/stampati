@@ -12,7 +12,6 @@ import { ToastModule } from 'primeng/toast';
 import { DialogService, DynamicDialogRef, DynamicDialogModule } from 'primeng/dynamicdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { DialogRicercaComponent } from 'app/components/ricerca/dialog.ricerca.component'
-import { TypographyToProcessModel } from "app/models/typography.model";
 import { TableModule } from 'primeng/table';
 import { FloatLabel } from "primeng/floatlabel"
 import { RicercaService } from "app/services/ricerca.service";
@@ -22,6 +21,7 @@ import { RicercaModel } from "app/models/ricerca.model";
 import { DialogModule } from 'primeng/dialog';
 import { NgIf } from '@angular/common';
 import { StampatoModel } from "app/models/stampato.model";
+import { saveAs } from 'file-saver';
 
 @Component({
 	standalone: true,
