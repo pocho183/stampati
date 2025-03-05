@@ -35,7 +35,7 @@ export class DialogEmailComponent implements OnInit {
 		removePlugins: ['CKBox', 'EasyImage', 'CloudServices']
 	}
 	diffHtml: string = '';
-	text: string = 'titolo efel';
+	text: string = 'Titolo eFel';
 	
   	constructor(private dialogService: DialogService, 
 		public config: DynamicDialogConfig,
@@ -62,11 +62,8 @@ export class DialogEmailComponent implements OnInit {
 	  	}
 	  	const differences = diffWords(cleanOriginalText, cleanModifiedText);
 	  	this.diffHtml = differences
-	    	.map(part => 
-	      	part.added ? `<mark>${part.value}</mark>` :
-	      	part.removed ? '' :
-	      	part.value).join('');
-		}
+	    	.map(part => part.added ? `<mark>${part.value}</mark>` : part.removed ? '' : part.value).join('');
+	}
 	
 	stripHtml(html: string): string {
 	  	let tempDiv = document.createElement("div");

@@ -71,7 +71,7 @@ private static final Logger logger = LoggerFactory.getLogger(UtilityService.clas
 	        for (int i = 0; i < legislatures.getLength(); i++) {
 	            Element legislatureElement = (Element) legislatures.item(i);
 	            int legArabo = Integer.parseInt(legislatureElement.getAttribute("legArabo"));
-	            if (legArabo >= 17) {
+	            if (legArabo >= 15) {
 	                LegislaturaModel legislatura = new LegislaturaModel();
 	                legislatura.setId(legislatureElement.getAttribute("id"));
 	                legislatura.setLegRomano(legislatureElement.getAttribute("legRomano"));

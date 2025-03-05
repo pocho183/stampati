@@ -49,12 +49,14 @@ public class XhtmlParser {
 	        //stampato.set(getNavette(atto));
 	        stampato.setNumeroAtto(atto.split("-")[0]);
 	        stampato.setNumeriPDL(atto);
-	        // Extract title
+	        // Extract the first match title
 	        NodeList titleNodes = document.getElementsByTagName("p");
 	        for (int i = 0; i < titleNodes.getLength(); i++) {
 	            Element p = (Element) titleNodes.item(i);
-	            if ("titolo".equals(p.getAttribute("class")))
+	            if ("titolo".equals(p.getAttribute("class"))) {
 	                stampato.setTitolo(p.getTextContent().trim());
+	                break;
+	            }
 	        }
 	        // Extract data presentazione (es: ac.64.data.presentazione.20130315)
 	        NodeList presentazioneList = document.getElementsByTagName("p");

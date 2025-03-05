@@ -23,6 +23,7 @@ import { LegislaturaModel } from "app/models/legislatura.model";
 import { DialogService, DynamicDialogRef } from "primeng/dynamicdialog";
 import { DialogEmailComponent } from "./dialog.email.component";
 import { PdfViewerComponent } from "../pdfviewer/pdfviewer.component";
+import { diffWords } from 'diff';
 
 @Component({
 	standalone: true,
@@ -47,14 +48,17 @@ export class BarcodeComponent implements OnInit {
 	    toolbar: [ 'undo', 'redo', '|', 'bold', 'italic', '|' ],
 		removePlugins: ['CKBox', 'EasyImage', 'CloudServices']
 	}
-	text: string = '';
+	compareTitle: boolean = false;
+	text: string = 'Titolo eFel';
 	
 	constructor(private stampatoService: StampatoService,
 		private dialogService: DialogService,
 		private messageService: MessageService,
 		private utilityService: UtilityService) {}
 	
-    ngOnInit() { }
+    ngOnInit() {
+		this.compareTexts();
+	 }
 	
 	openEmail() {
 		this.ref = this.dialogService.open(DialogEmailComponent, 
@@ -63,6 +67,7 @@ export class BarcodeComponent implements OnInit {
 			baseZIndex: 10000, closable: true });
 		this.ref.onClose.subscribe((emailSuccess: boolean) => {
 			if (emailSuccess) {
+				this.compareTexts();
 				this.messageService.add({ severity: 'success', summary: 'Email inviata con successo' });
 			} else {
 		        this.messageService.add({ severity: 'error', summary: 'Errore nell\'invio email' });
@@ -93,6 +98,25 @@ export class BarcodeComponent implements OnInit {
 				}
 			});
 		}
+	}
+	
+	onTitoloChange(value: string): void {
+	    this.compareTexts();
+	}
+	
+	compareTexts() {
+	  	const cleanOriginalText = this.stripHtml(this.text.trim());
+		const cleanModifiedText = this.stripHtml(this.stampato.titolo.trim());
+		if(cleanOriginalText === cleanModifiedText)
+		    this.compareTitle = true;
+		else
+			this.compareTitle = false;
+	}
+	
+	stripHtml(html: string): string {
+		let tempDiv = document.createElement("div");
+	  	tempDiv.innerHTML = html;
+		return tempDiv.innerText || tempDiv.textContent || "";
 	}
 	
 }

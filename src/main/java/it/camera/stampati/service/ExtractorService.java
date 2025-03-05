@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import it.camera.stampati.domain.Stampato;
 import it.camera.stampati.enumerator.StampatoFormat;
+import it.camera.stampati.model.RicercaModel;
 import it.camera.stampati.model.StampatoModel;
 import it.camera.stampati.model.TypographyToProcessModel;
 import it.camera.stampati.parser.PDFParser;
@@ -108,6 +110,7 @@ private static final Logger logger = LoggerFactory.getLogger(ExtractorService.cl
 	            TypographyToProcessModel model = new TypographyToProcessModel(stampato.getBarcode(), leg, format, dataDeleted);
 	            return model; }).collect(Collectors.toList());
 	    logger.info("Processed {} stampati to process", result.size());
+	    result.sort(Comparator.comparing(TypographyToProcessModel::getBarcode));
 	    return result;
 	}
 

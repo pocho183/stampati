@@ -31,7 +31,7 @@ private static final Logger logger = LoggerFactory.getLogger(RicercaService.clas
         if (stampati.isEmpty())
             logger.warn("No stampati found for legislatura: {}, text: {}", leg, text);
         List<RicercaModel> result = beanMapper.map(stampati, Stampato.class, RicercaModel.class);
-        result.sort(Comparator.comparing(RicercaModel::getBarcode).reversed());
+        result.sort(Comparator.comparing(RicercaModel::getBarcode));
         return result;
     }
 	

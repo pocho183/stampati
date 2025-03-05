@@ -55,7 +55,9 @@ export class FrontespizioComponent implements OnInit {
 	constructor(private dialogService: DialogService,
 		private messageService: MessageService) {}
 
-    ngOnInit() { }
+    ngOnInit() { 
+		this.updateNomeFrontespizio();
+	}
 	
 	showDialog() {
 		this.ref = this.dialogService.open(DialogFrontespizioComponent, {header: 'Atti Associati', width: '40%', height: '60%',
@@ -64,6 +66,34 @@ export class FrontespizioComponent implements OnInit {
 		    	if (atto)
 		        	this.messageService.add({ severity: 'info', summary: 'Atto associato' });
 		});
+	}
+	
+	updateNomeFrontespizio(): void {
+		
+		console.log("ee");
+		
+	    let lettera = this.stampato.lettera?.trim() || "";
+	    let minoranza = this.stampato.relazioneMin?.trim() || "";
+	    let suffisso = this.stampato.suffisso?.trim() || "";
+	    let navette = this.stampato.numeriPDL?.trim() || "";
+	    let rinvio = this.stampato.rinvioInCommissione ? "/R" : "";
+		
+		console.log(lettera);
+
+	    const concat = (buffer: string, string: string): string => {
+	        return string.length > 0 ? (buffer.length > 0 ? `${buffer}-${string}` : string) : buffer;
+	    };
+
+	    let discussion = "";
+	    discussion = concat(discussion, lettera);
+	    discussion = concat(discussion, navette);
+	    discussion += rinvio;
+	    discussion = concat(discussion, minoranza);
+	    discussion = concat(discussion, suffisso);
+
+	    this.stampato.nomeFrontespizio = this.stampato.numeroAtto
+	        ? `${this.stampato.numeroAtto}_${discussion}`
+	        : discussion;
 	}
 	
 }
