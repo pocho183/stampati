@@ -1,16 +1,8 @@
 package it.camera.stampati.service;
 
-import java.io.File;
-import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,11 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import it.camera.stampati.domain.Stampato;
-import it.camera.stampati.domain.StampatoId;
-import it.camera.stampati.enumerator.StampatoFormat;
-import it.camera.stampati.model.StampatoIdModel;
 import it.camera.stampati.model.StampatoModel;
-import it.camera.stampati.model.TypographyToProcessModel;
 import it.camera.stampati.repository.StampatoRepository;
 import it.esinware.mapping.BeanMapper;
 
@@ -53,6 +41,7 @@ public class StampatiService {
 	        model.getId().setLegislatura(lastLegislature);
 	    }
 	    Stampato stampato = beanMapper.map(model, Stampato.class);
+	    stampato.setNumeroAtto(model.getNumeriPDL().split("-")[0]);
 	    stampato = stampatiRepository.save(stampato);
 	    logger.info("Stampato saved successfully");
         return beanMapper.map(stampato, StampatoModel.class);

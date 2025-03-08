@@ -18,6 +18,7 @@ export class StampatoIdModel {
 export class StampatoModel {
 	@Type(() => StampatoIdModel)
 	id: StampatoIdModel;
+	progressivo?: number;
 	pdfPresente?: boolean;
 	htmlPresente?: boolean;
 	numeroAtto?: string;
@@ -26,6 +27,7 @@ export class StampatoModel {
 	numeriPDL?: string;
 	pagine?: number;
 	lettera?: string;
+	navette?: string;
 	testoUnificato?:boolean;
 	rinvioInCommissione?: boolean;
 	relazioneMagg?: boolean;

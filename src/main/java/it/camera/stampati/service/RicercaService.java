@@ -27,7 +27,7 @@ private static final Logger logger = LoggerFactory.getLogger(RicercaService.clas
 	
 	public List<RicercaModel> searchStampato(String leg, String text) {
         logger.info("Searching stampati for legislatura: {}, text: {}", leg, text);
-        List<Stampato> stampati = ricercaRepository.searchStampati(leg, text.toUpperCase());
+        List<Stampato> stampati = ricercaRepository.searchStampati(leg, text);
         if (stampati.isEmpty())
             logger.warn("No stampati found for legislatura: {}, text: {}", leg, text);
         List<RicercaModel> result = beanMapper.map(stampati, Stampato.class, RicercaModel.class);

@@ -16,6 +16,7 @@ public class StampatoModel {
 	
 	@NotNull
 	private StampatoIdModel id;
+	private Long progressivo;
 	private Boolean errataCorrige;
 	private Boolean rigoNero;
     private Boolean pdfPresente;
@@ -25,6 +26,7 @@ public class StampatoModel {
     private String nomeFile;
     private String numeriPDL;
     private Integer pagine;
+    private String navette;
     private String lettera;
     private Boolean testoUnificato;
     private Boolean rinvioInCommissione;

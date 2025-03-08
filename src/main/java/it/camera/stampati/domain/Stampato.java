@@ -28,6 +28,7 @@ public class Stampato {
 
 	@EmbeddedId
     private StampatoId id;
+	private Long progressivo;
 	private Boolean errataCorrige;
 	private Boolean rigoNero;
     private Boolean pdfPresente;
@@ -38,6 +39,7 @@ public class Stampato {
     private String numeriPDL;
     private Integer pagine;
     private String lettera;
+    private String navette;
     private Boolean testoUnificato;
     private Boolean rinvioInCommissione;
     private Boolean relazioneMagg;

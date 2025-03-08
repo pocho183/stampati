@@ -4,12 +4,14 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -50,6 +52,8 @@ private static final Logger logger = LoggerFactory.getLogger(ExtractorService.cl
         File file = loadFile(model);
         StampatoModel stampato = parseContent(file, model);
         validate(stampato);
+        updateNomeFrontespizio(stampato);
+        updateNomeFile(stampato);
         stampato = save(stampato);
         return stampato;
     }
@@ -86,6 +90,59 @@ private static final Logger logger = LoggerFactory.getLogger(ExtractorService.cl
 		}
 	}
 	
+	public void updateNomeFrontespizio(StampatoModel stampato) {
+	    String lettera = trimValue(stampato.getLettera());
+	    String minoranza = trimValue(stampato.getRelazioneMin());
+	    String suffisso = trimValue(stampato.getSuffisso());
+	    String navette = trimValue(stampato.getNavette());
+	    String numeriPDL = trimValue(stampato.getNumeriPDL());
+	    String rinvio = Boolean.TRUE.equals(stampato.getRinvioInCommissione()) ? "/R" : "";
+	    String parts = Arrays.asList(lettera, navette).stream().filter(part -> !part.isEmpty()).collect(Collectors.joining("-"));
+        String rest = Arrays.asList(minoranza, suffisso).stream().filter(part -> !part.isEmpty()).collect(Collectors.joining("-"));
+        String finalPart = (!parts.isEmpty() ? parts : "") + (!rinvio.isEmpty() ? rinvio : "") +
+                (!rest.isEmpty() ? (!parts.isEmpty() || !rinvio.isEmpty() ? "-" + rest : rest) : "");
+        String nomeFrontespizio = numeriPDL + (!finalPart.isEmpty() ? "_" + finalPart : "");
+        stampato.setNomeFrontespizio(nomeFrontespizio);
+	}
+
+	private String trimValue(String value) {
+	    return Optional.ofNullable(value).map(String::trim).orElse("");
+	}
+	
+	public void updateNomeFile(StampatoModel stampato) {
+		if (stampato != null && stampato.getId() != null && stampato.getId().getBarcode() != null) {
+            String type = extractTypeStampato(stampato.getId().getBarcode());
+            String numeriPDL = (stampato.getNumeriPDL() != null && !stampato.getNumeriPDL().isEmpty()) ? stampato.getNumeriPDL().split("-")[0] : "unknown";
+            String filename = "leg." + stampato.getId().getLegislatura() + "." + (type != null ? type : "") + ".camera." + numeriPDL;
+            if(stampato.getRelazioneMin() != null && !stampato.getRelazioneMin().trim().isEmpty())
+                filename += "-" + stampato.getRelazioneMin();
+            if(stampato.getNavette() != null && !stampato.getNavette().trim().isEmpty())
+                filename += "-" + stampato.getNavette();
+            String relazione = (stampato.getLettera() != null) ? stampato.getLettera() : "";
+            if(stampato.getRinvioInCommissione() != null && stampato.getRinvioInCommissione())
+                relazione += "R";
+            if(stampato.getRelazioneMin() != null && !stampato.getRelazioneMin().trim().isEmpty()) {
+                if(!relazione.trim().isEmpty())
+                    relazione = relazione.concat("-").concat(stampato.getRelazioneMin());
+                else
+                    relazione = relazione.concat(stampato.getRelazioneMin());
+            }
+            if (!relazione.trim().isEmpty())
+                filename = filename + "_" + relazione;
+            filename = filename + "." + stampato.getId().getBarcode() + ".html";
+            stampato.setNomeFile(filename);
+        }
+	}
+	
+	public static String extractTypeStampato(String input) {
+	    Pattern pattern = Pattern.compile("(PDL|MSG|TU)");
+        Matcher matcher = pattern.matcher(input);
+        if (matcher.find())
+            return matcher.group(1).toLowerCase();
+        return null;
+	}
+
+
 	private StampatoModel save(StampatoModel model) {
         Stampato entity = beanMapper.map(model, Stampato.class);
         entity = stampatoRepository.save(entity);

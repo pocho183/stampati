@@ -15,6 +15,8 @@ import { DialogService, DynamicDialogRef, DynamicDialogModule } from 'primeng/dy
 import { MessageService } from 'primeng/api';
 import { DialogFrontespizioComponent } from "./dialog.frontespizio.component";
 import { StampatoModel } from "app/models/stampato.model";
+import { UtilityService } from "app/services/utility.service";
+import { LegislaturaModel } from "app/models/legislatura.model";
 
 @Component({
 	standalone: true,
@@ -34,6 +36,10 @@ export class FrontespizioComponent implements OnInit {
 		{ label: 'G', value: 'G' }, { label: 'I', value: 'I' }, { label: 'M', value: 'M' },
 	    { label: 'O', value: 'O' }, { label: 'Q', value: 'Q' }, { label: 'S', value: 'S' },
 	    { label: 'U', value: 'U' }, { label: 'Z', value: 'Z' }   ];
+	navettes = [ { label: 'B', value: 'B' }, { label: 'D', value: 'D' }, { label: 'F', value: 'F' },
+		{ label: 'H', value: 'H' }, { label: 'L', value: 'L' }, { label: 'N', value: 'N' },
+		{ label: 'P', value: 'P' }, { label: 'R', value: 'R' }, { label: 'T', value: 'T' },
+		{ label: 'V', value: 'V' } ];
 	minoranza = [ { label: 'bis', value: 'bis' }, { label: 'ter', value: 'ter' }, { label: 'quater', value: 'quater' },
 		{ label: 'quinquies', value: 'quinquies' }, { label: 'sexies', vlabel: 'sexies' }, { label: 'septies', value: 'septies' },
 	    { label: 'octies', value: 'octies' }, { label: 'novies', value: 'novies' }, { label: 'decies', value: 'decies' },
@@ -51,12 +57,19 @@ export class FrontespizioComponent implements OnInit {
 		{ label: 'quater et quadragies', value: 'quateretquadragies' }, { label: 'quinquiesetquadragies', value: 'quinquies et quadragies' }, { label: 'sexies et quadragies', value: 'sexiesetquadragies' },
 		{ label: 'septies et quadragies', value: 'septiesetquadragies' }, { label: 'octies et quadragies', value: 'octiesetquadragies' }, { label: 'novies et quadragies', value: 'noviesetquadragies' },
 		{ label: 'quinquagies', value: 'quinquagies' } ];
-	
+	isDisabled: boolean = true;
+	legislature: LegislaturaModel = null;
+		
 	constructor(private dialogService: DialogService,
+		private utilityService: UtilityService,
 		private messageService: MessageService) {}
 
-    ngOnInit() { 
+    ngOnInit() {
+		this.utilityService.getWorkingLegislature().subscribe((leg) => {
+			this.legislature = leg;
+		});
 		this.updateNomeFrontespizio();
+		this.updateFilename();
 	}
 	
 	showDialog() {
@@ -68,32 +81,67 @@ export class FrontespizioComponent implements OnInit {
 		});
 	}
 	
+	onChangeLetter(event: any) {
+		this.updateNomeFrontespizio();
+		this.updateFilename();
+	}
+	
+	onChangeNavette(event: any) {
+		this.updateNomeFrontespizio();
+		this.updateFilename();
+	}
+	
+	onChangeRinvio(event: any) {
+		this.updateNomeFrontespizio();
+		this.updateFilename();
+	}
+	
+	onChangeRelMin(event: any) {
+		this.updateNomeFrontespizio();
+		this.updateFilename();
+	}
+	
+	onChangeNumeriPDL(event: any) {
+		this.updateNomeFrontespizio();
+		this.updateFilename();
+	}	
+	
 	updateNomeFrontespizio(): void {
-		
-		console.log("ee");
-		
-	    let lettera = this.stampato.lettera?.trim() || "";
-	    let minoranza = this.stampato.relazioneMin?.trim() || "";
-	    let suffisso = this.stampato.suffisso?.trim() || "";
-	    let navette = this.stampato.numeriPDL?.trim() || "";
-	    let rinvio = this.stampato.rinvioInCommissione ? "/R" : "";
-		
-		console.log(lettera);
-
-	    const concat = (buffer: string, string: string): string => {
-	        return string.length > 0 ? (buffer.length > 0 ? `${buffer}-${string}` : string) : buffer;
-	    };
-
-	    let discussion = "";
-	    discussion = concat(discussion, lettera);
-	    discussion = concat(discussion, navette);
-	    discussion += rinvio;
-	    discussion = concat(discussion, minoranza);
-	    discussion = concat(discussion, suffisso);
-
-	    this.stampato.nomeFrontespizio = this.stampato.numeroAtto
-	        ? `${this.stampato.numeroAtto}_${discussion}`
-	        : discussion;
+		const trimValue = (value?: string): string => value?.trim() || "";
+	    const lettera = trimValue(this.stampato.lettera);
+	    const minoranza = trimValue(this.stampato.relazioneMin);
+	    const suffisso = trimValue(this.stampato.suffisso);
+		const navette = trimValue(this.stampato.navette);
+	    const numeriPDL = trimValue(this.stampato.numeriPDL);
+	    const rinvio = this.stampato.rinvioInCommissione ? "/R" : "";
+		const parts = [lettera, navette].filter(part => part.length > 0).join("-");
+		const rest = [minoranza, suffisso].filter(part => part.length > 0).join("-");
+		const finalPart = 
+		        (parts.length > 0 ? parts : "") +
+		        (rinvio.length > 0 ? rinvio : "") +
+		        (rest.length > 0 ? (parts.length > 0 || rinvio.length > 0 ? `-${rest}` : rest) : "");
+		this.stampato.nomeFrontespizio = numeriPDL + (finalPart.length > 0 ? `_${finalPart}` : "");
+	}
+	
+	updateFilename() :void {
+		if(!this.stampato || !this.stampato.id || this.stampato.id.barcode != null) {
+			let type = this.extractTypeStampato(this.stampato.id.barcode);
+			let numeriPDL = this.stampato.numeriPDL ? this.stampato.numeriPDL.split('-')[0] : 'unknown';
+			let filename = 'leg.' + this.legislature.legArabo + "." + (type ? type : '') + '.camera.' + numeriPDL;
+			if (this.stampato.relazioneMin?.trim()) filename += '-' + this.stampato.relazioneMin;
+			if (this.stampato.navette?.trim()) filename += '-' + this.stampato.navette;
+			let relazione = this.stampato.lettera ? this.stampato.lettera : '';
+			if (this.stampato.rinvioInCommissione) relazione += 'R';
+			if (this.stampato.relazioneMin?.trim())
+				relazione = relazione.trim() ? relazione.concat('-').concat(this.stampato.relazioneMin) : relazione.concat(this.stampato.relazioneMin);
+			if (relazione.trim()) filename = filename + '_' + relazione;    
+			this.stampato.nomeFile = filename + '.' + this.stampato.id.barcode + '.html';
+		}
+	}
+	
+	extractTypeStampato(input: string) {
+		const match = input.match(/^\d{2}(PDL|MSG|TU)/);
+		return match ? match[1].toLowerCase() : null;
 	}
 	
 }

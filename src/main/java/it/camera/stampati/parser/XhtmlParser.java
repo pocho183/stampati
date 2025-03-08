@@ -45,8 +45,7 @@ public class XhtmlParser {
 	        // Extract number of the act
 	        String atto = getAtto(document);
 	        stampato.setLettera(getLettera(atto));
-	        /** Chiedere a raffaele roba vecchia*/
-	        //stampato.set(getNavette(atto));
+	        stampato.setNavette(getNavette(atto));
 	        stampato.setNumeroAtto(atto.split("-")[0]);
 	        stampato.setNumeriPDL(atto);
 	        // Extract the first match title
@@ -121,7 +120,6 @@ public class XhtmlParser {
         return "";
     }
     
- // Chiedere a raffaele roba vecchia
     private String getNavette(String atto) {
 		String navette = null;
 		Pattern pattern = Pattern.compile("-[B|D|F|H|L|N|P|R|T|V]");

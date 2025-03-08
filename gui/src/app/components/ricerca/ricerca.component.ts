@@ -87,22 +87,10 @@ export class RicercaComponent implements OnInit {
 	}
 
 	loadStampato(selectedResult: RicercaModel) {
-		/*this.ref = this.dialogService.open(DialogAnswerComponent, { 
-			header: 'Carica Stampato', width: '30%', height: '30%', modal: true, contentStyle: { overflow: 'auto', paddingBottom: '1px' }, 
-			data: { text: 'Confermi di aprire lo stampato con BARCODE: ' + selectedResult.barcode + ' ?'},
-			templates: { footer: AnswerFooterComponent },
-			baseZIndex: 10000, closable: true });
-		this.ref.onClose.subscribe((answer: boolean) => {
-			if (answer) {*/
-				this.ricercaService.load(selectedResult.legislatura, selectedResult.barcode).subscribe( res => {
-					// New object reference
-				 	//this.stampato = { ...res };
-					this.stampato = res;  
-				 	this.stampatoChange.emit(this.stampato);
-					this.messageService.add({ severity: 'success', summary: 'Stampato caricato correttamente' });
-				});
-			//}
-		//});
+		this.ricercaService.load(selectedResult.legislatura, selectedResult.barcode).subscribe( res => {
+		this.stampato = res;  
+		this.stampatoChange.emit(this.stampato);
+		this.messageService.add({ severity: 'success', summary: 'Stampato caricato correttamente' }); });
 	}
 		
 }
