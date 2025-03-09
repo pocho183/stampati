@@ -57,9 +57,7 @@ export class BarcodeComponent implements OnInit {
 		private utilityService: UtilityService) {}
 	
     ngOnInit() {
-		this.utilityService.getWorkingLegislature().subscribe((leg) => {
-			this.legislature = leg;
-		});
+		this.utilityService.getWorkingLegislature().subscribe((leg) => { this.legislature = leg; });
 		this.compareTexts();
 	 }
 	 
@@ -80,6 +78,10 @@ export class BarcodeComponent implements OnInit {
 		        this.messageService.add({ severity: 'error', summary: 'Errore nell\'invio email' });
 			}
 		});
+	}
+	
+	copyTitle() {
+		this.stampato.titolo = this.text;
 	}
 	
 	preview(format: string) {

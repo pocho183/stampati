@@ -54,4 +54,10 @@ export class UtilityService {
         const params = new HttpParams().set('filename', filename).set('leg', leg).set('extension', extension);
         return this.http.post(url, params, { responseType: 'arraybuffer' });
     }
+	
+	sendEmail(titleFel: string, title: string, numeriPDL: string, emails: string[]): Observable<boolean> {
+	    const url = '/utility/sendEmail';
+	    const payload = { titleFel, title, numeriPDL, emails };
+	    return this.http.post<boolean>(url, payload);
+	}
 }

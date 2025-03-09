@@ -16,7 +16,7 @@
   		<p-chip *ngFor="let email of emails" class="mr-2" [label]="email" [removable]="true"></p-chip>
   		<div class="flex justify-content-between flex-wrap mt-2">
     		<div class="flex align-items-center justify-content-center"><input #emailInput type="email" pInputText class="p-inputtext w-full" placeholder="Inserisci email" /></div>
-    		<div class="flex align-items-center justify-content-center"><button (click)="addEmail(emailInput.value)" pButton label="Aggiungi Email" icon="pi pi-plus" class="p-button-outlined ml-2"></button></div>
+    		<div class="flex align-items-center justify-content-center"><button (click)="addEmail(emailInput)" pButton label="Aggiungi Email" icon="pi pi-plus" class="p-button-outlined ml-2"></button></div>
   			<div class="flex align-items-center justify-content-center"><button (click)="sendEmail()" pButton label="Invia Email" class="ml-2"></button></div>
   		</div>
 	</div>

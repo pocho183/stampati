@@ -13,20 +13,22 @@ import { ClassicEditor, Bold, Essentials, Italic, Paragraph } from 'ckeditor5';
 import { InputTextModule } from 'primeng/inputtext';
 import { diffWords } from 'diff';
 import { DomSanitizer } from '@angular/platform-browser';
+import { MessageService } from "primeng/api";
+import { UtilityService } from "app/services/utility.service";
 
 @Component({
 	standalone: true,
 	selector: 'dialog-email',
 	imports: [ButtonModule, FormsModule, ReactiveFormsModule, CommonModule, DialogModule, SelectButtonModule, 
 		TextareaModule, CKEditorModule, InputTextModule, ChipModule ],
-	providers: [DialogService],
+	providers: [DialogService, MessageService],
 	templateUrl: './dialog.email.component.html',
 	styleUrl: './dialog.email.component.css'
 })
 export class DialogEmailComponent implements OnInit {
 
 	stampato: StampatoModel;
-	emails: string[] = ['example1@email.com', 'example2@email.com'];
+	emails: string[] = [];
 	public Editor = ClassicEditor;
 	public configEditor = {
 		licenseKey: 'GPL',
@@ -40,6 +42,8 @@ export class DialogEmailComponent implements OnInit {
   	constructor(private dialogService: DialogService, 
 		public config: DynamicDialogConfig,
 		private sanitizer: DomSanitizer,
+		private messageService: MessageService,
+		private utilityService: UtilityService,
 		private ref: DynamicDialogRef) {
 		
 	}
@@ -71,16 +75,33 @@ export class DialogEmailComponent implements OnInit {
 	  	return tempDiv.innerText || tempDiv.textContent || "";
 	}
 
-	addEmail(newEmail: string) {
-		if (newEmail && !this.emails.includes(newEmail))
-	    	this.emails.push(newEmail);
+	addEmail(newEmailInput: HTMLInputElement) {
+	    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+	    const newEmail = newEmailInput.value.trim();
+	    if (newEmail && emailPattern.test(newEmail) && !this.emails.includes(newEmail)) {
+	        this.emails.push(newEmail);
+	        newEmailInput.value = '';
+	    } else {
+			this.messageService.add({ severity: 'error', summary: 'Invalid or duplicate email:' + newEmail});
+	    }
 	}
 	
-	sendEmail() {
-	//	this.emailService.send(this.emailData).subscribe({
-	//	        next: () => this.ref.close(true),
-	//	        error: () => this.ref.close(false)
-	//	    });
+	sendEmail(): void {
+		if(!this.emails || this.emails.length === 0) { 
+			this.messageService.add({ severity: 'warn', summary: 'Missing Email', detail: 'Please enter an email before sending.' });
+		    return;
+		}
+	    this.utilityService.sendEmail(this.text, this.stampato.titolo, this.stampato.numeriPDL, this.emails).subscribe({
+	        next: () => {
+	            this.messageService.add({ severity: 'success', summary: 'Email Sent', detail: 'The email was successfully sent.' });
+	            this.ref.close(true);
+	        },
+	        error: (err) => {
+	            console.error('Email sending failed:', err);
+	            this.messageService.add({ severity: 'error', summary: 'Email Error', detail: 'Failed to send the email. Please try again.' });
+	            this.ref.close(false);
+	        }
+	    });
 	}
 	
 }
