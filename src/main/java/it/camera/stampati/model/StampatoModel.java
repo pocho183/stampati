@@ -17,6 +17,7 @@ public class StampatoModel {
 	@NotNull
 	private StampatoIdModel id;
 	private Long progressivo;
+	private Boolean pubblicato;
 	private Boolean errataCorrige;
 	private Boolean rigoNero;
     private Boolean pdfPresente;

@@ -137,8 +137,8 @@ export class BarcodeComponent implements OnInit {
 		if (this.stampato.navette?.trim()) filename += '-' + this.stampato.navette;
 		let relazione = this.stampato.lettera ? this.stampato.lettera : '';
 		if (this.stampato.rinvioInCommissione) relazione += 'R';
-		if (this.stampato.relazioneMin?.trim())
-			relazione = relazione.trim() ? relazione.concat('-').concat(this.stampato.relazioneMin) : relazione.concat(this.stampato.relazioneMin);
+		//if (this.stampato.relazioneMin?.trim())
+			//relazione = relazione.trim() ? relazione.concat('-').concat(this.stampato.relazioneMin) : relazione.concat(this.stampato.relazioneMin);
 		if (relazione.trim()) filename = filename + '_' + relazione;    
 			this.stampato.nomeFile = filename + '.' + this.stampato.id.barcode + '.html';
 		}

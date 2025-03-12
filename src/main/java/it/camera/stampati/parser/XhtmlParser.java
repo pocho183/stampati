@@ -46,6 +46,8 @@ public class XhtmlParser {
 	        String atto = getAtto(document);
 	        stampato.setLettera(getLettera(atto));
 	        stampato.setNavette(getNavette(atto));
+	        stampato.setRelazioneMin(getMinoranza(atto));
+	        stampato.setRinvioInCommissione(getRinvio(atto));
 	        stampato.setNumeroAtto(atto.split("-")[0]);
 	        stampato.setNumeriPDL(atto);
 	        // Extract the first match title
@@ -120,15 +122,6 @@ public class XhtmlParser {
         return "";
     }
     
-    private String getNavette(String atto) {
-		String navette = null;
-		Pattern pattern = Pattern.compile("-[B|D|F|H|L|N|P|R|T|V]");
-		Matcher matcher = pattern.matcher(atto);
-		if (matcher.find())
-			navette = matcher.group(0);
-		return navette;
-	}
-
     private String getLettera(String atto) {
         String lettera = null;
         Pattern pattern = Pattern.compile("A|C|E|G|I|M|O|Q|S|U|Z");
@@ -138,6 +131,36 @@ public class XhtmlParser {
         return lettera;
     }
     
+    private String getNavette(String atto) {
+		String navette = null;
+		Pattern pattern = Pattern.compile("\\b(B|D|F|H|L|N|P|R|T|V)\\b"); 
+		Matcher matcher = pattern.matcher(atto);
+		if (matcher.find())
+			navette = matcher.group(0);
+		return navette;
+	}
+
+    private String getMinoranza(String atto) {
+        String minoranza = null;
+        Pattern pattern = Pattern.compile("bis|ter|quater|quinquies|sexies|septies|octies|novies|decies"
+        		+ "|undecies|duodecies|terdecies|quaterdecies|quindecies|sedecies|septiesdecies|duodevicies|undevicies|vicies"
+        		+ "|semeletvicies|bisetvicies|teretvicies|quateretvicies|quinquiesetvicies|sexiesetvicies|septiesetvicies|octiesetvicies|noviesetvicies|tricies"
+        		+ "|semelettricies|bisettricies|terettricies|quaterettricies|quinquiesettricies|sexiesettricies|septiesettricies|octiesettricies|noviesettricies|quadragies"
+        		+ "|semeletquadragies|bisetquadragies|teretquadragies|quateretquadragies|quinquiesetquadragies|sexiesetquadragies|septiesetquadragies|octiesetquadragies|noviesetquadragies|quinquagies");
+        Matcher matcher = pattern.matcher(atto);
+        if (matcher.find())
+        	minoranza = matcher.group(0);
+        return minoranza;
+    }
+    
+    private Boolean getRinvio(String atto) {
+		Boolean rinvio = null;
+		Pattern pattern = Pattern.compile("\\b[A-Z]R\\b");
+		Matcher matcher = pattern.matcher(atto);
+		if (matcher.find())
+			return true;
+		return false;
+	}
     
     /**
 	 * Estra le persone dal tracciato stringa coi seguenti formati: 

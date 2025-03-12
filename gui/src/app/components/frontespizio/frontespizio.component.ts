@@ -104,23 +104,49 @@ export class FrontespizioComponent implements OnInit {
 	onChangeNumeriPDL(event: any) {
 		this.updateNomeFrontespizio();
 		this.updateFilename();
-	}	
+	}
 	
-	updateNomeFrontespizio(): void {
+	/*updateNomeFrontespizio(): void {
+		let numeriPDL = this.stampato.numeriPDL;
 		const trimValue = (value?: string): string => value?.trim() || "";
-	    const lettera = trimValue(this.stampato.lettera);
+		const lettera = trimValue(this.stampato.lettera);
 	    const minoranza = trimValue(this.stampato.relazioneMin);
 	    const suffisso = trimValue(this.stampato.suffisso);
 		const navette = trimValue(this.stampato.navette);
-	    const numeriPDL = trimValue(this.stampato.numeriPDL);
 	    const rinvio = this.stampato.rinvioInCommissione ? "/R" : "";
-		const parts = [lettera, navette].filter(part => part.length > 0).join("-");
-		const rest = [minoranza, suffisso].filter(part => part.length > 0).join("-");
-		const finalPart = 
-		        (parts.length > 0 ? parts : "") +
-		        (rinvio.length > 0 ? rinvio : "") +
-		        (rest.length > 0 ? (parts.length > 0 || rinvio.length > 0 ? `-${rest}` : rest) : "");
-		this.stampato.nomeFrontespizio = numeriPDL + (finalPart.length > 0 ? `_${finalPart}` : "");
+		if(numeriPDL == null || numeriPDL == "") {
+			const parts = [minoranza, lettera, navette].filter(part => part.length > 0).join("-");
+			const rest = [suffisso].filter(part => part.length > 0).join("-");					
+			const finalPart = 
+				(parts.length > 0 ? parts : "") +
+			    (rinvio.length > 0 ? rinvio : "") +
+				(rest.length > 0 ? (parts.length > 0 || rinvio.length > 0 ? `-${rest}` : rest) : "");
+			this.stampato.nomeFrontespizio = numeriPDL + (finalPart.length > 0 ? `-${finalPart}` : "");	
+		} else {
+			if(!numeriPDL.includes(minoranza))
+				numeriPDL = numeriPDL + "-" + minoranza;
+			if(!numeriPDL.includes(lettera))
+				numeriPDL = numeriPDL + "-" + lettera;
+			if(!numeriPDL.includes(navette))
+				numeriPDL = numeriPDL + "-" + navette;
+			if(!numeriPDL.includes("\\b[A-Z]R\\b"))
+				numeriPDL = numeriPDL + "/R";
+			if(!numeriPDL.includes(suffisso))
+				numeriPDL = numeriPDL + "-" + suffisso;
+			this.stampato.nomeFrontespizio = numeriPDL
+		}
+	}*/
+	
+	updateNomeFrontespizio(): void {
+		let numeriPDL = this.stampato.numeriPDL ? this.stampato.numeriPDL.split('-')[0] : 'unknown';
+		let frontespizio = numeriPDL;
+		if(this.stampato.relazioneMin?.trim()) frontespizio += '-' + this.stampato.relazioneMin;
+		if (this.stampato.navette?.trim()) frontespizio += '-' + this.stampato.navette;
+		let relazione = this.stampato.lettera ? "-" + this.stampato.lettera : '';
+		if (this.stampato.rinvioInCommissione) relazione += '/R';
+		if (relazione.trim()) frontespizio = frontespizio + relazione; 
+		if(this.stampato.suffisso?.trim())  frontespizio += "-" + this.stampato.suffisso;
+		this.stampato.nomeFrontespizio = frontespizio;
 	}
 	
 	updateFilename() :void {
@@ -132,8 +158,8 @@ export class FrontespizioComponent implements OnInit {
 			if (this.stampato.navette?.trim()) filename += '-' + this.stampato.navette;
 			let relazione = this.stampato.lettera ? this.stampato.lettera : '';
 			if (this.stampato.rinvioInCommissione) relazione += 'R';
-			if (this.stampato.relazioneMin?.trim())
-				relazione = relazione.trim() ? relazione.concat('-').concat(this.stampato.relazioneMin) : relazione.concat(this.stampato.relazioneMin);
+			//if (this.stampato.relazioneMin?.trim())
+			//	relazione = relazione.trim() ? relazione.concat('-').concat(this.stampato.relazioneMin) : relazione.concat(this.stampato.relazioneMin);
 			if (relazione.trim()) filename = filename + '_' + relazione;    
 			this.stampato.nomeFile = filename + '.' + this.stampato.id.barcode + '.html';
 		}

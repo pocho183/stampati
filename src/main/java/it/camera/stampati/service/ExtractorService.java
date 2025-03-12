@@ -91,18 +91,19 @@ private static final Logger logger = LoggerFactory.getLogger(ExtractorService.cl
 	}
 	
 	public void updateNomeFrontespizio(StampatoModel stampato) {
-	    String lettera = trimValue(stampato.getLettera());
-	    String minoranza = trimValue(stampato.getRelazioneMin());
-	    String suffisso = trimValue(stampato.getSuffisso());
-	    String navette = trimValue(stampato.getNavette());
+	    //String lettera = trimValue(stampato.getLettera());
+	    //String minoranza = trimValue(stampato.getRelazioneMin());
+	    //String suffisso = trimValue(stampato.getSuffisso());
+	    //String navette = trimValue(stampato.getNavette());
 	    String numeriPDL = trimValue(stampato.getNumeriPDL());
-	    String rinvio = Boolean.TRUE.equals(stampato.getRinvioInCommissione()) ? "/R" : "";
-	    String parts = Arrays.asList(lettera, navette).stream().filter(part -> !part.isEmpty()).collect(Collectors.joining("-"));
-        String rest = Arrays.asList(minoranza, suffisso).stream().filter(part -> !part.isEmpty()).collect(Collectors.joining("-"));
-        String finalPart = (!parts.isEmpty() ? parts : "") + (!rinvio.isEmpty() ? rinvio : "") +
-                (!rest.isEmpty() ? (!parts.isEmpty() || !rinvio.isEmpty() ? "-" + rest : rest) : "");
-        String nomeFrontespizio = numeriPDL + (!finalPart.isEmpty() ? "_" + finalPart : "");
-        stampato.setNomeFrontespizio(nomeFrontespizio);
+	    numeriPDL = numeriPDL.replaceAll("\\b([A-Z])R\\b", "$1/R");
+	    //String rinvio = Boolean.TRUE.equals(stampato.getRinvioInCommissione()) ? "/R" : "";
+	    //String parts = Arrays.asList(lettera, navette).stream().filter(part -> !part.isEmpty()).collect(Collectors.joining("-"));
+        //String rest = Arrays.asList(minoranza, suffisso).stream().filter(part -> !part.isEmpty()).collect(Collectors.joining("-"));
+        //String finalPart = (!parts.isEmpty() ? parts : "") + (!rinvio.isEmpty() ? rinvio : "") +
+          //      (!rest.isEmpty() ? (!parts.isEmpty() || !rinvio.isEmpty() ? "-" + rest : rest) : "");
+        //String nomeFrontespizio = numeriPDL + (!finalPart.isEmpty() ? "_" + finalPart : "");
+        stampato.setNomeFrontespizio(numeriPDL);
 	}
 
 	private String trimValue(String value) {
@@ -121,12 +122,12 @@ private static final Logger logger = LoggerFactory.getLogger(ExtractorService.cl
             String relazione = (stampato.getLettera() != null) ? stampato.getLettera() : "";
             if(stampato.getRinvioInCommissione() != null && stampato.getRinvioInCommissione())
                 relazione += "R";
-            if(stampato.getRelazioneMin() != null && !stampato.getRelazioneMin().trim().isEmpty()) {
+            /*if(stampato.getRelazioneMin() != null && !stampato.getRelazioneMin().trim().isEmpty()) {
                 if(!relazione.trim().isEmpty())
                     relazione = relazione.concat("-").concat(stampato.getRelazioneMin());
                 else
                     relazione = relazione.concat(stampato.getRelazioneMin());
-            }
+            }*/
             if (!relazione.trim().isEmpty())
                 filename = filename + "_" + relazione;
             filename = filename + "." + stampato.getId().getBarcode() + ".html";

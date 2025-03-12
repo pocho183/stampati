@@ -34,21 +34,33 @@ export class PresentazioneComponent implements OnInit {
 		this.updateNomeFrontespizio();
 	}	
 	
-	updateNomeFrontespizio(): void {
+	/*updateNomeFrontespizio(): void {
 		const trimValue = (value?: string): string => value?.trim() || "";
-		const lettera = trimValue(this.stampato.lettera);
-		const minoranza = trimValue(this.stampato.relazioneMin);
+	    const lettera = trimValue(this.stampato.lettera);
+	    const minoranza = trimValue(this.stampato.relazioneMin);
 		const suffisso = trimValue(this.stampato.suffisso);
 		const navette = trimValue(this.stampato.navette);
 	    const numeriPDL = trimValue(this.stampato.numeriPDL);
-	    const rinvio = this.stampato.rinvioInCommissione ? "/R" : "";
-		const parts = [lettera, navette].filter(part => part.length > 0).join("-");
-		const rest = [minoranza, suffisso].filter(part => part.length > 0).join("-");
+		const rinvio = this.stampato.rinvioInCommissione ? "/R" : "";
+		const parts = [minoranza, lettera, navette].filter(part => part.length > 0).join("-");
+		const rest = [suffisso].filter(part => part.length > 0).join("-");
 		const finalPart = 
-        	(parts.length > 0 ? parts : "") +
+			(parts.length > 0 ? parts : "") +
 	        (rinvio.length > 0 ? rinvio : "") +
-	        (rest.length > 0 ? (parts.length > 0 || rinvio.length > 0 ? `-${rest}` : rest) : "");
-		this.stampato.nomeFrontespizio = numeriPDL + (finalPart.length > 0 ? `_${finalPart}` : "");
+		    (rest.length > 0 ? (parts.length > 0 || rinvio.length > 0 ? `-${rest}` : rest) : "");
+		this.stampato.nomeFrontespizio = numeriPDL + (finalPart.length > 0 ? `-${finalPart}` : "");
+	}*/
+	
+	updateNomeFrontespizio(): void {
+		let numeriPDL = this.stampato.numeriPDL ? this.stampato.numeriPDL.split('-')[0] : 'unknown';
+		let frontespizio = numeriPDL;
+		if(this.stampato.relazioneMin?.trim()) frontespizio += '-' + this.stampato.relazioneMin;
+		if (this.stampato.navette?.trim()) frontespizio += '-' + this.stampato.navette;
+		let relazione = this.stampato.lettera ? "-" + this.stampato.lettera : '';
+		if (this.stampato.rinvioInCommissione) relazione += '/R';
+		if (relazione.trim()) frontespizio = frontespizio + relazione; 
+		if(this.stampato.suffisso?.trim())  frontespizio += "-" + this.stampato.suffisso;
+		this.stampato.nomeFrontespizio = frontespizio;
 	}
 
 }
