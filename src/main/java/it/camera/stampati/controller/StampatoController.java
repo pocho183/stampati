@@ -59,6 +59,30 @@ public class StampatoController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
         }
     }
+    
+    @PostMapping(path = "publish")
+    public ResponseEntity<?> publish(@RequestBody StampatoModel model) {
+        try {
+            StampatoModel savedModel = stampatiService.publish(model);
+            return ResponseEntity.status(HttpStatus.OK).body(savedModel);
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid data: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+        }
+    }
+    
+    @PostMapping(path = "unpublish")
+    public ResponseEntity<?> unpublish(@RequestBody StampatoModel model) {
+        try {
+            StampatoModel savedModel = stampatiService.unpublish(model);
+            return ResponseEntity.status(HttpStatus.OK).body(savedModel);
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid data: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+        }
+    }
 }
 
 	

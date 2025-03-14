@@ -1,5 +1,7 @@
 package it.camera.stampati.service;
 
+import java.io.File;
+import java.text.MessageFormat;
 import java.util.Date;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -28,6 +30,8 @@ public class StampatiService {
 	private StampatoRepository stampatiRepository;
 	@Value("${stampati.shared.input}")
     private String sharedPath;
+	@Value("${stampati.shared.output}")
+    private String publishPath;
 	
 	//private final String BARCODE_REGEXP = "[1-9][0-9]*(PDL|MSG)[0-9]{7}";
 	private final String BARCODE_REGEXP = "[1-9][0-9]*(PDL|MSG|TU)[0-9]{4,7}";
@@ -89,5 +93,48 @@ public class StampatiService {
 	        logger.error("Error deleting Stampato: ", e);
 	        throw new RuntimeException("Error restoring Stampato", e);
 	    }
+	}
+	
+	public StampatoModel publish(StampatoModel model) {
+		try {
+			String pdfPublishDir = MessageFormat.format(publishPath, model.getId().getLegislatura(), "xhtml");
+			String xhtmlPublishDir = MessageFormat.format(publishPath, model.getId().getLegislatura(), "pdf");
+			
+			
+
+	        String fileXHTML = MessageFormat.format(sharedPath, model.getId().getLegislatura(), "xhtml") + "/" + model.getBarcode() + ".html";
+	        String filePDF = MessageFormat.format(sharedPath, model.getId().getLegislatura(), "pdf") + "/" + model.getBarcode() + ".pdf";
+	        File xhtml = new File(fileXHTML);
+	        File pdf = new File(filePDF);
+	        if (xhtml.exists()) {
+	            System.out.println("File 1 does not exist.");
+	        } else {
+	            System.out.println("File 2 does not exist.");
+	        }
+	        if (pdf.exists()) {
+	            System.out.println("File 1 does not exist.");
+	        } else {
+	            System.out.println("File 2 does not exist.");
+	        }
+			
+			//File destdir = getBasedir(stampato.getLeg(), this.stampatiFormat);
+			//File source = stampatiProvider.getStampato(getInputFormat(), stampato.getBarCode(), stampato.getLeg().intValue());
+			//if (source == null) {
+			//	throw new FileNotFoundException("file " + stampato.getBarCode() + "." + getInputFormat().name().toLowerCase() + " non presente");
+			//}
+			//String extension = FilenameUtils.getExtension(source.getName());
+			//String filename = destdir.getAbsolutePath() + File.separator + stampato.getFilename();
+			//IOUtils.copy(new FileInputStream(source), new FileOutputStream(filename + "." + extension));
+			//publishAllegato(stampato, destdir);
+	        return null;
+		}
+		catch (Exception e) {
+			return null;
+		}
+	}
+	
+	public StampatoModel unpublish(StampatoModel model) {
+		
+		return null;
 	}
 }

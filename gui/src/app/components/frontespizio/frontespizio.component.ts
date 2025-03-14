@@ -138,7 +138,7 @@ export class FrontespizioComponent implements OnInit {
 	}*/
 	
 	updateNomeFrontespizio(): void {
-		let numeriPDL = this.stampato.numeriPDL ? this.stampato.numeriPDL.split('-')[0] : 'unknown';
+		let numeriPDL = this.stampato.numeriPDL ? this.stampato.numeriPDL.split('-')[0] : '';
 		let frontespizio = numeriPDL;
 		if(this.stampato.relazioneMin?.trim()) frontespizio += '-' + this.stampato.relazioneMin;
 		if (this.stampato.navette?.trim()) frontespizio += '-' + this.stampato.navette;

@@ -108,7 +108,7 @@ private static final Logger logger = LoggerFactory.getLogger(UtilityService.clas
     }
 
 	public byte[] getPreview(String filePath, String leg, String extension) throws IOException {
-	    String url = MessageFormat.format(urlPreview, leg, extension) + "/" + filePath;
+	    String url = MessageFormat.format(urlPreview, leg, extension) + "/" + filePath.replace("x", "");
 	    Path file = Paths.get(url);
 	    if (!Files.exists(file))
 	        throw new IOException("File not found: " + url);

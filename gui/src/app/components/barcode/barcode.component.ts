@@ -82,11 +82,12 @@ export class BarcodeComponent implements OnInit {
 	
 	copyTitle() {
 		this.stampato.titolo = this.text;
+		this.compareTexts();
 	}
 	
 	preview(format: string) {
 		if(this.stampato && this.stampato.id && this.stampato.id.barcode) {
-			let filename = (this.stampato.id.barcode + "." + format).replace("x", "");;
+			let filename = (this.stampato.id.barcode + "." + format).replace("x", "");
 			this.utilityService.preview(filename, this.stampato.id.legislatura, format).subscribe(response => {
 				if (response) {
 					if (format === 'pdf') {

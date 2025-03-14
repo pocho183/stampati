@@ -74,6 +74,8 @@ export class DialogRicercaComponent implements OnInit {
 	
 	previewStampato(stampato: TypographyToProcessModel) {
 		let extension = stampato.format.toString().toLocaleLowerCase();
+		
+		console.log(extension);
 		let filename = stampato.barcode + "." + extension;
 		this.utilityService.preview(filename, stampato.legislaturaId, extension).subscribe(response => {
 		    if (response) {
@@ -82,7 +84,7 @@ export class DialogRicercaComponent implements OnInit {
 		                width: '50vw', height: '80vh', modal: true, baseZIndex: 10000, dismissableMask: true,
 		                data: { file: response, filename: filename }
 		            });
-				} else if (extension === 'html') {
+				} else if (extension === 'xhtml') {
 					const newWindow = window.open('', '_blank');
 					if (newWindow) {
 						newWindow.document.open();
