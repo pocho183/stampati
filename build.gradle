@@ -58,5 +58,7 @@ dependencies {
 	implementation group: 'jakarta.xml.bind', name: 'jakarta.xml.bind-api', version: '4.0.2'
 	implementation group: 'org.burningwave', name: 'core', version: '12.65.2'
 	implementation group: 'com.sun.mail', name: 'javax.mail', version: '1.6.2'
+	implementation group: 'org.apache.pdfbox', name: 'pdfbox', version: '2.0.33'
+	
 	
 }

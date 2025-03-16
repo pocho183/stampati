@@ -63,24 +63,22 @@ public class StampatoController {
     @PostMapping(path = "publish")
     public ResponseEntity<?> publish(@RequestBody StampatoModel model) {
         try {
-            StampatoModel savedModel = stampatiService.publish(model);
-            return ResponseEntity.status(HttpStatus.OK).body(savedModel);
-        } catch (DataIntegrityViolationException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid data: " + e.getMessage());
+        	StampatoModel publishedModel = stampatiService.publish(model);
+            return ResponseEntity.status(HttpStatus.OK).body(publishedModel);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+        	logger.error("Error publish  stampato", e);
+        	return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
         }
     }
     
     @PostMapping(path = "unpublish")
     public ResponseEntity<?> unpublish(@RequestBody StampatoModel model) {
         try {
-            StampatoModel savedModel = stampatiService.unpublish(model);
-            return ResponseEntity.status(HttpStatus.OK).body(savedModel);
-        } catch (DataIntegrityViolationException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid data: " + e.getMessage());
+        	StampatoModel unpublishedModel = stampatiService.unpublish(model);
+            return ResponseEntity.status(HttpStatus.OK).body(unpublishedModel);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+        	logger.error("Error unpublish  stampato", e);
+        	return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
         }
     }
 }

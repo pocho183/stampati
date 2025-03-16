@@ -141,7 +141,7 @@ export class BarcodeComponent implements OnInit {
 		//if (this.stampato.relazioneMin?.trim())
 			//relazione = relazione.trim() ? relazione.concat('-').concat(this.stampato.relazioneMin) : relazione.concat(this.stampato.relazioneMin);
 		if (relazione.trim()) filename = filename + '_' + relazione;    
-			this.stampato.nomeFile = filename + '.' + this.stampato.id.barcode + '.html';
+			this.stampato.nomeFile = filename + '.' + this.stampato.id.barcode;
 		}
 	}
 	

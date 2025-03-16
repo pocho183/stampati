@@ -130,7 +130,7 @@ private static final Logger logger = LoggerFactory.getLogger(ExtractorService.cl
             }*/
             if (!relazione.trim().isEmpty())
                 filename = filename + "_" + relazione;
-            filename = filename + "." + stampato.getId().getBarcode() + ".html";
+            filename = filename + "." + stampato.getId().getBarcode();
             stampato.setNomeFile(filename);
         }
 	}

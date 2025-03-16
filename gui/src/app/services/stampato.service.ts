@@ -22,4 +22,15 @@ export class StampatoService {
 		const url = '/stampato/restore';
 		return this.http.post<StampatoModel>(url, stampato);
 	}
+	
+	publish(stampato: StampatoModel): Observable<StampatoModel> {
+		const url = '/stampato/publish';
+		return this.http.post<StampatoModel>(url, stampato);
+	}
+	
+	unpublish(stampato: StampatoModel): Observable<StampatoModel> {
+		const url = '/stampato/unpublish';
+		return this.http.post<StampatoModel>(url, stampato);
+	}
+	
 }

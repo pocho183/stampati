@@ -22,8 +22,8 @@
 							<div class="m-2"><p-button label="Rigo nero" [disabled]="stampato.dataDeleted != null || stampato?.id?.barcode == null" [style]="{'background-color': '#285492'}"/></div>						
 							<div class="m-2"><p-button (click)="new()" label="Nuovo" [style]="{'background-color': '#285492'}"/></div>					
 							<div class="m-2"><p-button (click)="save(stampato)" [disabled]="stampato.dataDeleted != null || stampato?.id?.barcode == null" label="Salva" [style]="{'background-color': '#285492'}"/></div>
-							<div class="m-2"><p-button (click)="publish(stampato)" label="Pubblica" [disabled]="stampato.id.barcode == null || stampato.dataDeleted != null" [style]="{'background-color': '#285492'}" /></div>
-							<div class="m-2"><p-button label="Sospendi Pubblicazione" [style]="{'background-color': '#285492'}"/></div>
+							<div class="m-2"><p-button (click)="publish(stampato)" label="Pubblica" [disabled]="stampato.id.barcode == null || stampato.dataDeleted != null || stampato.pubblicato == true" [style]="{'background-color': '#285492'}" /></div>
+							<div class="m-2"><p-button (click)="unpublish(stampato)" label="Sospendi Pubblicazione" [disabled]="stampato.id.barcode == null || stampato.dataDeleted != null || stampato.pubblicato == null || stampato.pubblicato == false" [style]="{'background-color': '#285492'}"/></div>
 							<div class="m-2"><p-button (click)="delete(stampato)" [disabled]="stampato.dataDeleted != null || stampato.id.barcode == null" label="Cancella" severity="danger"/></div>
 							<div class="m-2"><p-button (click)="restore(stampato)" [disabled]="stampato.dataDeleted == null || stampato.id.barcode == null" label="Ripristina" [style]="{'background-color': '#285492'}"/></div>
 							</div>
