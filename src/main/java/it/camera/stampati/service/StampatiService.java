@@ -277,4 +277,40 @@ public class StampatiService {
             }
         }
     }
+    
+    public StampatoModel rigonero(StampatoModel model) throws IOException {
+        StampatoModel rigonero = new StampatoModel();
+        String BarcodeRigonero = extractRigoneroBarcode(model.getId().getBarcode());
+        Optional<Stampato> stampatoOpt = stampatiRepository.findByIdLegislaturaAndIdBarcode(model.getId().getLegislatura(), BarcodeRigonero);
+        if(!stampatoOpt.isPresent()) {
+        	unpublish(model);
+        	rigonero= model;
+        	rigonero.getId().setBarcode(BarcodeRigonero);
+        	rigonero.setRigoNero(model.getId().getBarcode());
+        	rigonero.setHtmlPresente(false);
+        	rigonero.setPdfPresente(false);
+        	rigonero = save(rigonero);
+	        logger.info("Rigo nero created successfully");
+	        return beanMapper.map(rigonero, StampatoModel.class);
+        } else {
+        	throw new IOException("Rigo nero already exist !");
+        }
+    }
+    
+    private String extractRigoneroBarcode(String barcode) {
+    	int i = barcode.length() - 1;
+        while (i >= 0 && Character.isDigit(barcode.charAt(i)))
+            i--;
+        String prefix = barcode.substring(0, i + 1);
+        String numberPart = barcode.substring(i + 1);
+        int number = Integer.parseInt(numberPart) + 1;
+        String newNumberPart = String.format("%0" + numberPart.length() + "d", number);
+        return prefix + newNumberPart;
+    }
+    
+    public StampatoModel erratacorrige(StampatoModel model) throws FileNotFoundException {
+        
+
+        return model;
+    }
 }

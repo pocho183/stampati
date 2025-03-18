@@ -33,4 +33,8 @@ export class StampatoService {
 		return this.http.post<StampatoModel>(url, stampato);
 	}
 	
+	rigonero(stampato: StampatoModel): Observable<StampatoModel> {
+	  	const url = '/stampato/rigonero';
+	  	return this.http.post<StampatoModel>(url, stampato);
+	}
 }
