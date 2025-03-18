@@ -28,4 +28,8 @@ public enum StampatoFormat {
         }
         throw new IllegalArgumentException("Invalid format name: " + name);
     }
+    
+    public String getExtension() {
+        return "." + this.name().toLowerCase();
+    }
 }

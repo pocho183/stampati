@@ -3,8 +3,6 @@ package it.camera.stampati.model;
 import java.util.Date;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import it.camera.stampati.enumerator.StampatoFormat;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;

@@ -96,7 +96,25 @@ export class StampatoComponent implements OnInit {
 	}
 		
 	publish(stampato: StampatoModel) {
-		if (!this.confirmUnsavedChanges()) return;
+		if(!this.confirmUnsavedChanges()) return;
+		this.stampatoService.publish(stampato).subscribe({
+			next: (publishedStampato) => {
+				this.stampato = publishedStampato;
+				this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Stampato pubblicato!' });
+			},
+		    error: (err) => { this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Pubblicazione fallita!' }); }
+		});
+	}
+	
+	unpublish(stampato: StampatoModel) {
+		if(!this.confirmUnsavedChanges()) return;
+		this.stampatoService.unpublish(stampato).subscribe({
+			next: (unpublishedStampato) => {
+				this.stampato = unpublishedStampato;
+				this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Stampato non pubblicato!' });
+			},
+			error: (err) => { this.messageService.add({ severity: 'error', summary: 'Error', detail: 'L\'operazione di rendere lo stampato non pubblico fallita!' }); }
+		});
 	}
 		
 	delete(stampato: StampatoModel) {
