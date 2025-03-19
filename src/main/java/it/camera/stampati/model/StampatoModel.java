@@ -17,7 +17,7 @@ public class StampatoModel {
 	private Long progressivo;
 	private Boolean pubblicato;
 	private Boolean errataCorrige;
-	private Boolean rigoNero;
+	private String rigoNero;
     private Boolean pdfPresente;
     private Boolean htmlPresente;
     private String numeroAtto;

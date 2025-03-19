@@ -20,6 +20,8 @@ export class StampatoModel {
 	id: StampatoIdModel;
 	progressivo?: number;
 	pubblicato?:boolean;
+	errataCorrige: boolean;
+	rigoNero: string;
 	pdfPresente?: boolean;
 	htmlPresente?: boolean;
 	numeroAtto?: string;

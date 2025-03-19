@@ -64,6 +64,27 @@ export class StampatoComponent implements OnInit {
 		this.originalStampato = _.cloneDeep(this.stampato);
 	}
 	
+	rigonero() {
+		if (!this.confirmUnsavedChanges()) return;
+		this.ref = this.dialogService.open(DialogAnswerComponent, {
+			header: 'Rigo nero', width: '20%', height: '20%', modal: true, contentStyle: { overflow: 'auto', paddingBottom: '1px' }, 
+			data: { text: 'Confermi di creare il rigo nero ?' },
+			templates: { footer: AnswerFooterComponent },
+			baseZIndex: 10000, closable: true });
+		this.ref.onClose.subscribe((answer: boolean) => {
+			if (answer) {
+				this.stampatoService.rigonero(this.stampato).subscribe({
+					next: (rigonero) => {
+				   		this.stampato = rigonero;
+						this.originalStampato = _.cloneDeep(this.stampato);
+						this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Stampato con rigo nero salvato correttamente !' });
+					},
+					error: (err) => { this.messageService.add({ severity: 'error', summary: 'Error', detail: 'La creazione del rigo nero è fallita!' }); }
+				});
+			}
+		});	
+	}
+	
 	new() {
 		if (!this.confirmUnsavedChanges()) return;
 		this.ref = this.dialogService.open(DialogAnswerComponent, {

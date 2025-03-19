@@ -34,7 +34,7 @@
 		            <td>{{ result.barcode }}</td>
 		            <td>{{ result.numeriPDL }}</td>
 		            <td><i *ngIf="result.errataCorrige" class="pi pi-check" style="color: green; font-size: 1.5rem"></i></td>
-    				<td><i *ngIf="result.rigoNero" class="pi pi-check" style="color: black; font-size: 1.5rem"></i></td> 
+    				<td><i *ngIf="result.rigoNero !=null" class="pi pi-check" style="color: black; font-size: 1.5rem"></i></td> 
     			</tr>
 		    </ng-template>
 		    <ng-template #emptymessage>
