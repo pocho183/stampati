@@ -37,4 +37,9 @@ export class StampatoService {
 	  	const url = '/stampato/rigonero';
 	  	return this.http.post<StampatoModel>(url, stampato);
 	}
+	
+	errata(stampato: StampatoModel): Observable<StampatoModel> {
+	  	const url = '/stampato/erratacorrige';
+	  	return this.http.post<StampatoModel>(url, stampato);
+	}
 }

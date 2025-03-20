@@ -97,7 +97,7 @@ public class StampatoController {
     @PostMapping(path = "erratacorrige")
     public ResponseEntity<?> erratacorrige(@RequestBody StampatoModel model) {
         try {
-            StampatoModel erratacorrigeModel = stampatiService.erratacorrige(model);
+            StampatoModel erratacorrigeModel = stampatiService.errataCorrige(model);
             return ResponseEntity.status(HttpStatus.CREATED).body(erratacorrigeModel);
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid data: " + e.getMessage());

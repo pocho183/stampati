@@ -30,6 +30,7 @@ import org.springframework.stereotype.Service;
 
 import it.camera.stampati.domain.Stampato;
 import it.camera.stampati.enumerator.StampatoFormat;
+import it.camera.stampati.model.StampatoIdModel;
 import it.camera.stampati.model.StampatoModel;
 import it.camera.stampati.repository.StampatoRepository;
 import it.esinware.mapping.BeanMapper;
@@ -284,7 +285,8 @@ public class StampatiService {
         Optional<Stampato> stampatoOpt = stampatiRepository.findByIdLegislaturaAndIdBarcode(model.getId().getLegislatura(), BarcodeRigonero);
         if(!stampatoOpt.isPresent()) {
         	unpublish(model);
-        	rigonero= model;
+        	delete(model);
+        	rigonero = model;
         	rigonero.getId().setBarcode(BarcodeRigonero);
         	rigonero.setRigoNero(model.getId().getBarcode());
         	rigonero.setHtmlPresente(false);
@@ -308,9 +310,40 @@ public class StampatiService {
         return prefix + newNumberPart;
     }
     
-    public StampatoModel erratacorrige(StampatoModel model) throws FileNotFoundException {
-        
-
-        return model;
+    public StampatoModel errataCorrige(StampatoModel model) throws FileNotFoundException {
+    	StampatoIdModel stamaptoId = new StampatoIdModel();
+    	StampatoModel errataCorrige = new StampatoModel();
+    	Optional<Stampato> last = stampatiRepository.findLastInserted();
+    	if(last.isPresent()) {
+    		String lastBarcode = last.get().getId().getBarcode();
+    		String barcodeAvailable = extractErrataBarcode(lastBarcode);
+    		unpublish(model);
+    		delete(model);
+    		stamaptoId.setLegislatura(model.getId().getLegislatura());
+    		stamaptoId.setBarcode(barcodeAvailable);
+    		errataCorrige.setId(stamaptoId);
+    		errataCorrige.setHtmlPresente(false);
+    		errataCorrige.setPdfPresente(false);
+    		errataCorrige.setRigoNero(model.getRigoNero());
+    		errataCorrige.setErrataCorrige(true);
+    		errataCorrige.setNumeriPDL(model.getNumeriPDL());
+    		errataCorrige = save(errataCorrige);
+	        logger.info("Errata Corrige created successfully");
+	        return beanMapper.map(errataCorrige, StampatoModel.class);
+    	}
+        return null;
     }
+    
+    private String extractErrataBarcode(String barcode) {
+        int i = barcode.length() - 1;
+        while (i >= 0 && Character.isDigit(barcode.charAt(i)))
+            i--;
+        String prefix = barcode.substring(0, i + 1);
+        String numberPart = barcode.substring(i + 1);
+        int number = Integer.parseInt(numberPart);
+        number = ((number / 10) + 1) * 10;
+        String newNumberPart = String.format("%0" + numberPart.length() + "d", number);
+        return prefix + newNumberPart;
+    }
+
 }
