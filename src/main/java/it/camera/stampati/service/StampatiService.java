@@ -30,8 +30,10 @@ import org.springframework.stereotype.Service;
 
 import it.camera.stampati.domain.Stampato;
 import it.camera.stampati.enumerator.StampatoFormat;
+import it.camera.stampati.model.StampatoFelModel;
 import it.camera.stampati.model.StampatoIdModel;
 import it.camera.stampati.model.StampatoModel;
+import it.camera.stampati.model.StampatoRelatoreModel;
 import it.camera.stampati.repository.StampatoRepository;
 import it.esinware.mapping.BeanMapper;
 
@@ -44,6 +46,8 @@ public class StampatiService {
 	private BeanMapper beanMapper;
 	@Autowired
 	private UtilityService utlityService;
+	@Autowired
+	private ExtractorService extractorService;
 	@Autowired
 	private StampatoRepository stampatiRepository;
 	@Value("${stampati.shared.input}")
@@ -281,16 +285,26 @@ public class StampatiService {
     
     public StampatoModel rigonero(StampatoModel model) throws IOException {
         StampatoModel rigonero = new StampatoModel();
+      //  List<StampatoRelatoreModel> stampatiRelatori = new ArrayList<StampatoRelatoreModel>();
+     //   List<StampatoFelModel> stampatiFel = new ArrayList<StampatoFelModel>();
         String BarcodeRigonero = extractRigoneroBarcode(model.getId().getBarcode());
         Optional<Stampato> stampatoOpt = stampatiRepository.findByIdLegislaturaAndIdBarcode(model.getId().getLegislatura(), BarcodeRigonero);
         if(!stampatoOpt.isPresent()) {
         	unpublish(model);
         	delete(model);
-        	rigonero = model;
+        	//rigonero = model;
+        	beanMapper.map(model, rigonero);
         	rigonero.getId().setBarcode(BarcodeRigonero);
         	rigonero.setRigoNero(model.getId().getBarcode());
         	rigonero.setHtmlPresente(false);
         	rigonero.setPdfPresente(false);
+        	rigonero.setDataDeleted(null);
+        	//stampatiRelatori = model.getStampatiRelatori();
+        	//stampatiFel = model.getStampatiFel();
+        	//rigonero.setStampatiRelatori(stampatiRelatori);
+        	//rigonero.setStampatiFel(stampatiFel);
+        	//extractorService.updateNomeFrontespizio(rigonero);
+        	extractorService.updateNomeFile(rigonero);
         	rigonero = save(rigonero);
 	        logger.info("Rigo nero created successfully");
 	        return beanMapper.map(rigonero, StampatoModel.class);
@@ -311,7 +325,7 @@ public class StampatiService {
     }
     
     public StampatoModel errataCorrige(StampatoModel model) throws FileNotFoundException {
-    	StampatoIdModel stamaptoId = new StampatoIdModel();
+    	//StampatoIdModel stamaptoId = new StampatoIdModel();
     	StampatoModel errataCorrige = new StampatoModel();
     	Optional<Stampato> last = stampatiRepository.findLastInserted();
     	if(last.isPresent()) {
@@ -319,14 +333,21 @@ public class StampatiService {
     		String barcodeAvailable = extractErrataBarcode(lastBarcode);
     		unpublish(model);
     		delete(model);
-    		stamaptoId.setLegislatura(model.getId().getLegislatura());
-    		stamaptoId.setBarcode(barcodeAvailable);
-    		errataCorrige.setId(stamaptoId);
+    		//stamaptoId.setLegislatura(model.getId().getLegislatura());
+    		//stamaptoId.setBarcode(barcodeAvailable);
+    		errataCorrige = model;
+    		errataCorrige.getId().setBarcode(barcodeAvailable);
+    		//errataCorrige.setId(stamaptoId);
     		errataCorrige.setHtmlPresente(false);
     		errataCorrige.setPdfPresente(false);
-    		errataCorrige.setRigoNero(model.getRigoNero());
+    		errataCorrige.setDataDeleted(null);
+    		//errataCorrige.setRigoNero(model.getRigoNero());
     		errataCorrige.setErrataCorrige(true);
-    		errataCorrige.setNumeriPDL(model.getNumeriPDL());
+    		//errataCorrige.setNumeriPDL(model.getNumeriPDL());
+    		errataCorrige.setSuffisso("Errata Corrige");
+    		//extractorService.updateNomeFrontespizio(errataCorrige);
+    		errataCorrige.setNomeFrontespizio(errataCorrige.getNomeFrontespizio() + "-Errata Corrige");
+    		extractorService.updateNomeFile(errataCorrige);
     		errataCorrige = save(errataCorrige);
 	        logger.info("Errata Corrige created successfully");
 	        return beanMapper.map(errataCorrige, StampatoModel.class);

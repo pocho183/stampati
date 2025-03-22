@@ -12,7 +12,7 @@ import { ToastModule } from 'primeng/toast';
 import { DialogService, DynamicDialogRef, DynamicDialogModule } from 'primeng/dynamicdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { DialogRicercaComponent } from 'app/components/ricerca/dialog.ricerca.component'
-import { TableModule } from 'primeng/table';
+import { TableModule, TableRowReorderEvent } from 'primeng/table';
 import { FloatLabel } from "primeng/floatlabel"
 import { RicercaService } from "app/services/ricerca.service";
 import { UtilityService } from "app/services/utility.service";
@@ -84,6 +84,10 @@ export class RicercaComponent implements OnInit {
 		if(this.searchInput && this.searchInput.nativeElement)
 	    	this.searchInput.nativeElement.value = '';
 		this.results = null;
+	}
+	
+	onRowReorder(event: TableRowReorderEvent) {
+	    console.log("New product order:", event);
 	}
 
 	loadStampato(selectedResult: RicercaModel) {
