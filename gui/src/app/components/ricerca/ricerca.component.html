@@ -20,7 +20,7 @@
     </div>
     <div *ngIf="results?.length > 0" class="bg-gray-100 text-lg mt-4">Risultati</div>
     <div *ngIf="results?.length > 0" class="overflow-hidden">
-    	<p-table [value]="results" (onRowReorder)="onRowReorder($event)" showGridlines size="small" scrollHeight="700px" [scrollable]="true" selectionMode="single" class="h-full">
+    	<p-table [value]="results" (onRowReorder)="onRowReorder()" showGridlines size="small" scrollHeight="700px" [scrollable]="true" selectionMode="single" class="h-full">
 		    <ng-template pTemplate="header">
 		        <tr>
 		        	<th style="width:3rem"></th>
