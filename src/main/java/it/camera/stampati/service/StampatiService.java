@@ -19,6 +19,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentInformation;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
@@ -29,7 +30,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import it.camera.stampati.domain.Stampato;
-import it.camera.stampati.enumerator.StampatoFormat;
 import it.camera.stampati.model.StampatoModel;
 import it.camera.stampati.repository.StampatoRepository;
 import it.esinware.mapping.BeanMapper;
@@ -182,7 +182,7 @@ public class StampatiService {
 	}
 
     public void updatePdfMetadata(File pdfFile, StampatoModel model) throws IOException {
-        try (PDDocument document = PDDocument.load(pdfFile)) {
+        try (PDDocument document = Loader.loadPDF(pdfFile)) {
         	if (document.isEncrypted())
                 document.setAllSecurityToBeRemoved(true);
             PDDocumentInformation info = document.getDocumentInformation();

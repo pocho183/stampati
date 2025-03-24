@@ -11,20 +11,20 @@ export class ExtractorService {
 	
 	constructor(private http: HttpClient) {}
     
-	getStampato(stampato: TypographyToProcessModel): Promise<StampatoModel> {
+	getStampato(stampato: TypographyToProcessModel): Observable<StampatoModel> {
 	    const url = `/extractor/load`;
 		//return this.http.post<StampatoModel>(url, stampato).toPromise().catch(error => { throw error });
-		return this.http.post<StampatoModel>(url, stampato).pipe(first(), map(response => plainToInstance(StampatoModel, response))).toPromise().catch(error => { throw error });			
+		return this.http.post<StampatoModel>('/extractor/load', stampato).pipe(first(), map(response => plainToInstance(StampatoModel, response)));			
 	}
 
-	getStampatiXHTML(leg: number): Promise<TypographyToProcessModel[]> {
+	getStampatiXHTML(leg: number): Observable<TypographyToProcessModel[]> {
 		const url = `/extractor/newtoprocess/${leg}/xhtml`;
-		return this.http.get<TypographyToProcessModel[]>(url).toPromise();
+		return this.http.get<TypographyToProcessModel[]>(url).pipe(first());
 	}
 	
-	getStampatiPDF(leg: number): Promise<TypographyToProcessModel[]> {
+	getStampatiPDF(leg: number): Observable<TypographyToProcessModel[]> {
 	    const url = `/extractor/newtoprocess/${leg}/pdf`;
-	    return this.http.get<TypographyToProcessModel[]>(url).toPromise();
+	    return this.http.get<TypographyToProcessModel[]>(url).pipe(first());
 	}
 
 };

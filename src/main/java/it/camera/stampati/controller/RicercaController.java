@@ -1,6 +1,6 @@
 package it.camera.stampati.controller;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import it.camera.stampati.model.RicercaModel;
 import it.camera.stampati.model.StampatoModel;
 import it.camera.stampati.service.RicercaService;
-import it.esinware.mapping.BeanMapper;
 
 @RestController
 @RequestMapping(path = "/search")
@@ -29,7 +28,7 @@ public class RicercaController {
     private RicercaService searchService;
     
     @GetMapping("stampato")
-    public List<RicercaModel> searchStampato(@RequestParam(name = "leg") String leg, @RequestParam(name = "text") String text) {
+    public Collection<RicercaModel> searchStampato(@RequestParam(name = "leg") String leg, @RequestParam(name = "text") String text) {
     	return searchService.searchStampato(leg, text);
     }
     

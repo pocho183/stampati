@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -23,7 +23,6 @@ import org.springframework.stereotype.Service;
 
 import it.camera.stampati.domain.Stampato;
 import it.camera.stampati.enumerator.StampatoFormat;
-import it.camera.stampati.model.RicercaModel;
 import it.camera.stampati.model.StampatoModel;
 import it.camera.stampati.model.TypographyToProcessModel;
 import it.camera.stampati.parser.PDFParser;
@@ -154,9 +153,9 @@ private static final Logger logger = LoggerFactory.getLogger(ExtractorService.cl
 		logger.info("Starting to process stampati for legislatura {} and format {}", leg, format);
 	    List<Stampato> barcodes = stampatoRepository.findByLegislaturaAndNotDeleted(leg);
 	    logger.debug("Found {} barcodes for legislatura {}", barcodes.size(), leg);
-	    List<StampatoModel> barcodeModels = beanMapper.map(barcodes, Stampato.class, StampatoModel.class);
+	    Collection<StampatoModel> barcodeModels = beanMapper.map(barcodes, StampatoModel.class);
 	    List<Stampato> existingBarcodeDataDeleted = stampatoRepository.findByLegislaturaAndDeleted(leg);
-	    List<StampatoModel> existingBarcodeDataDeletedModels = beanMapper.map(existingBarcodeDataDeleted, Stampato.class, StampatoModel.class);
+	    Collection<StampatoModel> existingBarcodeDataDeletedModels = beanMapper.map(existingBarcodeDataDeleted, StampatoModel.class);
 	    Map<String, Date> deletedBarcodeDataDeletedMap = existingBarcodeDataDeletedModels.stream().collect(Collectors.toMap(StampatoModel::getBarcode, StampatoModel::getDataDeleted));  
 	    Set<String> existingBarcodeIds = barcodeModels.stream().map(st -> st.getBarcode()).collect(Collectors.toSet());  
 	    List<TypographyToProcessModel> stampatiFromShared = getStampatiFromShared(leg, format);
@@ -173,7 +172,7 @@ private static final Logger logger = LoggerFactory.getLogger(ExtractorService.cl
 	}
 
 	public List<TypographyToProcessModel> getStampatiFromShared(String leg, StampatoFormat format) {	
-		String formattedPath = MessageFormat.format(sharedPath, leg, format);
+		String formattedPath = MessageFormat.format(sharedPath, leg, format.name().toLowerCase());
         File baseDir = new File(formattedPath);   
         if (!baseDir.exists() || !baseDir.isDirectory())
             return new ArrayList<>();

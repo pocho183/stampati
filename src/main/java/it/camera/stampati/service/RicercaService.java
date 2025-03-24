@@ -1,5 +1,7 @@
 package it.camera.stampati.service;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -25,13 +27,14 @@ private static final Logger logger = LoggerFactory.getLogger(RicercaService.clas
 	@Autowired
 	private RicercaRepository ricercaRepository;
 	
-	public List<RicercaModel> searchStampato(String leg, String text) {
+	public Collection<RicercaModel> searchStampato(String leg, String text) {
         logger.info("Searching stampati for legislatura: {}, text: {}", leg, text);
         List<Stampato> stampati = ricercaRepository.searchStampati(leg, text);
         if (stampati.isEmpty())
             logger.warn("No stampati found for legislatura: {}, text: {}", leg, text);
-        List<RicercaModel> result = beanMapper.map(stampati, Stampato.class, RicercaModel.class);
-        result.sort(Comparator.comparing(RicercaModel::getBarcode));
+        Collection<RicercaModel> result = beanMapper.map(stampati, RicercaModel.class);
+        Collections.sort((List<RicercaModel>)result, Comparator.comparing(RicercaModel::getBarcode));
+        //result.sort(Comparator.comparing(RicercaModel::getBarcode));
         return result;
     }
 	
