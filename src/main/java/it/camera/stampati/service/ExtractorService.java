@@ -121,12 +121,6 @@ private static final Logger logger = LoggerFactory.getLogger(ExtractorService.cl
             String relazione = (stampato.getLettera() != null) ? stampato.getLettera() : "";
             if(stampato.getRinvioInCommissione() != null && stampato.getRinvioInCommissione())
                 relazione += "R";
-            /*if(stampato.getRelazioneMin() != null && !stampato.getRelazioneMin().trim().isEmpty()) {
-                if(!relazione.trim().isEmpty())
-                    relazione = relazione.concat("-").concat(stampato.getRelazioneMin());
-                else
-                    relazione = relazione.concat(stampato.getRelazioneMin());
-            }*/
             if (!relazione.trim().isEmpty())
                 filename = filename + "_" + relazione;
             filename = filename + "." + stampato.getId().getBarcode();

@@ -25,5 +25,13 @@ public interface StampatoRepository extends JpaRepository<Stampato, StampatoId> 
 
     @Query("SELECT s FROM Stampato s WHERE s.id.legislatura = :legislatura AND s.dataDeleted IS NOT NULL")
     List<Stampato> findByLegislaturaAndDeleted(@Param("legislatura") String legislatura);
+
+    @Query(value = """
+    	    SELECT * FROM stampato ORDER BY 
+    	        CAST(SUBSTRING(barcode FROM 1 FOR 2) AS INTEGER) DESC, 
+    	        CAST(REGEXP_SUBSTR(barcode, '[0-9]+$', 1, 1) AS INTEGER) DESC LIMIT 1
+    	""", nativeQuery = true)
+    Optional<Stampato> findLastInserted();
+
 }
 

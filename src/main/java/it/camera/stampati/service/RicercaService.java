@@ -26,6 +26,9 @@ private static final Logger logger = LoggerFactory.getLogger(RicercaService.clas
 	private BeanMapper beanMapper;
 	@Autowired
 	private RicercaRepository ricercaRepository;
+	@Autowired
+	private StampatiService stampatoService;
+	
 	
 	public Collection<RicercaModel> searchStampato(String leg, String text) {
         logger.info("Searching stampati for legislatura: {}, text: {}", leg, text);
@@ -48,5 +51,21 @@ private static final Logger logger = LoggerFactory.getLogger(RicercaService.clas
 		}
 		logger.warn("Stampato not found for legislatura: {}, barcode: {}", leg, barcode);
         return Optional.empty();
+	}
+	
+	public List<RicercaModel> saveOrder(List<RicercaModel> models) {
+		for(RicercaModel result: models) {
+			Optional<StampatoModel> stampatoOpt = load(result.getLegislatura(), result.getBarcode());
+			if(stampatoOpt.isPresent()) {
+				StampatoModel stampato = stampatoOpt.get();
+				stampato.setProgressivo(result.getProgressivo());
+				stampatoService.save(stampato);
+			}
+		}
+		logger.info("Stampato order saved successfully");
+		models.sort(Comparator
+                .comparing(RicercaModel::getProgressivo, Comparator.nullsLast(Comparator.naturalOrder()))
+                .thenComparing(RicercaModel::getBarcode, Comparator.nullsLast(Comparator.naturalOrder()))); 
+		return models;
 	}
 }

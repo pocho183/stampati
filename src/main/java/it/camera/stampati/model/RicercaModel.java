@@ -15,6 +15,7 @@ public class RicercaModel {
 	private String barcode;
 	@FieldBinding(binding = "id.legislatura")
     private String legislatura;
+	private Long progressivo;
 	private String numeriPDL;
     private Boolean errataCorrige;
 	private Boolean rigoNero;

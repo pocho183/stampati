@@ -22,4 +22,9 @@ export class RicercaService {
 		return this.http.get<StampatoModel>(url).pipe(first(), map(response => plainToInstance(StampatoModel, response)));
 	}
 	
+	saveOrder(results: RicercaModel[]): Observable<RicercaModel[]> {
+		const url = `/search/saveorder`;
+		return this.http.post<RicercaModel[]>(url, results);
+	}
+	
 };

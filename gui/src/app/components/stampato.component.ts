@@ -85,6 +85,26 @@ export class StampatoComponent implements OnInit {
 		});	
 	}
 	
+	errata(stampato: StampatoModel) {
+		if (!this.confirmUnsavedChanges()) return;
+		this.ref = this.dialogService.open(DialogAnswerComponent, {
+			header: 'Errata Corrige', width: '30%', height: '30%', modal: true, contentStyle: { overflow: 'auto', paddingBottom: '1px' }, 
+			data: { text: 'Confermi di creare una errata corrige ?'},
+			templates: { footer: AnswerFooterComponent },
+			baseZIndex: 10000, closable: true });
+		this.ref.onClose.subscribe((answer: boolean) => {
+			if (answer) {
+				this.stampatoService.errata(stampato).subscribe({
+				    next: (res) => {
+					    this.stampato = res;
+				     	this.messageService.add({ severity: 'success', summary: 'Errata corrige creata correttamente' });
+				    },
+				    error: (err) => { this.messageService.add({ severity: 'error', summary: 'Errore durante la creazione dell\'errata corrige' }); }
+				});
+			}
+		});
+	}
+	
 	new() {
 		if (!this.confirmUnsavedChanges()) return;
 		this.ref = this.dialogService.open(DialogAnswerComponent, {

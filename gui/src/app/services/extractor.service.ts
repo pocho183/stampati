@@ -14,7 +14,7 @@ export class ExtractorService {
 	getStampato(stampato: TypographyToProcessModel): Observable<StampatoModel> {
 	    const url = `/extractor/load`;
 		//return this.http.post<StampatoModel>(url, stampato).toPromise().catch(error => { throw error });
-		return this.http.post<StampatoModel>('/extractor/load', stampato).pipe(first(), map(response => plainToInstance(StampatoModel, response)));			
+		return this.http.post<StampatoModel>('/extractor/load', stampato).pipe(first(), map(response => plainToInstance(StampatoModel, response)));
 	}
 
 	getStampatiXHTML(leg: number): Observable<TypographyToProcessModel[]> {

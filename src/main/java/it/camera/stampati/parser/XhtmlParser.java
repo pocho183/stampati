@@ -39,10 +39,11 @@ public class XhtmlParser {
 	        stampatoId.setLegislatura(getMetaContent(document, "legislatura.a"));
 	        stampatoId.setBarcode(getMetaContent(document, "codiceABarre"));
 	        stampato.setId(stampatoId);
-	        //stampato.setRigoNero("0".equals(getMetaContent(document, "rigoNero")) ? false : true);
 	        if(!("0".equals(getMetaContent(document, "rigoNero"))))
-	        	stampato.setRigoNero(extractParent(stampatoId.getBarcode()));
+	        	stampato.setRigoNero(extractRigoNeroParent(stampatoId.getBarcode()));
 	        stampato.setErrataCorrige("0".equals(getMetaContent(document, "errataCorrige")) ? false : getMetaContent(document, "errataCorrige") != null);
+	        if(stampato.getErrataCorrige())
+	        	stampato.setSuffisso("-Errata Corrige");
 	        stampato.setHtmlPresente(true);
 	        // Extract number of the act
 	        String atto = getAtto(document);
@@ -93,7 +94,7 @@ public class XhtmlParser {
 		
 	}
 	
-	private String extractParent(String barcode) {
+	private String extractRigoNeroParent(String barcode) {
         int i = barcode.length() - 1;
         while (i >= 0 && Character.isDigit(barcode.charAt(i)))
             i--;
