@@ -12,7 +12,7 @@
 **/.gradle_home/**
 /etc/local/**
 /build/
-src/ui/dist/**
+gui/dist/**
 /stampati.pid
 node_modules/
 /.apt_generated/

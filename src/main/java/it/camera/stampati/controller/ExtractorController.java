@@ -28,7 +28,7 @@ public class ExtractorController {
     @Autowired
     private ExtractorService extractorService;
     
-    @PostMapping("/load")
+    @PostMapping(path = "/load")
     public ResponseEntity<StampatoModel> getStampato(@RequestBody TypographyToProcessModel model) {
         try {
             StampatoModel stampato = extractorService.getStampato(model);

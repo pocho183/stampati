@@ -12,14 +12,11 @@ import lombok.Setter;
 @Getter
 @Setter
 public class StampatoFel {
-	
+
 	@Id
 	private Long idFel;
 	private String numeroAtto;
 	@ManyToOne
-    @JoinColumns({
-        @JoinColumn(name = "barcode", referencedColumnName = "barcode"),
-        @JoinColumn(name = "legislatura", referencedColumnName = "legislatura")
-    })
-    private Stampato stampato;
+	@JoinColumns({ @JoinColumn(name = "barcode", referencedColumnName = "barcode"), @JoinColumn(name = "legislatura", referencedColumnName = "legislatura") })
+	private Stampato stampato;
 }

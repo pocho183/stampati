@@ -19,10 +19,10 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.jta.JtaTransactionManager;
 
-@Configuration
-@EnableTransactionManagement
-@PropertySource(value = {"classpath:persistence.properties"})
-@EntityScan(basePackages = {"it.camera.stampati.domain"})
+//@Configuration
+//@EnableTransactionManagement
+//@PropertySource(value = {"classpath:persistence.properties"})
+//@EntityScan(basePackages = {"it.camera.stampati.domain"})
 public class Persistence extends JpaBaseConfiguration {
 
     private final Environment env;

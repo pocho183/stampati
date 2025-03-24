@@ -14,6 +14,7 @@ import { PdfViewerComponent } from "../pdfviewer/pdfviewer.component";
 import { LegislaturaModel } from "app/models/legislatura.model";
 import { StampatoModel } from "app/models/stampato.model";
 import { MessageService } from "primeng/api";
+import { switchMap } from "rxjs";
 
 @Component({
 	standalone: true,
@@ -41,17 +42,17 @@ export class DialogRicercaComponent implements OnInit {
 		private extractorService: ExtractorService) {}
 
 	ngOnInit() {
-		this.utilityService.getWorkingLegislature().subscribe((leg) => {
+		this.utilityService.getWorkingLegislature().pipe(switchMap(leg => {
 		    this.legislature = leg;
-		    this.extractorService.getStampatiXHTML(this.legislature.legArabo).then((data) => { this.stampati = data; });
-		});
+			return this.extractorService.getStampatiXHTML(leg.legArabo);
+		})).subscribe(data => this.stampati = data);
 	}
 
 	onSelectionChange(selectedValue: string) {
 	    if (selectedValue === 'xhtml') {
-	        this.extractorService.getStampatiXHTML(this.legislature.legArabo).then((data) => { this.stampati = data; });
+	        this.extractorService.getStampatiXHTML(this.legislature.legArabo).subscribe((data) => { this.stampati = data; });
 	    } else if (selectedValue === 'pdf') {
-	        this.extractorService.getStampatiPDF(this.legislature.legArabo).then((data) => { this.stampati = data; });
+	        this.extractorService.getStampatiPDF(this.legislature.legArabo).subscribe((data) => { this.stampati = data; });
 	    }
 	}
 	
@@ -59,13 +60,15 @@ export class DialogRicercaComponent implements OnInit {
 	    return dataDeleted ? 'danger' : 'success';
 	}
 	
-	async selectBarcode(stampato: TypographyToProcessModel) {
+	selectBarcode(stampato: TypographyToProcessModel) {
 		try {
-			this.stampato = await this.extractorService.getStampato(stampato);
-			if (this.stampato?.id?.barcode)
-				this.ref.close(this.stampato);
-			else
-				this.messageService.add({ severity: 'error', summary: 'Errore', detail: 'Stampato non valido' });
+			this.extractorService.getStampato(stampato).subscribe(response => {
+				this.stampato = response;
+				if (this.stampato?.id?.barcode)
+					this.ref.close(this.stampato);
+				else
+					this.messageService.add({ severity: 'error', summary: 'Errore', detail: 'Stampato non valido' });
+			});
 		} catch (error) {
 			this.messageService.add({ severity: 'error', summary: 'Errore', detail: 'Errore nel caricamento dello stampato' });
 		}
