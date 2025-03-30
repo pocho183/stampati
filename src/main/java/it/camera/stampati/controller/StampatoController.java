@@ -67,7 +67,7 @@ public class StampatoController {
             return ResponseEntity.status(HttpStatus.OK).body(publishedModel);
         } catch (Exception e) {
         	logger.error("Error publish  stampato", e);
-        	return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+        	return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
     

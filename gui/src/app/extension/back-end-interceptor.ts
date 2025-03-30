@@ -28,21 +28,14 @@ export function backEndInterceptor(req: HttpRequest<any>, next: HttpHandlerFn): 
 
 function handleError(error: HttpErrorResponse, dialogService: DialogService): void {
     console.log(error);
-    //dialogService.dialogComponentRefMap.forEach(dialog => { dialog.destroy(); });
     let errorMessage: any = 'Si è verificato un errore.';
-    if (error.status === 0 || error.status === 404) {
-        errorMessage = 'Servizio attualmente non disponibile. Riprovare più tardi.';
-    } else if (error.status === 400) {
-        errorMessage = error.error || 'Richiesta non valida.';
-    } else if (error.status === 500) {
-        errorMessage = 'Si è verificato un errore applicativo.';
-    }
-    /*dialogService.open(ErrorMessageComponent, {
-        header: error.status === 400 && error.error.blocked === false ? "Attenzione" : "Errore",
-        width: '70%',
-        contentStyle: { overflow: 'auto' },
-        baseZIndex: 10000,
-        data: errorMessage ? errorMessage : [errorMessage],
-        closable: true
-    });*/
+	if (error.status === 0 || error.status === 404) {
+		errorMessage = 'Servizio attualmente non disponibile. Riprovare più tardi.';
+	} else if (error.status === 400) {
+	    errorMessage = error.error || 'Richiesta non valida.';
+	} else if (error.status === 500) {
+	    errorMessage = error.error || 'Si è verificato un errore applicativo.';
+	}
+	// Propagate the error so the service can catch it.
+	throw new Error(errorMessage);
 }

@@ -7,6 +7,7 @@ import lombok.Setter;
 @Setter
 public class StampatoFelModel {
 
+	private Long id;
 	private Long idFel;
 	private String numeroAtto;
 }

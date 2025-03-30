@@ -106,37 +106,6 @@ export class FrontespizioComponent implements OnInit {
 		this.updateFilename();
 	}
 	
-	/*updateNomeFrontespizio(): void {
-		let numeriPDL = this.stampato.numeriPDL;
-		const trimValue = (value?: string): string => value?.trim() || "";
-		const lettera = trimValue(this.stampato.lettera);
-	    const minoranza = trimValue(this.stampato.relazioneMin);
-	    const suffisso = trimValue(this.stampato.suffisso);
-		const navette = trimValue(this.stampato.navette);
-	    const rinvio = this.stampato.rinvioInCommissione ? "/R" : "";
-		if(numeriPDL == null || numeriPDL == "") {
-			const parts = [minoranza, lettera, navette].filter(part => part.length > 0).join("-");
-			const rest = [suffisso].filter(part => part.length > 0).join("-");					
-			const finalPart = 
-				(parts.length > 0 ? parts : "") +
-			    (rinvio.length > 0 ? rinvio : "") +
-				(rest.length > 0 ? (parts.length > 0 || rinvio.length > 0 ? `-${rest}` : rest) : "");
-			this.stampato.nomeFrontespizio = numeriPDL + (finalPart.length > 0 ? `-${finalPart}` : "");	
-		} else {
-			if(!numeriPDL.includes(minoranza))
-				numeriPDL = numeriPDL + "-" + minoranza;
-			if(!numeriPDL.includes(lettera))
-				numeriPDL = numeriPDL + "-" + lettera;
-			if(!numeriPDL.includes(navette))
-				numeriPDL = numeriPDL + "-" + navette;
-			if(!numeriPDL.includes("\\b[A-Z]R\\b"))
-				numeriPDL = numeriPDL + "/R";
-			if(!numeriPDL.includes(suffisso))
-				numeriPDL = numeriPDL + "-" + suffisso;
-			this.stampato.nomeFrontespizio = numeriPDL
-		}
-	}*/
-	
 	updateNomeFrontespizio(): void {
 		let numeriPDL = this.stampato.numeriPDL ? this.stampato.numeriPDL.split('-')[0] : '';
 		let frontespizio = numeriPDL;

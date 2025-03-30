@@ -36,7 +36,13 @@ export class AppComponent implements OnInit {
 			dateFormat: 'dd-MM-yyyy',
 			today: 'Oggi',
 			firstDayOfWeek: 1,
-			noFilter: 'NESSUN FILTRO'
+			noFilter: 'Nessun filtro',
+			startsWith: 'Inizia con',
+			contains: 'Contiene',
+		    notContains: 'Non contiene',
+		    endsWith: 'Finisce con',
+		    equals: 'Uguale a',
+			notEquals: 'Diverso da'
 		});
 		
 		this.utilityService.fetchLastLegislature();

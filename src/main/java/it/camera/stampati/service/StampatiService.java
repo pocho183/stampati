@@ -12,11 +12,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.pdfbox.Loader;
@@ -30,7 +32,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import it.camera.stampati.domain.Stampato;
+import it.camera.stampati.domain.StampatoFel;
+import it.camera.stampati.domain.StampatoRelatore;
+import it.camera.stampati.model.StampatoFelModel;
 import it.camera.stampati.model.StampatoModel;
+import it.camera.stampati.model.StampatoRelatoreModel;
 import it.camera.stampati.repository.StampatoRepository;
 import it.esinware.mapping.BeanMapper;
 
@@ -125,35 +131,39 @@ public class StampatiService {
 	}
 	
 	public StampatoModel publish(StampatoModel model) throws IOException {
-	    String xhtmlPublishDir = MessageFormat.format(publishPath, model.getId().getLegislatura(), "xhtml");
-	    String pdfPublishDir = MessageFormat.format(publishPath, model.getId().getLegislatura(), "pdf");
-	    String xhtmlSource = MessageFormat.format(sourcePath, model.getId().getLegislatura(), "xhtml");
-	    String pdfSource = MessageFormat.format(sourcePath, model.getId().getLegislatura(), "pdf");
-	    File xhtmlFile = new File(xhtmlSource + File.separator + model.getBarcode() + ".html");
-	    File pdfFile = new File(pdfSource + File.separator + model.getBarcode() + ".pdf");    
-	    File xhtmlDestFile = new File(xhtmlPublishDir + File.separator + model.getNomeFile() + ".html");
-	    File pdfDestFile = new File(pdfPublishDir + File.separator + model.getNomeFile() + ".pdf");
-	    try {
-	        if (xhtmlFile.exists()) {
-	            copyFile(xhtmlFile, xhtmlDestFile);
-	            parseImageAndSave(xhtmlDestFile, model);
-	        } else {
-	            logger.error("XHTML file not found: " + xhtmlFile.getAbsolutePath());
-	        }
-	        if (pdfFile.exists()) {
-	            copyFile(pdfFile, pdfDestFile);
-	            updatePdfMetadata(pdfDestFile, model);
-	        } else {
-	            logger.error("PDF file not found: " + pdfFile.getAbsolutePath());
-	        }
-	        publishAllegato(model, xhtmlSource, pdfSource, xhtmlPublishDir, pdfPublishDir);
-	        model.setPubblicato(true);
-	        save(model);
-	        logger.info("Stampato published successfully");
-	    } catch (Exception e) {
-	        logger.error("Error publishing stampato: " + model.getBarcode(), e);
-	        throw new IOException("Error publishing stampato: " + model.getBarcode(), e);
-	    }
+		if(model.getPdfPresente() != null && model.getPdfPresente()) {
+			String pdfPublishDir = MessageFormat.format(publishPath, model.getId().getLegislatura(), "pdf");
+			String pdfSource = MessageFormat.format(sourcePath, model.getId().getLegislatura(), "pdf");
+			File pdfFile = new File(pdfSource + File.separator + model.getBarcode() + ".pdf");    
+			File pdfDestFile = new File(pdfPublishDir + File.separator + model.getNomeFile() + ".pdf");
+			if (pdfFile.exists()) {
+				copyFile(pdfFile, pdfDestFile);
+		        updatePdfMetadata(pdfDestFile, model);
+		        publishAllegato(model, pdfSource, pdfPublishDir);
+		        model.setPubblicato(true);
+		    } else {
+		    	logger.error("PDF file not found: " + pdfFile.getAbsolutePath());
+		        throw new IOException("Errore nella pubblicazione del PDF: " + model.getBarcode());
+		    }
+		}
+		if(model.getHtmlPresente() != null && model.getHtmlPresente()) {
+			String xhtmlPublishDir = MessageFormat.format(publishPath, model.getId().getLegislatura(), "xhtml");
+			String xhtmlSource = MessageFormat.format(sourcePath, model.getId().getLegislatura(), "xhtml");
+			File xhtmlFile = new File(xhtmlSource + File.separator + model.getBarcode() + ".html");
+			File xhtmlDestFile = new File(xhtmlPublishDir + File.separator + model.getNomeFile() + ".html");
+			if (xhtmlFile.exists()) {
+				copyFile(xhtmlFile, xhtmlDestFile);
+		        parseImageAndSave(xhtmlDestFile, model);
+		        publishAllegato(model, xhtmlSource, xhtmlPublishDir);
+		        model.setPubblicato(true);
+		    } else {
+		        logger.error("XHTML file not found: " + xhtmlFile.getAbsolutePath());
+		        throw new IOException("Errore nella publicazione XHTML: " + model.getBarcode());
+		    }
+		}	   
+	    //publishAllegato(model, xhtmlSource, pdfSource, xhtmlPublishDir, pdfPublishDir);     
+	    save(model);
+	    logger.info("Stampato published successfully");
 	    return model;
 	}
 
@@ -203,9 +213,13 @@ public class StampatiService {
         }
     }
 
-    protected void publishAllegato(StampatoModel model, String xhtmlSource, String pdfSource, String xhtmlPublishDir, String pdfPublishDir) throws IOException {
+    /*protected void publishAllegato(StampatoModel model, String xhtmlSource, String pdfSource, String xhtmlPublishDir, String pdfPublishDir) throws IOException {
         copyAllegati(getAllegati(xhtmlSource, model.getBarcode()), xhtmlPublishDir, model);
         copyAllegati(getAllegati(pdfSource, model.getBarcode()), pdfPublishDir, model);
+    }*/
+    
+    protected void publishAllegato(StampatoModel model, String source, String publishDir) throws IOException {
+        copyAllegati(getAllegati(source, model.getBarcode()), publishDir, model);
     }
 
     private void copyAllegati(File[] allegati, String destPath, StampatoModel model) throws IOException {
@@ -282,32 +296,42 @@ public class StampatiService {
     
     public StampatoModel rigonero(StampatoModel model) throws IOException {
         StampatoModel rigonero = new StampatoModel();
-      //  List<StampatoRelatoreModel> stampatiRelatori = new ArrayList<StampatoRelatoreModel>();
-     //   List<StampatoFelModel> stampatiFel = new ArrayList<StampatoFelModel>();
-        String BarcodeRigonero = extractRigoneroBarcode(model.getId().getBarcode());
-        Optional<Stampato> stampatoOpt = stampatiRepository.findByIdLegislaturaAndIdBarcode(model.getId().getLegislatura(), BarcodeRigonero);
-        if(!stampatoOpt.isPresent()) {
-        	unpublish(model);
-        	delete(model);
-        	//rigonero = model;
-        	beanMapper.map(model, rigonero);
-        	rigonero.getId().setBarcode(BarcodeRigonero);
-        	rigonero.setRigoNero(model.getId().getBarcode());
-        	rigonero.setHtmlPresente(false);
-        	rigonero.setPdfPresente(false);
-        	rigonero.setDataDeleted(null);
-        	//stampatiRelatori = model.getStampatiRelatori();
-        	//stampatiFel = model.getStampatiFel();
-        	//rigonero.setStampatiRelatori(stampatiRelatori);
-        	//rigonero.setStampatiFel(stampatiFel);
-        	//extractorService.updateNomeFrontespizio(rigonero);
-        	extractorService.updateNomeFile(rigonero);
-        	rigonero = save(rigonero);
-	        logger.info("Rigo nero created successfully");
-	        return beanMapper.map(rigonero, StampatoModel.class);
-        } else {
-        	throw new IOException("Rigo nero already exist !");
-        }
+        String barcodeRigonero = extractRigoneroBarcode(model.getId().getBarcode());
+        Optional<Stampato> stampatoOpt = stampatiRepository.findByIdLegislaturaAndIdBarcode(model.getId().getLegislatura(), model.getId().getBarcode());
+        Optional<Stampato> rigoneroOpt = stampatiRepository.findByIdLegislaturaAndIdBarcode(model.getId().getLegislatura(), barcodeRigonero);
+        if (rigoneroOpt.isPresent())
+            throw new IOException("Rigo nero già esiste: " + barcodeRigonero);
+        if (stampatoOpt.isEmpty())
+            throw new IOException("Stampato di partenza non trovato: " +model.getId().getBarcode());
+        unpublish(model);
+        delete(model);
+        beanMapper.map(model, rigonero);
+        rigonero.getId().setBarcode(barcodeRigonero);
+        rigonero.setRigoNero(model.getId().getBarcode());
+        rigonero.setHtmlPresente(false);
+        rigonero.setPdfPresente(false);
+        rigonero.setDataDeleted(null);
+        Stampato originalStampato = stampatoOpt.get();
+        List<StampatoRelatoreModel> newRelatoriList = originalStampato.getStampatiRelatori()
+            .stream().map(relatore -> {
+                StampatoRelatoreModel newRelatore = new StampatoRelatoreModel();
+                beanMapper.map(relatore, newRelatore);
+                newRelatore.setId(null); // Ensure new entity creation
+                return newRelatore;
+            }).collect(Collectors.toList());
+        List<StampatoFelModel> newFelList = originalStampato.getStampatiFel()
+            .stream().map(fel -> {
+                StampatoFelModel newFel = new StampatoFelModel();
+                beanMapper.map(fel, newFel);
+                newFel.setId(null); // Ensure new entity creation
+                return newFel;
+            }).collect(Collectors.toList());
+        rigonero.setStampatiRelatori(new ArrayList<>(newRelatoriList));
+        rigonero.setStampatiFel(new ArrayList<>(newFelList));
+        extractorService.updateNomeFile(rigonero);
+        rigonero = save(rigonero);
+        logger.info("Rigo nero created successfully");
+        return beanMapper.map(rigonero, StampatoModel.class);
     }
     
     private String extractRigoneroBarcode(String barcode) {
@@ -322,7 +346,6 @@ public class StampatiService {
     }
     
     public StampatoModel errataCorrige(StampatoModel model) throws FileNotFoundException {
-    	//StampatoIdModel stamaptoId = new StampatoIdModel();
     	StampatoModel errataCorrige = new StampatoModel();
     	Optional<Stampato> last = stampatiRepository.findLastInserted();
     	if(last.isPresent()) {
@@ -330,19 +353,13 @@ public class StampatiService {
     		String barcodeAvailable = extractErrataBarcode(lastBarcode);
     		unpublish(model);
     		delete(model);
-    		//stamaptoId.setLegislatura(model.getId().getLegislatura());
-    		//stamaptoId.setBarcode(barcodeAvailable);
     		errataCorrige = model;
     		errataCorrige.getId().setBarcode(barcodeAvailable);
-    		//errataCorrige.setId(stamaptoId);
     		errataCorrige.setHtmlPresente(false);
     		errataCorrige.setPdfPresente(false);
     		errataCorrige.setDataDeleted(null);
-    		//errataCorrige.setRigoNero(model.getRigoNero());
     		errataCorrige.setErrataCorrige(true);
-    		//errataCorrige.setNumeriPDL(model.getNumeriPDL());
     		errataCorrige.setSuffisso("Errata Corrige");
-    		//extractorService.updateNomeFrontespizio(errataCorrige);
     		errataCorrige.setNomeFrontespizio(errataCorrige.getNomeFrontespizio() + "-Errata Corrige");
     		extractorService.updateNomeFile(errataCorrige);
     		errataCorrige = save(errataCorrige);

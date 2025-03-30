@@ -61,7 +61,7 @@ export class RicercaComponent implements OnInit {
 	}
 
 	showDialogRicerca() {
-		this.ref = this.dialogService.open(DialogRicercaComponent, {header: 'Carica Stampato da Elaborare della LEGISLATURA: ' + this.legislatures[0].legArabo, width: '40%', height: '60%',
+		this.ref = this.dialogService.open(DialogRicercaComponent, {header: 'Carica Stampato da Elaborare della LEGISLATURA: ' + this.legislatures[0].legArabo, width: '40%', height: '80%',
 			modal: true, contentStyle: { overflow: 'auto' }, baseZIndex: 10000, closable: true, dismissableMask: true });
 	    this.ref.onClose.subscribe(stampatoLoaded => {
 	    	if (stampatoLoaded) {

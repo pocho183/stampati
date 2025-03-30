@@ -1,15 +1,14 @@
-<div>
+<div class="custom-card">
 	<p-card>
 		<p-toast />
-		<div><span class="text-2xl text-left font-bold">Menu di gestione del Frontespizio</span></div>
 		<div class="flex justify-content-between flex-wrap mt-2 gap-4">
-			<div class="flex flex-column w-30rem"><input [(ngModel)]="stampato.nomeFrontespizio" pInputText placeholder="Nome del Frontespizio" readonly/></div>
-			<div class="flex flex-column flex-grow-1 w-20rem"><input [(ngModel)]="stampato.nomeFile" pInputText placeholder="Nome file" readonly class="w-full"/></div>
+			<div class="flex flex-column w-30rem"><label class="font-bold block mb-2">Frontespizio</label><input [(ngModel)]="stampato.nomeFrontespizio" pInputText readonly style="border: none; outline: none; background: transparent;"/></div>
+			<div class="flex flex-column flex-grow-1 w-20rem"><label class="font-bold block mb-2">Nomefile</label><input [(ngModel)]="stampato.nomeFile" pInputText readonly class="w-full" style="border: none; outline: none; background: transparent;"/></div>
 		</div>
 		<div class="flex justify-content-between flex-wrap mt-2 gap-2">
 			<div class="flex flex-row">
 				<div>
-					<label class="font-bold block mb-2">Numeri PDL del frontespizio</label>
+					<label class="font-bold block mb-2 required-field">Numeri PDL del frontespizio</label>
            			<p-inputgroup>
 		    			<input [(ngModel)]="stampato.numeriPDL" (ngModelChange)="onChangeNumeriPDL($event)" pInputText/>
 		    			<p-inputgroup-addon><div><p-button (click)="showDialog()" pTooltip="Modifica" tooltipPosition="top" icon="pi pi-pencil" [style]="{'background-color': '#285492'}"/></div></p-inputgroup-addon>
@@ -27,27 +26,27 @@
 			<div class="flex flex-column items-center">
            		<div class="flex align-items-center justify-content-center"><label class="font-bold block mb-2">Testo Unificato</label></div>
            		<div class="flex align-items-center justify-content-center">
-           			<p-checkbox [(ngModel)]="stampato.testoUnificato" [binary]="true" />
+           			<p-checkbox [(ngModel)]="stampato.testoUnificato" [binary]="true" [disabled]="isDisabled" />
            		</div>
        		</div>
        		<div class="flex flex-column items-center">
            		<div class="flex align-items-center justify-content-center"><label class="font-bold block mb-2">Rinvio in Commissione</label></div>
            		<div class="flex align-items-center justify-content-center">
-           			<p-checkbox [(ngModel)]="stampato.rinvioInCommissione" (onChange)="onChangeRinvio($event)" [binary]="true" />
+           			<p-checkbox [(ngModel)]="stampato.rinvioInCommissione" (onChange)="onChangeRinvio($event)" [binary]="true" [disabled]="!stampato.lettera"/>
            		</div>
        		</div>
        		<div class="flex flex-column">
            		<div class="flex align-items-center justify-content-center"><label class="font-bold block mb-2">Maggioranza</label></div>
            		<div class="flex align-items-center justify-content-center">
-           			<p-checkbox [(ngModel)]="stampato.relazioneMagg" [binary]="true" />
+           			<p-checkbox [(ngModel)]="stampato.relazioneMagg" [binary]="true" [disabled]="!stampato.lettera"/>
            		</div>
        		</div>
        		<div>
            		<label class="font-bold block mb-2">Minoranza</label>
-           		<p-select [options]="minoranza" [(ngModel)]="stampato.relazioneMin" (onChange)="onChangeRelMin($event)" [showClear]="true" placeholder="Seleziona Minoranza" class="w-14rem"/>
+           		<p-select [options]="minoranza" [(ngModel)]="stampato.relazioneMin" (onChange)="onChangeRelMin($event)" [showClear]="true" placeholder="Seleziona Minoranza" [disabled]="!stampato.lettera" class="w-14rem"/>
 			</div>
        		<div>
-           		<label class="font-bold block mb-2">Pagine</label>
+           		<label class="font-bold block mb-2">Numero Pagine PDF</label>
 	    		<input [(ngModel)]="stampato.pagine" pInputText />
            	</div>
 		</div>

@@ -24,6 +24,7 @@ import { DialogService, DynamicDialogRef } from "primeng/dynamicdialog";
 import { DialogEmailComponent } from "./dialog.email.component";
 import { PdfViewerComponent } from "../pdfviewer/pdfviewer.component";
 import { diffWords } from 'diff';
+import { environment } from "environments/environment.develop";
 
 @Component({
 	standalone: true,
@@ -83,6 +84,17 @@ export class BarcodeComponent implements OnInit {
 	copyTitle() {
 		this.stampato.titolo = this.text;
 		this.compareTexts();
+	}
+	
+	linkPDL() {
+		if(this.stampato && this.stampato.id && this.stampato.id.barcode && this.stampato.numeriPDL) {
+			let url = environment.linkPDL.replace("{legislatura}", ''+this.stampato.id.legislatura).replace("{legislatura}", ''+this.stampato.id.legislatura).replace("{numeroPDL}", ''+this.stampato.numeriPDL);
+			// Append a unique cache-busting anchor to avoid cache
+			const now = new Date();
+			const timeString = `${now.getHours()}${now.getMinutes()}${now.getSeconds()}`;
+			url += `#${timeString}`;
+			window.open(url, "_blank");
+		}
 	}
 	
 	preview(format: string) {

@@ -143,7 +143,10 @@ export class StampatoComponent implements OnInit {
 				this.stampato = publishedStampato;
 				this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Stampato pubblicato!' });
 			},
-		    error: (err) => { this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Pubblicazione fallita!' }); }
+			error: (err) => {
+				let errorMessage = err?.message || 'Pubblicazione fallita!';
+				this.messageService.add({ severity: 'error', summary: 'Errore', detail: errorMessage });
+			}
 		});
 	}
 	
