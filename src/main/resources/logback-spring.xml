@@ -7,9 +7,9 @@
 		</encoder>
 	</appender>
 	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>C:\Software\workspace_2024_12\stampati\temp\application.log</file>
+		<file>/Users/manuel/workspace/stampati/temp/application.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>C:\Software\workspace_2024_12\stampati\temp\application.%d{yyyy-MM-dd}.log
+			<fileNamePattern>/Users/manuel/workspace/stampati/temp/application.%d{yyyy-MM-dd}.log
 			</fileNamePattern>
 			<maxHistory>5</maxHistory>
 		</rollingPolicy>
@@ -29,7 +29,6 @@
 			<appender-ref ref="STDOUT" />
 		</logger>
 	</springProfile>
-
 	<root level="WARN">
 		<appender-ref ref="STDOUT" />
 	</root>

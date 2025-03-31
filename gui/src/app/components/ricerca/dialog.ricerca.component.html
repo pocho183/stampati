@@ -5,11 +5,15 @@
 	  	</ng-template>
 	</p-selectbutton>
 </div>
-<p-table [value]="stampati" selectionMode="single" showGridlines stripedRows [scrollable]="true" class="m-4" size="large">
+<p-table [value]="stampati" selectionMode="single" showGridlines stripedRows [scrollable]="true" class="m-4" size="small" [globalFilterFields]="['barcode']">
     <ng-template #header>
         <tr>
-            <th>Barcode da elaborare</th>
+            <th>Barcode da Elaborare</th>
             <th style="width:25%">Opzioni</th>
+        </tr>
+        <tr>
+            <th><p-columnFilter type="text" field="barcode" matchMode="contains" placeholder="Barcode da Elaborare" ariaLabel="Filter" /></th>
+            <th style="width:25%"></th>
         </tr>
     </ng-template>
     <ng-template #body let-stampato>

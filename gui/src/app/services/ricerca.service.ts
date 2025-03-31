@@ -11,7 +11,6 @@ export class RicercaService {
 	constructor(private http: HttpClient) {}
 	
 	search(leg:number, textSearch: string): Observable<RicercaModel[]> {
-		console.log('Searching.....');
 		const url = '/search/stampato';
 		const params = new HttpParams().set('leg', leg).set('text', textSearch);
 	    return this.http.get<RicercaModel[]>(url, { params: params });

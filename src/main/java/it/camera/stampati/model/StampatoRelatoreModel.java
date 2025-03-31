@@ -7,6 +7,7 @@ import lombok.Setter;
 @Setter
 public class StampatoRelatoreModel {
 
+	private Long id;
 	private Long idPersona;
 	private String cognome;
 	private Boolean maggioranza;

@@ -10,3 +10,8 @@
     flex-basis: 50%;
     max-width: 100%;
 }
+
+.custom-card {
+    padding: 0rem 1.0rem 0rem 1.0rem;
+    background-color: #f9f9f9;
+}
