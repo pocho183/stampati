@@ -34,7 +34,7 @@ import it.esinware.mapping.BeanMapper;
 @Service
 public class ExtractorService {
 
-private static final Logger logger = LoggerFactory.getLogger(ExtractorService.class);
+	private static final Logger logger = LoggerFactory.getLogger(ExtractorService.class);
 	
 	@Autowired
 	private BeanMapper beanMapper;

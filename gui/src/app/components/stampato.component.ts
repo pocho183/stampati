@@ -9,6 +9,7 @@ import { StampatoIdModel, StampatoModel } from "app/models/stampato.model";
 import { ButtonModule } from 'primeng/button';
 import { NgIf } from '@angular/common';
 import { StampatoService } from "app/services/stampato.service";
+import { FelService } from "app/services/fel.service";
 import { DialogService, DynamicDialogRef } from "primeng/dynamicdialog";
 import { MessageService } from "primeng/api";
 import { AnswerFooterComponent } from "./dialog/dialog.answer.footer.component";
@@ -21,7 +22,7 @@ import * as _ from 'lodash';
 	selector: 'stampato',
 	imports: [SplitterModule, RicercaComponent, BarcodeComponent, FrontespizioComponent, RelatoriComponent, 
 		PresentazioneComponent, ButtonModule, NgIf, ToastModule],
-	providers: [StampatoService, MessageService, DialogService],
+	providers: [StampatoService, FelService, MessageService, DialogService],
 	templateUrl: './stampato.component.html',
 	styleUrl: './stampato.component.css'
 })
@@ -33,10 +34,12 @@ export class StampatoComponent implements OnInit {
 	private ref: DynamicDialogRef | undefined;
 	
 	constructor(private stampatoService: StampatoService,
-			private dialogService: DialogService,
-			private messageService: MessageService) { }
+		private felService: FelService,
+		private dialogService: DialogService,
+		private messageService: MessageService) { }
 	
-    ngOnInit() { 
+    ngOnInit() {
+		this.loadFel();
 		this.originalStampato = _.cloneDeep(this.stampato);
 	}
 	
@@ -197,6 +200,18 @@ export class StampatoComponent implements OnInit {
 					},
 					error: (err) => { this.messageService.add({ severity: 'error', summary: 'Errore durante il ripristino dello stampato' }); }
 				});
+			}
+		});
+	}
+	
+	loadFel() {
+		this.felService.loadFel(this.stampato).subscribe({
+			next: (eFelStampato) => {
+				this.stampato = eFelStampato;
+			},
+			error: (err) => {
+				let errorMessage = err?.message || 'Caricamento dati eFel fallito!';
+				this.messageService.add({ severity: 'error', summary: 'Errore', detail: errorMessage });
 			}
 		});
 	}
