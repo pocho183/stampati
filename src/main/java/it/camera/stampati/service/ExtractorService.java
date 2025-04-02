@@ -90,19 +90,8 @@ public class ExtractorService {
 	}
 	
 	public void updateNomeFrontespizio(StampatoModel stampato) {
-	    //String lettera = trimValue(stampato.getLettera());
-	    //String minoranza = trimValue(stampato.getRelazioneMin());
-	    //String suffisso = trimValue(stampato.getSuffisso());
-	    //String navette = trimValue(stampato.getNavette());
-	    String numeriPDL = trimValue(stampato.getNumeriPDL());
-	    numeriPDL = numeriPDL.replaceAll("\\b([A-Z])R\\b", "$1/R");
-	    //String rinvio = Boolean.TRUE.equals(stampato.getRinvioInCommissione()) ? "/R" : "";
-	    //String parts = Arrays.asList(lettera, navette).stream().filter(part -> !part.isEmpty()).collect(Collectors.joining("-"));
-        //String rest = Arrays.asList(minoranza, suffisso).stream().filter(part -> !part.isEmpty()).collect(Collectors.joining("-"));
-        //String finalPart = (!parts.isEmpty() ? parts : "") + (!rinvio.isEmpty() ? rinvio : "") +
-          //      (!rest.isEmpty() ? (!parts.isEmpty() || !rinvio.isEmpty() ? "-" + rest : rest) : "");
-        //String nomeFrontespizio = numeriPDL + (!finalPart.isEmpty() ? "_" + finalPart : "");
-        stampato.setNomeFrontespizio(numeriPDL);
+	    if(stampato.getNomeFrontespizio() != null && stampato.getNomeFrontespizio() != " " && stampato.getSuffisso() != null && stampato.getSuffisso() != "")
+	    	stampato.setNomeFrontespizio((stampato.getNomeFrontespizio() + "-" +stampato.getSuffisso()).replace(" ", "-"));
 	}
 
 	private String trimValue(String value) {

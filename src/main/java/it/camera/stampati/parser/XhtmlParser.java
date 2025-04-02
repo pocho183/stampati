@@ -9,6 +9,8 @@ import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import org.xml.sax.InputSource;
+import java.io.StringReader;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +31,13 @@ public class XhtmlParser {
 	public StampatoModel parse(File file) {
 		try {
 	        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+	        // Prevent loading external DTDs but allow DOCTYPE declaration
+	        //factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+	        //factory.setFeature("http://xml.org/sax/features/validation", false);
+	        //factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", false);
 	        DocumentBuilder builder = factory.newDocumentBuilder();
+	        // Ignore DTD-related errors
+	        //builder.setEntityResolver((publicId, systemId) -> new InputSource(new StringReader("")));
 	        Document document = builder.parse(file);
 	        document.getDocumentElement().normalize();
 	        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
@@ -53,6 +61,8 @@ public class XhtmlParser {
 	        stampato.setRinvioInCommissione(getRinvio(atto));
 	        stampato.setNumeroAtto(atto.split("-")[0]);
 	        stampato.setNumeriPDL(atto);
+	        stampato.setNomeFrontespizio(getNomeFrontespizio(document));
+	        stampato.setSuffisso(getSuffisso(document));
 	        // Extract the first match title
 	        NodeList titleNodes = document.getElementsByTagName("p");
 	        for (int i = 0; i < titleNodes.getLength(); i++) {
@@ -136,6 +146,82 @@ public class XhtmlParser {
         }
         return "";
     }
+    
+    private String getNomeFrontespizio(Document doc) {
+        NodeList attoNodes = doc.getElementsByTagName("p");
+        for (int i = 0; i < attoNodes.getLength(); i++) {
+            Element p = (Element) attoNodes.item(i);
+            if ("numeroAtto".equals(p.getAttribute("class"))) {
+                String text = p.getTextContent().replaceAll("\\s+", " ").trim();
+                if (text.startsWith("N. ")) {
+                    text = text.substring(3).trim();
+                }
+                return text;
+            }
+        }
+        return "";
+    }
+
+    private String getSuffisso(Document doc) {
+        NodeList attoNodes = doc.getElementsByTagName("p");
+        for (int i = 0; i < attoNodes.getLength(); i++) {
+            Element p = (Element) attoNodes.item(i);
+            if ("numeroAtto".equals(p.getAttribute("class"))) {
+                Node nextNode = p.getNextSibling();
+                while (nextNode != null && nextNode.getNodeType() == Node.TEXT_NODE) {
+                    nextNode = nextNode.getNextSibling();
+                }
+                if (nextNode instanceof Element) {
+                    Element nextElement = (Element) nextNode;
+                    if ("center".equals(nextElement.getAttribute("class")))
+                        return getTextWithSpaces(nextElement).trim();
+                }
+                break;
+            }
+        }
+        return "";
+    }
+
+    private String getTextWithSpaces(Element element) {
+        StringBuilder text = new StringBuilder();
+        NodeList childNodes = element.getChildNodes();
+        for (int i = 0; i < childNodes.getLength(); i++) {
+            Node node = childNodes.item(i);
+            if (node.getNodeType() == Node.TEXT_NODE) {
+                text.append(node.getTextContent().trim()).append(" ");
+            } else if (node.getNodeType() == Node.ELEMENT_NODE) {
+                text.append(getTextWithSpaces((Element) node)).append(" ");
+            }
+        }
+        return text.toString().replaceAll("\\s+", " ").trim();
+    }
+
+    
+    /*private String getNomeFrontespizio(Document document) {
+        NodeList attoNodes = document.getElementsByTagName("p");
+        for (int i = 0; i < attoNodes.getLength(); i++) {
+            Element p = (Element) attoNodes.item(i);
+            if ("numeroAtto".equals(p.getAttribute("class"))) {
+                // Extract text content of the element
+                String text = p.getTextContent().replaceAll("\\s+", " ").trim();
+                // Remove "N. " prefix if present
+                if (text.startsWith("N. "))
+                    text = text.substring(3).trim();
+                // Check for an additional <p> tag with class "center" (e.g., TOMO I case)
+                Node nextNode = p.getNextSibling();
+                while (nextNode != null && nextNode.getNodeType() == Node.TEXT_NODE) {
+                    nextNode = nextNode.getNextSibling();
+                }
+                if (nextNode instanceof Element) {
+                    Element nextElement = (Element) nextNode;
+                    if ("center".equals(nextElement.getAttribute("class")))
+                        text += "-" + nextElement.getTextContent().trim();
+                }
+                return text;
+            }
+        }
+        return "";
+    }*/
     
     private String getLettera(String atto) {
         String lettera = null;
