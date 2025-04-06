@@ -18,6 +18,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -71,6 +73,18 @@ public class StampatiService {
 	//private final String BARCODE_REGEXP = "[1-9][0-9]*(PDL|MSG)[0-9]{7}";
 	private final String BARCODE_REGEXP = "[1-9][0-9]*(PDL|MSG|TU)[0-9]{4,7}";
 	
+	public static final List<String> STRALCIO = List.of(
+		"bis", "ter", "quater", "quinquies", "sexies", "septies", "octies", "novies", "decies",
+	    "undecies", "duodecies", "terdecies", "quaterdecies", "quindecies", "sedecies", 
+	    "septiesdecies", "duodevicies", "undevicies", "vicies", "semeletvicies", "bisetvicies",
+	    "teretvicies", "quateretvicies", "quinquiesetvicies", "sexiesetvicies", "septiesetvicies",
+	    "octiesetvicies", "noviesetvicies", "tricies", "semelettricies", "bisettricies", "terettricies",
+	    "quaterettricies", "quinquiesettricies", "sexiesettricies", "septiesettricies", "octiesettricies",
+	    "noviesettricies", "quadragies", "semeletquadragies", "bisetquadragies", "teretquadragies",
+	    "quateretquadragies", "quinquiesetquadragies", "sexiesetquadragies", "septiesetquadragies",
+	    "octiesetquadragies", "noviesetquadragies", "quinquagies"
+	);
+	
 	public StampatoModel save(StampatoModel model) {
 	    String barcode = model.getId().getBarcode();
 	    if (barcode == null || !barcode.matches("(" + BARCODE_REGEXP + ")"))
@@ -80,7 +94,9 @@ public class StampatiService {
 	        model.getId().setLegislatura(lastLegislature);
 	    }
 	    Stampato stampato = beanMapper.map(model, Stampato.class);
-	    stampato.setNumeroAtto(model.getNumeriPDL().split("-")[0]);
+	    //stampato.setNumeroAtto(model.getNumeriPDL().split("-")[0]);
+	    String stralcio = getStralcio(model.getNumeriPDL());
+        stampato.setNumeroAtto(stralcio != null ? model.getNumeriPDL().split("-")[0] + "-" + stralcio : model.getNumeriPDL().split("-")[0]);
 	    stampato = stampatiRepository.save(stampato);
 	    logger.info("Stampato saved successfully");
         return beanMapper.map(stampato, StampatoModel.class);
@@ -366,6 +382,15 @@ public class StampatiService {
 	        logger.info("Errata Corrige created successfully");
 	        return beanMapper.map(errataCorrige, StampatoModel.class);
     	}
+        return null;
+    }
+    
+    private String getStralcio(String atto) {
+    	Pattern pattern = Pattern.compile("-(?i)(" + String.join("|", STRALCIO) + ")");
+        Matcher matcher = pattern.matcher(atto);
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
         return null;
     }
     

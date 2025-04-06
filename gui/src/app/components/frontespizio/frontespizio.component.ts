@@ -41,7 +41,7 @@ export class FrontespizioComponent implements OnInit {
 		{ label: 'P', value: 'P' }, { label: 'R', value: 'R' }, { label: 'T', value: 'T' },
 		{ label: 'V', value: 'V' } ];
 	minoranza = [ { label: 'bis', value: 'bis' }, { label: 'ter', value: 'ter' }, { label: 'quater', value: 'quater' },
-		{ label: 'quinquies', value: 'quinquies' }, { label: 'sexies', vlabel: 'sexies' }, { label: 'septies', value: 'septies' },
+		{ label: 'quinquies', value: 'quinquies' }, { label: 'sexies', value: 'sexies' }, { label: 'septies', value: 'septies' },
 	    { label: 'octies', value: 'octies' }, { label: 'novies', value: 'novies' }, { label: 'decies', value: 'decies' },
 		{ label: 'undecies', value: 'undecies' }, { label: 'duodecies', value: 'duodecies' }, { label: 'terdecies', value: 'terdecies' },
 		{ label: 'quaterdecies', value: 'quaterdecies' }, { label: 'quindecies', value: 'quindecies' }, { label: 'sedecies', value: 'sedecies' },
@@ -57,6 +57,7 @@ export class FrontespizioComponent implements OnInit {
 		{ label: 'quater et quadragies', value: 'quateretquadragies' }, { label: 'quinquiesetquadragies', value: 'quinquies et quadragies' }, { label: 'sexies et quadragies', value: 'sexiesetquadragies' },
 		{ label: 'septies et quadragies', value: 'septiesetquadragies' }, { label: 'octies et quadragies', value: 'octiesetquadragies' }, { label: 'novies et quadragies', value: 'noviesetquadragies' },
 		{ label: 'quinquagies', value: 'quinquagies' } ];
+
 	isDisabled: boolean = true;
 	legislature: LegislaturaModel = null;
 		
@@ -107,31 +108,43 @@ export class FrontespizioComponent implements OnInit {
 	}
 	
 	updateNomeFrontespizio(): void {
-		let numeriPDL = this.stampato.numeriPDL ? this.stampato.numeriPDL.split('-')[0] : '';
-		let frontespizio = numeriPDL;
-		if(this.stampato.relazioneMin?.trim()) frontespizio += '-' + this.stampato.relazioneMin;
-		if (this.stampato.navette?.trim()) frontespizio += '-' + this.stampato.navette;
-		let relazione = this.stampato.lettera ? "-" + this.stampato.lettera : '';
-		if (this.stampato.rinvioInCommissione) relazione += '/R';
-		if (relazione.trim()) frontespizio = frontespizio + relazione; 
-		if(this.stampato.suffisso?.trim())  frontespizio += "-" + this.stampato.suffisso;
-		this.stampato.nomeFrontespizio = frontespizio;
+		if(this.stampato.numeriPDL) {
+			let stralcio = this.utilityService.getStralcio(this.stampato.numeriPDL);   
+			let numeriPDL = stralcio != null ? this.stampato.numeriPDL.split("-")[0] + "-" + stralcio : this.stampato.numeriPDL.split("-")[0]
+			//let numeriPDL = this.stampato.numeriPDL ? this.stampato.numeriPDL.split('-')[0] : '';
+			let frontespizio = numeriPDL;
+			if (this.stampato.navette?.trim()) frontespizio += '-' + this.stampato.navette;
+			let relazione = this.stampato.lettera ? "-" + this.stampato.lettera : '';
+			if (this.stampato.rinvioInCommissione) relazione += '/R';
+			if (relazione.trim()) frontespizio = frontespizio + relazione;
+			if(this.stampato.relazioneMin?.trim()) frontespizio += '_' + this.stampato.relazioneMin;				
+			if(this.stampato.suffisso?.trim())  frontespizio += "-" + this.stampato.suffisso;
+			this.stampato.nomeFrontespizio = frontespizio;
+		}
 	}
 	
 	updateFilename() :void {
 		if(!this.stampato || !this.stampato.id || this.stampato.id.barcode != null) {
+			let stralcio = this.utilityService.getStralcio(this.stampato.numeriPDL);   
+			let numeriPDL = stralcio != null ? this.stampato.numeriPDL.split("-")[0] + "-" + stralcio : this.stampato.numeriPDL.split("-")[0]
 			let type = this.extractTypeStampato(this.stampato.id.barcode);
-			let numeriPDL = this.stampato.numeriPDL ? this.stampato.numeriPDL.split('-')[0] : 'unknown';
+			//let numeriPDL = this.stampato.numeriPDL ? this.stampato.numeriPDL.split('-')[0] : 'unknown';
 			let filename = 'leg.' + this.legislature.legArabo + "." + (type ? type : '') + '.camera.' + numeriPDL;
-			if (this.stampato.relazioneMin?.trim()) filename += '-' + this.stampato.relazioneMin;
 			if (this.stampato.navette?.trim()) filename += '-' + this.stampato.navette;
 			let relazione = this.stampato.lettera ? this.stampato.lettera : '';
 			if (this.stampato.rinvioInCommissione) relazione += 'R';
-			//if (this.stampato.relazioneMin?.trim())
-			//	relazione = relazione.trim() ? relazione.concat('-').concat(this.stampato.relazioneMin) : relazione.concat(this.stampato.relazioneMin);
-			if (relazione.trim()) filename = filename + '_' + relazione;    
+			if (relazione.trim()) filename = filename + '_' + relazione;
+			if (this.stampato.relazioneMin?.trim()) filename += '_' + this.stampato.relazioneMin;						 
 			this.stampato.nomeFile = filename + '.' + this.stampato.id.barcode;
 		}
+	}
+	
+	onClearLetter() {
+		this.stampato.relazioneMin = "";
+		this.stampato.relazioneMagg = false;
+		this.stampato.rinvioInCommissione = false;
+		this.updateNomeFrontespizio();
+		this.updateFilename();
 	}
 	
 	extractTypeStampato(input: string) {

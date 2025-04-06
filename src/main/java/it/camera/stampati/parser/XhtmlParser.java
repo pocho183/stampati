@@ -27,6 +27,17 @@ public class XhtmlParser {
 	
 	private static final Logger logger = LoggerFactory.getLogger(XhtmlParser.class);
 
+	public static final List<String> STRALCIO = List.of(
+		"bis", "ter", "quater", "quinquies", "sexies", "septies", "octies", "novies", "decies",
+	    "undecies", "duodecies", "terdecies", "quaterdecies", "quindecies", "sedecies", 
+	    "septiesdecies", "duodevicies", "undevicies", "vicies", "semeletvicies", "bisetvicies",
+	    "teretvicies", "quateretvicies", "quinquiesetvicies", "sexiesetvicies", "septiesetvicies",
+	    "octiesetvicies", "noviesetvicies", "tricies", "semelettricies", "bisettricies", "terettricies",
+	    "quaterettricies", "quinquiesettricies", "sexiesettricies", "septiesettricies", "octiesettricies",
+	    "noviesettricies", "quadragies", "semeletquadragies", "bisetquadragies", "teretquadragies",
+	    "quateretquadragies", "quinquiesetquadragies", "sexiesetquadragies", "septiesetquadragies",
+	    "octiesetquadragies", "noviesetquadragies", "quinquagies"
+	);
 
 	public StampatoModel parse(File file) {
 		try {
@@ -50,6 +61,9 @@ public class XhtmlParser {
 	        if(!("0".equals(getMetaContent(document, "rigoNero"))))
 	        	stampato.setRigoNero(extractRigoNeroParent(stampatoId.getBarcode()));
 	        stampato.setErrataCorrige("0".equals(getMetaContent(document, "errataCorrige")) ? false : getMetaContent(document, "errataCorrige") != null);
+	        
+	        // Da provare con un caso di errata corrige perchè legge l'html e in questo caso
+	        // potrebbe inserirlo due volte
 	        if(stampato.getErrataCorrige())
 	        	stampato.setSuffisso("-Errata Corrige");
 	        stampato.setHtmlPresente(true);
@@ -57,9 +71,12 @@ public class XhtmlParser {
 	        String atto = getAtto(document);
 	        stampato.setLettera(getLettera(atto));
 	        stampato.setNavette(getNavette(atto));
+	        
+	        // Da rivedere, la minoranza è quando c'è _bis, non il caso -bis
 	        stampato.setRelazioneMin(getMinoranza(atto));
 	        stampato.setRinvioInCommissione(getRinvio(atto));
-	        stampato.setNumeroAtto(atto.split("-")[0]);
+	        String stralcio = getStralcio(atto);
+	        stampato.setNumeroAtto(stralcio != null ? atto.split("-")[0] + "-" + stralcio : atto.split("-")[0]);
 	        stampato.setNumeriPDL(atto);
 	        stampato.setNomeFrontespizio(getNomeFrontespizio(document));
 	        stampato.setSuffisso(getSuffisso(document));
@@ -240,6 +257,19 @@ public class XhtmlParser {
 			navette = matcher.group(0);
 		return navette;
 	}
+    
+    /*private String getStralcio(String atto) {
+        String minoranza = null;
+        Pattern pattern = Pattern.compile("bis|ter|quater|quinquies|sexies|septies|octies|novies|decies"
+        		+ "|undecies|duodecies|terdecies|quaterdecies|quindecies|sedecies|septiesdecies|duodevicies|undevicies|vicies"
+        		+ "|semeletvicies|bisetvicies|teretvicies|quateretvicies|quinquiesetvicies|sexiesetvicies|septiesetvicies|octiesetvicies|noviesetvicies|tricies"
+        		+ "|semelettricies|bisettricies|terettricies|quaterettricies|quinquiesettricies|sexiesettricies|septiesettricies|octiesettricies|noviesettricies|quadragies"
+        		+ "|semeletquadragies|bisetquadragies|teretquadragies|quateretquadragies|quinquiesetquadragies|sexiesetquadragies|septiesetquadragies|octiesetquadragies|noviesetquadragies|quinquagies");
+        Matcher matcher = pattern.matcher(atto);
+        if (matcher.find())
+        	minoranza = matcher.group(0);
+        return minoranza;
+    }
 
     private String getMinoranza(String atto) {
         String minoranza = null;
@@ -252,10 +282,27 @@ public class XhtmlParser {
         if (matcher.find())
         	minoranza = matcher.group(0);
         return minoranza;
+    }*/
+    
+    private String getStralcio(String atto) {
+    	Pattern pattern = Pattern.compile("-(?i)(" + String.join("|", STRALCIO) + ")");
+        Matcher matcher = pattern.matcher(atto);
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+        return null;
+    }
+
+    private String getMinoranza(String atto) {
+    	Pattern pattern = Pattern.compile("_(?i)(" + String.join("|", STRALCIO) + ")");
+        Matcher matcher = pattern.matcher(atto);
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+        return null;
     }
     
     private Boolean getRinvio(String atto) {
-		Boolean rinvio = null;
 		Pattern pattern = Pattern.compile("\\b[A-Z]R\\b");
 		Matcher matcher = pattern.matcher(atto);
 		if (matcher.find())

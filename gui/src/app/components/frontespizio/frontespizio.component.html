@@ -15,7 +15,7 @@
            	</div>
        		<div>
            		<label class="font-bold block mb-2">Lettera</label>
-           		<p-select [options]="letters" [(ngModel)]="stampato.lettera" (onChange)="onChangeLetter($event)" [showClear]="true" placeholder="Seleziona Lettera" class="w-14rem" />
+           		<p-select [options]="letters" [(ngModel)]="stampato.lettera" (onChange)="onChangeLetter($event)" (onClear)="onClearLetter()" [showClear]="true" placeholder="Seleziona Lettera" class="w-14rem" />
 			</div>
 			<div>
            		<label class="font-bold block mb-2">Navette</label>

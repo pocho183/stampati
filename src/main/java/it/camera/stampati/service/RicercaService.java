@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,15 +31,27 @@ private static final Logger logger = LoggerFactory.getLogger(RicercaService.clas
 	@Autowired
 	private StampatiService stampatoService;
 	
+	public static final List<String> STRALCIO = List.of(
+		"bis", "ter", "quater", "quinquies", "sexies", "septies", "octies", "novies", "decies",
+	    "undecies", "duodecies", "terdecies", "quaterdecies", "quindecies", "sedecies", 
+        "septiesdecies", "duodevicies", "undevicies", "vicies", "semeletvicies", "bisetvicies",
+	    "teretvicies", "quateretvicies", "quinquiesetvicies", "sexiesetvicies", "septiesetvicies",
+	    "octiesetvicies", "noviesetvicies", "tricies", "semelettricies", "bisettricies", "terettricies",
+	    "quaterettricies", "quinquiesettricies", "sexiesettricies", "septiesettricies", "octiesettricies",
+	    "noviesettricies", "quadragies", "semeletquadragies", "bisetquadragies", "teretquadragies",
+	    "quateretquadragies", "quinquiesetquadragies", "sexiesetquadragies", "septiesetquadragies",
+	    "octiesetquadragies", "noviesetquadragies", "quinquagies"
+	);
 	
 	public Collection<RicercaModel> searchStampato(String leg, String text) {
         logger.info("Searching stampati for legislatura: {}, text: {}", leg, text);
+        // Normalize text like "643 bis" to "643-bis"
+        text = normalizeRelMinoranzaFormat(text);
         List<Stampato> stampati = ricercaRepository.searchStampati(leg, text);
         if (stampati.isEmpty())
             logger.warn("No stampati found for legislatura: {}, text: {}", leg, text);
         Collection<RicercaModel> result = beanMapper.map(stampati, RicercaModel.class);
         Collections.sort((List<RicercaModel>)result, Comparator.comparing(RicercaModel::getBarcode));
-        //result.sort(Comparator.comparing(RicercaModel::getBarcode));
         return result;
     }
 	
@@ -68,4 +82,15 @@ private static final Logger logger = LoggerFactory.getLogger(RicercaService.clas
                 .thenComparing(RicercaModel::getBarcode, Comparator.nullsLast(Comparator.naturalOrder()))); 
 		return models;
 	}
+	
+	private String normalizeRelMinoranzaFormat(String text) {
+	    for (String stralcio : STRALCIO) {
+	        String pattern = "(\\d+)\\s+" + stralcio;
+	        if (text.toLowerCase().matches(pattern.toLowerCase())) {
+	            return text.replaceAll("(?i)(\\d+)\\s+" + stralcio, "$1-" + stralcio);
+	        }
+	    }
+	    return text;
+	}
+
 }

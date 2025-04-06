@@ -47,6 +47,18 @@ public class ExtractorService {
 	
 	private final String BARCODE_REGEXP = "[1-9][0-9]*(PDL|MSG|TU)[0-9]{4,7}";
 	
+	public static final List<String> STRALCIO = List.of(
+		"bis", "ter", "quater", "quinquies", "sexies", "septies", "octies", "novies", "decies",
+	    "undecies", "duodecies", "terdecies", "quaterdecies", "quindecies", "sedecies", 
+	    "septiesdecies", "duodevicies", "undevicies", "vicies", "semeletvicies", "bisetvicies",
+	    "teretvicies", "quateretvicies", "quinquiesetvicies", "sexiesetvicies", "septiesetvicies",
+	    "octiesetvicies", "noviesetvicies", "tricies", "semelettricies", "bisettricies", "terettricies",
+	    "quaterettricies", "quinquiesettricies", "sexiesettricies", "septiesettricies", "octiesettricies",
+		"noviesettricies", "quadragies", "semeletquadragies", "bisetquadragies", "teretquadragies",
+	    "quateretquadragies", "quinquiesetquadragies", "sexiesetquadragies", "septiesetquadragies",
+	    "octiesetquadragies", "noviesetquadragies", "quinquagies"
+	);
+	
 	public StampatoModel getStampato(TypographyToProcessModel model) throws FileNotFoundException {
         File file = loadFile(model);
         StampatoModel stampato = parseContent(file, model);
@@ -102,9 +114,10 @@ public class ExtractorService {
 		if (stampato != null && stampato.getId() != null && stampato.getId().getBarcode() != null) {
             String type = extractTypeStampato(stampato.getId().getBarcode());
             String numeriPDL = (stampato.getNumeriPDL() != null && !stampato.getNumeriPDL().isEmpty()) ? stampato.getNumeriPDL().split("-")[0] : "unknown";
+            String stralcio = getStralcio(stampato.getNumeriPDL());
+            if(stralcio != null && stralcio != "")
+            	numeriPDL = numeriPDL + "-" + stralcio;
             String filename = "leg." + stampato.getId().getLegislatura() + "." + (type != null ? type : "") + ".camera." + numeriPDL;
-            if(stampato.getRelazioneMin() != null && !stampato.getRelazioneMin().trim().isEmpty())
-                filename += "-" + stampato.getRelazioneMin();
             if(stampato.getNavette() != null && !stampato.getNavette().trim().isEmpty())
                 filename += "-" + stampato.getNavette();
             String relazione = (stampato.getLettera() != null) ? stampato.getLettera() : "";
@@ -112,10 +125,21 @@ public class ExtractorService {
                 relazione += "R";
             if (!relazione.trim().isEmpty())
                 filename = filename + "_" + relazione;
+            if(stampato.getRelazioneMin() != null && !stampato.getRelazioneMin().trim().isEmpty())
+                filename += "_" + stampato.getRelazioneMin();
             filename = filename + "." + stampato.getId().getBarcode();
             stampato.setNomeFile(filename);
         }
 	}
+	
+	private String getStralcio(String atto) {
+    	Pattern pattern = Pattern.compile("-(?i)(" + String.join("|", STRALCIO) + ")");
+        Matcher matcher = pattern.matcher(atto);
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+        return null;
+    }
 	
 	public static String extractTypeStampato(String input) {
 	    Pattern pattern = Pattern.compile("(PDL|MSG|TU)");

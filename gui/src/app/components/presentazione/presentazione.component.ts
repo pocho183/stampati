@@ -8,6 +8,7 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { SelectModule } from 'primeng/select';
 import { StampatoModel } from "app/models/stampato.model";
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { UtilityService } from "app/services/utility.service";
 
 @Component({
 	standalone: true,
@@ -24,7 +25,9 @@ export class PresentazioneComponent implements OnInit {
 		{ label: 'Trasmesso', value: 'trasmesso' }, { label: 'Stralciato', value: 'stralciato' }];
 	selectedTipoPresentazione: string | null = null;
 
-	constructor(private messageService: MessageService) {}
+	constructor(private messageService: MessageService,
+		private utilityService: UtilityService
+	) {}
 	
     ngOnInit() {
 		this.updateNomeFrontespizio();
@@ -33,34 +36,21 @@ export class PresentazioneComponent implements OnInit {
 	onChangeSuffisso(event: any) {
 		this.updateNomeFrontespizio();
 	}	
-	
-	/*updateNomeFrontespizio(): void {
-		const trimValue = (value?: string): string => value?.trim() || "";
-	    const lettera = trimValue(this.stampato.lettera);
-	    const minoranza = trimValue(this.stampato.relazioneMin);
-		const suffisso = trimValue(this.stampato.suffisso);
-		const navette = trimValue(this.stampato.navette);
-	    const numeriPDL = trimValue(this.stampato.numeriPDL);
-		const rinvio = this.stampato.rinvioInCommissione ? "/R" : "";
-		const parts = [minoranza, lettera, navette].filter(part => part.length > 0).join("-");
-		const rest = [suffisso].filter(part => part.length > 0).join("-");
-		const finalPart = 
-			(parts.length > 0 ? parts : "") +
-	        (rinvio.length > 0 ? rinvio : "") +
-		    (rest.length > 0 ? (parts.length > 0 || rinvio.length > 0 ? `-${rest}` : rest) : "");
-		this.stampato.nomeFrontespizio = numeriPDL + (finalPart.length > 0 ? `-${finalPart}` : "");
-	}*/
-	
+
 	updateNomeFrontespizio(): void {
-		let numeriPDL = this.stampato.numeriPDL ? this.stampato.numeriPDL.split('-')[0] : '';
-		let frontespizio = numeriPDL;
-		if(this.stampato.relazioneMin?.trim()) frontespizio += '-' + this.stampato.relazioneMin;
-		if (this.stampato.navette?.trim()) frontespizio += '-' + this.stampato.navette;
-		let relazione = this.stampato.lettera ? "-" + this.stampato.lettera : '';
-		if (this.stampato.rinvioInCommissione) relazione += '/R';
-		if (relazione.trim()) frontespizio = frontespizio + relazione; 
-		if(this.stampato.suffisso?.trim())  frontespizio += "-" + this.stampato.suffisso;
-		this.stampato.nomeFrontespizio = frontespizio;
+		if(this.stampato.numeriPDL) {
+			let stralcio = this.utilityService.getStralcio(this.stampato.numeriPDL);   
+			let numeriPDL = stralcio != null ? this.stampato.numeriPDL.split("-")[0] + "-" + stralcio : this.stampato.numeriPDL.split("-")[0]
+			//let numeriPDL = this.stampato.numeriPDL ? this.stampato.numeriPDL.split('-')[0] : '';
+			let frontespizio = numeriPDL;
+			if (this.stampato.navette?.trim()) frontespizio += '-' + this.stampato.navette;
+			let relazione = this.stampato.lettera ? "-" + this.stampato.lettera : '';
+			if (this.stampato.rinvioInCommissione) relazione += '/R';
+			if (relazione.trim()) frontespizio = frontespizio + relazione;
+			if(this.stampato.relazioneMin?.trim()) frontespizio += '_' + this.stampato.relazioneMin;				
+			if(this.stampato.suffisso?.trim())  frontespizio += "-" + this.stampato.suffisso;
+			this.stampato.nomeFrontespizio = frontespizio;
+		}
 	}
 
 }

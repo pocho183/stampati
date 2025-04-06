@@ -141,16 +141,21 @@ export class StampatoComponent implements OnInit {
 		
 	publish(stampato: StampatoModel) {
 		if(!this.confirmUnsavedChanges()) return;
-		this.stampatoService.publish(stampato).subscribe({
-			next: (publishedStampato) => {
-				this.stampato = publishedStampato;
-				this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Stampato pubblicato!' });
-			},
-			error: (err) => {
-				let errorMessage = err?.message || 'Pubblicazione fallita!';
-				this.messageService.add({ severity: 'error', summary: 'Errore', detail: errorMessage });
-			}
-		});
+		if(this.stampato.pdfPresente || this.stampato.htmlPresente) {_
+			this.stampatoService.publish(stampato).subscribe({
+				next: (publishedStampato) => {
+					this.stampato = publishedStampato;
+					this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Stampato pubblicato!' });
+				},
+				error: (err) => {
+					let errorMessage = err?.message || 'Pubblicazione fallita!';
+					this.messageService.add({ severity: 'error', summary: 'Errore', detail: errorMessage });
+				}
+			});
+		} else {
+			this.messageService.add({ severity: 'error', summary: 'Errore', detail: "Abilitare almeno una tipologia di pubblicazione: PDF o XHTML" });
+		}
+		
 	}
 	
 	unpublish(stampato: StampatoModel) {

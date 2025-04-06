@@ -143,16 +143,16 @@ export class BarcodeComponent implements OnInit {
 	
 	updateFilename() :void {
 		if(!this.stampato || !this.stampato.id || this.stampato.id.barcode != null) {
-		let type = this.extractTypeStampato(this.stampato.id.barcode);
-		let numeriPDL = this.stampato.numeriPDL ? this.stampato.numeriPDL.split('-')[0] : 'unknown';
-		let filename = 'leg.' + this.legislature.legArabo + "." + (type ? type : '') + '.camera.' + numeriPDL;
-		if (this.stampato.relazioneMin?.trim()) filename += '-' + this.stampato.relazioneMin;
-		if (this.stampato.navette?.trim()) filename += '-' + this.stampato.navette;
-		let relazione = this.stampato.lettera ? this.stampato.lettera : '';
-		if (this.stampato.rinvioInCommissione) relazione += 'R';
-		//if (this.stampato.relazioneMin?.trim())
-			//relazione = relazione.trim() ? relazione.concat('-').concat(this.stampato.relazioneMin) : relazione.concat(this.stampato.relazioneMin);
-		if (relazione.trim()) filename = filename + '_' + relazione;    
+			let stralcio = this.utilityService.getStralcio(this.stampato.numeriPDL);   
+			let numeriPDL = stralcio != null ? this.stampato.numeriPDL.split("-")[0] + "-" + stralcio : this.stampato.numeriPDL.split("-")[0]
+			let type = this.extractTypeStampato(this.stampato.id.barcode);
+			//let numeriPDL = this.stampato.numeriPDL ? this.stampato.numeriPDL.split('-')[0] : 'unknown';
+			let filename = 'leg.' + this.legislature.legArabo + "." + (type ? type : '') + '.camera.' + numeriPDL;
+			if (this.stampato.navette?.trim()) filename += '-' + this.stampato.navette;
+			let relazione = this.stampato.lettera ? this.stampato.lettera : '';
+			if (this.stampato.rinvioInCommissione) relazione += 'R';
+			if (relazione.trim()) filename = filename + '_' + relazione;
+			if (this.stampato.relazioneMin?.trim()) filename += '_' + this.stampato.relazioneMin;						 
 			this.stampato.nomeFile = filename + '.' + this.stampato.id.barcode;
 		}
 	}
@@ -161,4 +161,5 @@ export class BarcodeComponent implements OnInit {
 	    const match = input.match(/^\d{2}(PDL|MSG|TU)/);
 	    return match ? match[1].toLowerCase() : null;
 	}
+	
 }
