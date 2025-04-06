@@ -140,7 +140,7 @@ export class FrontespizioComponent implements OnInit {
 	}
 	
 	onClearLetter() {
-		this.stampato.relazioneMin = "";
+		this.stampato.relazioneMin = null;
 		this.stampato.relazioneMagg = false;
 		this.stampato.rinvioInCommissione = false;
 		this.updateNomeFrontespizio();
