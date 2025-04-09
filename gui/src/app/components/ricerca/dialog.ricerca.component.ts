@@ -74,11 +74,8 @@ export class DialogRicercaComponent implements OnInit {
 		}
 	}
 
-	
 	previewStampato(stampato: TypographyToProcessModel) {
 		let extension = stampato.format.toString().toLocaleLowerCase();
-		
-		console.log(extension);
 		let filename = stampato.barcode + "." + extension;
 		this.utilityService.preview(filename, stampato.legislaturaId, extension).subscribe(response => {
 		    if (response) {

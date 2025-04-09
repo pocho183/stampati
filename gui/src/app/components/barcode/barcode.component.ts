@@ -75,8 +75,6 @@ export class BarcodeComponent implements OnInit {
 			if (emailSuccess) {
 				this.compareTexts();
 				this.messageService.add({ severity: 'success', summary: 'Email inviata con successo' });
-			} else {
-		        this.messageService.add({ severity: 'error', summary: 'Errore nell\'invio email' });
 			}
 		});
 	}

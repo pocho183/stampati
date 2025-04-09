@@ -3,16 +3,17 @@ import { provideRouter, Routes } from "@angular/router";
 import { provideHttpClient, withInterceptors } from "@angular/common/http";
 import { provideAnimations } from "@angular/platform-browser/animations";
 import { backEndInterceptor } from "./extension/back-end-interceptor";
-import { StampatoComponent } from "./components/stampato.component";
 import { providePrimeNG } from "primeng/config";
 import Nora from "@primeng/themes/nora";
 import { definePreset } from "@primeng/themes";
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
 import { WINDOW_PROVIDERS } from './extension/window.provider';
+import { MenuComponent } from "./components/menu/menu.component";
 
 const routes: Routes = [
-	{ path: '', component: StampatoComponent },
+	{ path: 'testi', component: MenuComponent },
+	{ path: 'testi/:barcode', component: MenuComponent },
 	// otherwise redirect to home
 	{ path: '**', redirectTo: '' }
 ];

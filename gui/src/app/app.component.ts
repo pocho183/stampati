@@ -6,11 +6,12 @@ import { NgIf } from '@angular/common';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ProgressSpinner } from 'primeng/progressspinner';
 import { UtilityService } from "app/services/utility.service";
+import { StampatoComponent } from "app/components/stampato.component";
 
 @Component({
 	standalone: true,
 	selector: 'app-root',
-	imports: [ToolbarModule, ProgressSpinner, RouterModule, NgIf],
+	imports: [ToolbarModule, ProgressSpinner, RouterModule, NgIf, StampatoComponent],
 	providers: [UtilityService],
 	templateUrl: './app.component.html',
 	styleUrls: ['./app.component.css']

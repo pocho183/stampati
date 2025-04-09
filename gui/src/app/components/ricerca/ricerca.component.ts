@@ -20,8 +20,11 @@ import { LegislaturaModel } from "app/models/legislatura.model";
 import { RicercaModel } from "app/models/ricerca.model";
 import { DialogModule } from 'primeng/dialog';
 import { NgIf } from '@angular/common';
-import { StampatoModel } from "app/models/stampato.model";
+import { StampatoModel, StampatoIdModel } from "app/models/stampato.model";
 import { saveAs } from 'file-saver';
+import { DialogAnswerComponent } from "../dialog/dialog.answer.component";
+import { AnswerFooterComponent } from "../dialog/dialog.answer.footer.component";
+import { Router } from '@angular/router';
 
 @Component({
 	standalone: true,
@@ -50,6 +53,7 @@ export class RicercaComponent implements OnInit {
 		private ricercaService: RicercaService,
 		private messageService: MessageService,
 		private utilityService: UtilityService,
+		private router: Router,
 		private confirmationService: ConfirmationService) {}
 	
 	ngOnInit() {
@@ -58,6 +62,21 @@ export class RicercaComponent implements OnInit {
 			if (this.legislatures.length > 0)
 				this.selectedLegislature = this.legislatures[0];
 		});
+	}
+	
+	new() {
+		this.ref = this.dialogService.open(DialogAnswerComponent, {
+			header: 'Nuovo Stampato', width: '20%', height: '20%', modal: true, contentStyle: { overflow: 'auto', paddingBottom: '1px' }, 
+			data: { text: 'Confermi di creare un nuovo stampato ?' },
+			templates: { footer: AnswerFooterComponent },
+			baseZIndex: 10000, closable: true });
+		this.ref.onClose.subscribe((answer: boolean) => {
+			if (answer) {
+				let stampatoId = new StampatoIdModel();
+				this.stampato = new StampatoModel(stampatoId);
+				this.router.navigate(['/testi']);
+			}
+		});		
 	}
 
 	showDialogRicerca() {
@@ -68,7 +87,8 @@ export class RicercaComponent implements OnInit {
 				this.stampato = stampatoLoaded;  
 				this.stampatoChange.emit(this.stampato);
 	        	this.messageService.add({ severity: 'info', summary: 'Stampato caricato correttamente', detail: this.stampato.id.barcode });
-	        }
+				this.router.navigate(['/testi/' + this.stampato.id.barcode]);
+			}
 	    });
 	}
 	
@@ -96,10 +116,12 @@ export class RicercaComponent implements OnInit {
 	}
 
 	loadStampato(selectedResult: RicercaModel) {
-		this.ricercaService.load(selectedResult.legislatura, selectedResult.barcode).subscribe( res => {
-		this.stampato = res;  
-		this.stampatoChange.emit(this.stampato);
-		this.messageService.add({ severity: 'success', summary: 'Stampato caricato correttamente' }); });
+		this.ricercaService.load(selectedResult.legislatura, selectedResult.barcode).subscribe(res => {
+	    	this.stampato = res;
+	    	this.stampatoChange.emit(this.stampato);
+	    	this.messageService.add({ severity: 'success', summary: 'Stampato caricato correttamente' });
+	    	this.router.navigate(['/testi/' + this.stampato.id.barcode]);
+	  	});
 	}
 		
 }

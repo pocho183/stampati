@@ -1,7 +1,10 @@
 <p-card styleClass="w-full text-sm">
 <p-toast />
-    <div class="flex justify-content-center flex-wrap">
-        <p-button (click)="showDialogRicerca()" label="Carica Stampato da Elaborare" icon="pi pi-external-link" [style]="{'background-color': '#285492'}" styleClass="w-full"/>
+	<div class="flex justify-content-center flex-wrap">
+        <p-button (click)="new()" label="Nuovo" [style]="{'background-color': '#285492'}" styleClass="w-16rem"/>
+    </div>
+    <div class="flex justify-content-center flex-wrap mt-2">
+        <p-button (click)="showDialogRicerca()" label="Carica Stampato da Elaborare" icon="pi pi-external-link" [style]="{'background-color': '#285492'}" styleClass="w-16rem"/>
     </div>
 </p-card>
 <p-card header="Menu di Ricerca" styleClass="w-full text-sm">

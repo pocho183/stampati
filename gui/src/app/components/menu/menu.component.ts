@@ -1,53 +1,83 @@
-import { Component, OnInit, HostListener } from "@angular/core";
+import { Component, OnInit, HostListener, EventEmitter, Output } from "@angular/core";
 import { SplitterModule } from 'primeng/splitter';
-import { RicercaComponent } from './ricerca/ricerca.component';
+import { BarcodeComponent } from '../barcode/barcode.component';
+import { FrontespizioComponent } from "../frontespizio/frontespizio.component";
+import { RelatoriComponent } from '../relatori/relatori.component';
+import { PresentazioneComponent } from "../presentazione/presentazione.component";
 import { StampatoIdModel, StampatoModel } from "app/models/stampato.model";
 import { ButtonModule } from 'primeng/button';
 import { StampatoService } from "app/services/stampato.service";
 import { FelService } from "app/services/fel.service";
 import { DialogService, DynamicDialogRef } from "primeng/dynamicdialog";
 import { MessageService } from "primeng/api";
-import { AnswerFooterComponent } from "./dialog/dialog.answer.footer.component";
-import { DialogAnswerComponent } from "./dialog/dialog.answer.component";
 import { ToastModule } from 'primeng/toast';
 import * as _ from 'lodash';
-import { RouterModule } from '@angular/router';
+import { AnswerFooterComponent } from "../dialog/dialog.answer.footer.component";
+import { DialogAnswerComponent } from "../dialog/dialog.answer.component";
+import { ActivatedRoute } from '@angular/router';
+import { RicercaService } from "app/services/ricerca.service";
+import { NgIf } from '@angular/common';
+import { Subscription } from "rxjs";
 
 @Component({
 	standalone: true,
-	selector: 'stampato',
-	imports: [RouterModule, SplitterModule, RicercaComponent, ButtonModule, ToastModule],
-	providers: [StampatoService, FelService, MessageService, DialogService],
-	templateUrl: './stampato.component.html',
-	styleUrl: './stampato.component.css'
+	selector: 'app-menu',
+	imports: [SplitterModule, BarcodeComponent, FrontespizioComponent, RelatoriComponent, 
+		PresentazioneComponent, ButtonModule, ToastModule, NgIf],
+	providers: [StampatoService, FelService, MessageService, DialogService, RicercaService],
+	templateUrl: './menu.component.html',
+	styleUrl: './menu.component.css'
 })
-export class StampatoComponent implements OnInit {
+export class MenuComponent implements OnInit {
 
+	@Output() stampatoChange = new EventEmitter<StampatoModel>();
+	barcode: string | null = null;
+	private routeSub: Subscription;
 	stampatoId: StampatoIdModel = new StampatoIdModel();
 	stampato: StampatoModel = new StampatoModel(this.stampatoId);
 	originalStampato: StampatoModel;
 	private ref: DynamicDialogRef | undefined;
 	
 	constructor(private stampatoService: StampatoService,
+		private route: ActivatedRoute,
 		private felService: FelService,
+		private ricercaService: RicercaService,
 		private dialogService: DialogService,
 		private messageService: MessageService) { }
 	
     ngOnInit() {
+		this.routeSub = this.route.paramMap.subscribe(paramMap => {
+			this.barcode = paramMap.get('barcode');
+			this.handleBarcodeChange(this.barcode);
+		});
 		this.loadFel();
 		this.originalStampato = _.cloneDeep(this.stampato);
+	}
+	
+	ngOnDestroy(): void {
+		if (this.routeSub)
+	    	this.routeSub.unsubscribe();
+	}
+
+	handleBarcodeChange(barcode: string | null): void {
+		if (barcode) {
+			this.ricercaService.load(Number(barcode.substring(0, 2)), barcode).subscribe( res => {
+				this.stampato = res;  
+				this.stampatoChange.emit(this.stampato);
+			});
+	    }
 	}
 	
 	hasUnsavedChanges(): boolean {
 	    return !_.isEqual(this.originalStampato, this.stampato);
 	}
-	
+		
 	confirmUnsavedChanges(): boolean {
 		if (this.hasUnsavedChanges() && !confirm('Le modifiche apportate potrebbero non essere salvate. Vuoi continuare ?'))
 			return false;
 		return true;
 	}
-	
+		
 	// TODO: Togliere ed usare CanDeactive
 	// Check: close page and refresh page
 	@HostListener('window:beforeunload', ['$event'])
@@ -58,10 +88,10 @@ export class StampatoComponent implements OnInit {
 	
 	updateStampato(newStampato: StampatoModel) {
 		if (!this.confirmUnsavedChanges()) return;
-	    this.stampato = { ...newStampato };
+		this.stampato = { ...newStampato };
 		this.originalStampato = _.cloneDeep(this.stampato);
 	}
-	
+		
 	rigonero() {
 		if (!this.confirmUnsavedChanges()) return;
 		this.ref = this.dialogService.open(DialogAnswerComponent, {
@@ -82,7 +112,7 @@ export class StampatoComponent implements OnInit {
 			}
 		});	
 	}
-	
+		
 	errata(stampato: StampatoModel) {
 		if (!this.confirmUnsavedChanges()) return;
 		this.ref = this.dialogService.open(DialogAnswerComponent, {
@@ -93,50 +123,35 @@ export class StampatoComponent implements OnInit {
 		this.ref.onClose.subscribe((answer: boolean) => {
 			if (answer) {
 				this.stampatoService.errata(stampato).subscribe({
-				    next: (res) => {
+					next: (res) => {
 					    this.stampato = res;
-				     	this.messageService.add({ severity: 'success', summary: 'Errata corrige creata correttamente' });
-				    },
+					   	this.messageService.add({ severity: 'success', summary: 'Errata corrige creata correttamente' });
+					},
 				    error: (err) => { this.messageService.add({ severity: 'error', summary: 'Errore durante la creazione dell\'errata corrige' }); }
 				});
 			}
 		});
 	}
 	
-	new() {
-		if (!this.confirmUnsavedChanges()) return;
-		this.ref = this.dialogService.open(DialogAnswerComponent, {
-			header: 'Nuovo Stampato', width: '20%', height: '20%', modal: true, contentStyle: { overflow: 'auto', paddingBottom: '1px' }, 
-			data: { text: 'Confermi di creare un nuovo stampato ?' },
-			templates: { footer: AnswerFooterComponent },
-			baseZIndex: 10000, closable: true });
-		this.ref.onClose.subscribe((answer: boolean) => {
-			if (answer) {
-				let stampatoId = new StampatoIdModel();
-				this.stampato = new StampatoModel(stampatoId);
-			}
-		});		
-	}
-	
 	save(stampato: StampatoModel) {
 		if(this.stampato.id.barcode != null) {
 			this.stampatoService.save(stampato).subscribe({
-		       	next: (savedStampato) => {
-			     	this.stampato = savedStampato;
+				next: (savedStampato) => {
+					this.stampato = savedStampato;
 					this.originalStampato = _.cloneDeep(this.stampato);
 					this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Stampato salvato!' });
-			    },
-			    error: (err) => { this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Salvataggio fallito!' }); }
+				},
+				error: (err) => { this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Salvataggio fallito!' }); }
 			});
 		} else {
 			console.error("Errore: Codice a barre mancante !");
 			this.messageService.add({ severity: 'error', sticky: true, summary: 'Errore', detail: 'Codice a barre mancante !' });			    		    
 		}
 	}
-		
+			
 	publish(stampato: StampatoModel) {
 		if(!this.confirmUnsavedChanges()) return;
-		if(this.stampato.pdfPresente || this.stampato.htmlPresente) {_
+		if(this.stampato.pdfPresente || this.stampato.htmlPresente) {
 			this.stampatoService.publish(stampato).subscribe({
 				next: (publishedStampato) => {
 					this.stampato = publishedStampato;
@@ -150,9 +165,8 @@ export class StampatoComponent implements OnInit {
 		} else {
 			this.messageService.add({ severity: 'error', summary: 'Errore', detail: "Abilitare almeno una tipologia di pubblicazione: PDF o XHTML" });
 		}
-		
 	}
-	
+		
 	unpublish(stampato: StampatoModel) {
 		if(!this.confirmUnsavedChanges()) return;
 		this.stampatoService.unpublish(stampato).subscribe({
@@ -163,7 +177,7 @@ export class StampatoComponent implements OnInit {
 			error: (err) => { this.messageService.add({ severity: 'error', summary: 'Error', detail: 'L\'operazione di rendere lo stampato non pubblico fallita!' }); }
 		});
 	}
-		
+			
 	delete(stampato: StampatoModel) {
 		if (!this.confirmUnsavedChanges()) return;
 		this.ref = this.dialogService.open(DialogAnswerComponent, {
@@ -176,14 +190,14 @@ export class StampatoComponent implements OnInit {
 				this.stampatoService.delete(stampato).subscribe({
 				    next: (res) => {
 					    this.stampato = { ...res };
-				     	this.messageService.add({ severity: 'success', summary: 'Stampato cancellato correttamente' });
-				    },
+					   	this.messageService.add({ severity: 'success', summary: 'Stampato cancellato correttamente' });
+					},
 				    error: (err) => { this.messageService.add({ severity: 'error', summary: 'Errore durante la cancellazione dello stampato' }); }
 				});
 			}
 		});
 	}
-		
+			
 	restore(stampato: StampatoModel) {
 		if (!this.confirmUnsavedChanges()) return;
 		this.ref = this.dialogService.open(DialogAnswerComponent, {
@@ -203,7 +217,7 @@ export class StampatoComponent implements OnInit {
 			}
 		});
 	}
-	
+		
 	loadFel() {
 		this.felService.loadFel(this.stampato).subscribe({
 			next: (eFelStampato) => {
@@ -215,5 +229,5 @@ export class StampatoComponent implements OnInit {
 			}
 		});
 	}
-
+	
 }
