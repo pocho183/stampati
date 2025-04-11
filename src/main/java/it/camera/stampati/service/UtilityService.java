@@ -1,10 +1,6 @@
 package it.camera.stampati.service;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -17,21 +13,20 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import it.camera.stampati.model.CommissioneModel;
@@ -63,21 +58,18 @@ private static final Logger logger = LoggerFactory.getLogger(UtilityService.clas
 	        logger.debug("Fetching legislature data from URL: {}", urlLegislature);        
 	        RestTemplate restTemplate = new RestTemplate();
 	        String xmlResponse = restTemplate.getForObject(urlLegislature, String.class);
-	        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-	        DocumentBuilder builder = factory.newDocumentBuilder();
-	        Document doc = builder.parse(new ByteArrayInputStream(xmlResponse.getBytes(StandardCharsets.UTF_8)));        	        
-	        NodeList legislatures = doc.getElementsByTagName("legislatura");
+	        Document doc = Jsoup.parse(xmlResponse, "", org.jsoup.parser.Parser.xmlParser());
+	        Elements legislatures = doc.select("legislatura");
 	        List<LegislaturaModel> legislatureList = new ArrayList<>();
-	        for (int i = 0; i < legislatures.getLength(); i++) {
-	            Element legislatureElement = (Element) legislatures.item(i);
-	            int legArabo = Integer.parseInt(legislatureElement.getAttribute("legArabo"));
+	        for (Element legislatureElement : legislatures) {
+	            int legArabo = Integer.parseInt(legislatureElement.attr("legArabo"));
 	            if (legArabo >= 15) {
 	                LegislaturaModel legislatura = new LegislaturaModel();
-	                legislatura.setId(legislatureElement.getAttribute("id"));
-	                legislatura.setLegRomano(legislatureElement.getAttribute("legRomano"));
+	                legislatura.setId(legislatureElement.attr("id"));
+	                legislatura.setLegRomano(legislatureElement.attr("legRomano"));
 	                legislatura.setLegArabo(legArabo);
-	                legislatura.setDataInizio(legislatureElement.getAttribute("dataInizio"));
-	                legislatura.setDataFine(legislatureElement.getAttribute("dataFine"));               
+	                legislatura.setDataInizio(legislatureElement.attr("dataInizio"));
+	                legislatura.setDataFine(legislatureElement.attr("dataFine"));               
 	                legislatureList.add(legislatura);
 	                logger.debug("Added legislature: {}", legislatura);
 	            }

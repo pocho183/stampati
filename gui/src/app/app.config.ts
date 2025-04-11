@@ -10,12 +10,12 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
 import { WINDOW_PROVIDERS } from './extension/window.provider';
 import { MenuComponent } from "./components/menu/menu.component";
+import { CanDeactivateGuard } from './extension/can-deactivate.guard';
 
 const routes: Routes = [
-	{ path: 'testi', component: MenuComponent },
-	{ path: 'testi/:barcode', component: MenuComponent },
-	// otherwise redirect to home
-	{ path: '**', redirectTo: '' }
+  { path: 'testi', component: MenuComponent, canDeactivate: [CanDeactivateGuard] },
+  { path: 'testi/:barcode', component: MenuComponent, canDeactivate: [CanDeactivateGuard] },
+  { path: '**', redirectTo: '' }
 ];
 
 const customStyle = definePreset(Nora, {

@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, EventEmitter, Output } from "@angular/core";
+import { Component, OnInit, EventEmitter, Output } from "@angular/core";
 import { SplitterModule } from 'primeng/splitter';
 import { BarcodeComponent } from '../barcode/barcode.component';
 import { FrontespizioComponent } from "../frontespizio/frontespizio.component";
@@ -51,7 +51,6 @@ export class MenuComponent implements OnInit {
 			this.handleBarcodeChange(this.barcode);
 		});
 		this.loadFel();
-		this.originalStampato = _.cloneDeep(this.stampato);
 	}
 	
 	ngOnDestroy(): void {
@@ -64,72 +63,76 @@ export class MenuComponent implements OnInit {
 			this.ricercaService.load(Number(barcode.substring(0, 2)), barcode).subscribe( res => {
 				this.stampato = res;  
 				this.stampatoChange.emit(this.stampato);
+				this.originalStampato = _.cloneDeep(this.stampato);
 			});
 	    }
 	}
 	
 	hasUnsavedChanges(): boolean {
-	    return !_.isEqual(this.originalStampato, this.stampato);
+		const isEqual = _.isEqual(this.originalStampato, this.stampato);
+		if (!isEqual) {
+			console.log('Detected changes:', {
+				original: this.originalStampato,
+				current: this.stampato
+			});
+		}
+		return !isEqual;
 	}
 		
-	confirmUnsavedChanges(): boolean {
-		if (this.hasUnsavedChanges() && !confirm('Le modifiche apportate potrebbero non essere salvate. Vuoi continuare ?'))
-			return false;
-		return true;
-	}
-		
-	// TODO: Togliere ed usare CanDeactive
-	// Check: close page and refresh page
-	@HostListener('window:beforeunload', ['$event'])
-	onBeforeUnload(event: any) {
-	    if (this.hasUnsavedChanges())
-	    	event.returnValue = 'Le modifiche apportate potrebbero non essere salvate.';
-	}
-	
-	updateStampato(newStampato: StampatoModel) {
-		if (!this.confirmUnsavedChanges()) return;
-		this.stampato = { ...newStampato };
-		this.originalStampato = _.cloneDeep(this.stampato);
+	confirmUnsavedChanges(): Promise<boolean> {
+		if (!this.hasUnsavedChanges()) return Promise.resolve(true);
+		this.ref = this.dialogService.open(DialogAnswerComponent, { header: 'Attenzione', width: '30%', modal: true,
+			data: { text: 'Hai delle modifiche non salvate. Vuoi continuare senza salvare?'},
+			templates: { footer: AnswerFooterComponent }, baseZIndex: 10000, closable: false
+		});
+		return new Promise<boolean>((resolve) => { 
+			this.ref.onClose.subscribe((answer: boolean) => { resolve(answer); });
+		});
 	}
 		
 	rigonero() {
-		if (!this.confirmUnsavedChanges()) return;
-		this.ref = this.dialogService.open(DialogAnswerComponent, {
-			header: 'Rigo nero', width: '20%', height: '20%', modal: true, contentStyle: { overflow: 'auto', paddingBottom: '1px' }, 
-			data: { text: 'Confermi di creare il rigo nero ?' },
-			templates: { footer: AnswerFooterComponent },
-			baseZIndex: 10000, closable: true });
-		this.ref.onClose.subscribe((answer: boolean) => {
-			if (answer) {
-				this.stampatoService.rigonero(this.stampato).subscribe({
-					next: (rigonero) => {
-				   		this.stampato = rigonero;
-						this.originalStampato = _.cloneDeep(this.stampato);
-						this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Stampato con rigo nero salvato correttamente !' });
-					},
-					error: (err) => { this.messageService.add({ severity: 'error', summary: 'Error', detail: 'La creazione del rigo nero è fallita!' }); }
-				});
-			}
-		});	
+		this.confirmUnsavedChanges().then((confirmed: boolean) => {
+			if (!confirmed) return;
+			this.ref = this.dialogService.open(DialogAnswerComponent, {
+				header: 'Rigo nero', width: '20%', height: '20%', modal: true, contentStyle: { overflow: 'auto', paddingBottom: '1px' }, 
+				data: { text: 'Confermi di creare il rigo nero ?' },
+				templates: { footer: AnswerFooterComponent },
+				baseZIndex: 10000, closable: true });
+			this.ref.onClose.subscribe((answer: boolean) => {
+				if (answer) {
+					this.stampatoService.rigonero(this.stampato).subscribe({
+						next: (rigonero) => {
+					   		this.stampato = rigonero;
+							this.originalStampato = _.cloneDeep(this.stampato);
+							this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Stampato con rigo nero salvato correttamente !' });
+						},
+						error: (err) => { this.messageService.add({ severity: 'error', summary: 'Error', detail: 'La creazione del rigo nero è fallita!' }); }
+					});
+				}
+			});	
+		});
 	}
 		
 	errata(stampato: StampatoModel) {
-		if (!this.confirmUnsavedChanges()) return;
-		this.ref = this.dialogService.open(DialogAnswerComponent, {
-			header: 'Errata Corrige', width: '30%', height: '30%', modal: true, contentStyle: { overflow: 'auto', paddingBottom: '1px' }, 
-			data: { text: 'Confermi di creare una errata corrige ?'},
-			templates: { footer: AnswerFooterComponent },
-			baseZIndex: 10000, closable: true });
-		this.ref.onClose.subscribe((answer: boolean) => {
-			if (answer) {
-				this.stampatoService.errata(stampato).subscribe({
-					next: (res) => {
-					    this.stampato = res;
-					   	this.messageService.add({ severity: 'success', summary: 'Errata corrige creata correttamente' });
-					},
-				    error: (err) => { this.messageService.add({ severity: 'error', summary: 'Errore durante la creazione dell\'errata corrige' }); }
-				});
-			}
+		this.confirmUnsavedChanges().then((confirmed: boolean) => {
+			if (!confirmed) return;
+			this.ref = this.dialogService.open(DialogAnswerComponent, {
+				header: 'Errata Corrige', width: '30%', height: '30%', modal: true, contentStyle: { overflow: 'auto', paddingBottom: '1px' }, 
+				data: { text: 'Confermi di creare una errata corrige ?'},
+				templates: { footer: AnswerFooterComponent },
+				baseZIndex: 10000, closable: true });
+			this.ref.onClose.subscribe((answer: boolean) => {
+				if (answer) {
+					this.stampatoService.errata(stampato).subscribe({
+						next: (res) => {
+						    this.stampato = res;
+							this.originalStampato = _.cloneDeep(this.stampato);
+						   	this.messageService.add({ severity: 'success', summary: 'Errata corrige creata correttamente' });
+						},
+					    error: (err) => { this.messageService.add({ severity: 'error', summary: 'Errore durante la creazione dell\'errata corrige' }); }
+					});
+				}
+			});
 		});
 	}
 	
@@ -150,71 +153,83 @@ export class MenuComponent implements OnInit {
 	}
 			
 	publish(stampato: StampatoModel) {
-		if(!this.confirmUnsavedChanges()) return;
-		if(this.stampato.pdfPresente || this.stampato.htmlPresente) {
-			this.stampatoService.publish(stampato).subscribe({
-				next: (publishedStampato) => {
-					this.stampato = publishedStampato;
-					this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Stampato pubblicato!' });
-				},
-				error: (err) => {
-					let errorMessage = err?.message || 'Pubblicazione fallita!';
-					this.messageService.add({ severity: 'error', summary: 'Errore', detail: errorMessage });
-				}
-			});
-		} else {
-			this.messageService.add({ severity: 'error', summary: 'Errore', detail: "Abilitare almeno una tipologia di pubblicazione: PDF o XHTML" });
-		}
+		this.confirmUnsavedChanges().then((confirmed: boolean) => {
+			if (!confirmed) return;
+			if(this.stampato.pdfPresente || this.stampato.htmlPresente) {
+				this.stampatoService.publish(stampato).subscribe({
+					next: (publishedStampato) => {
+						this.stampato = publishedStampato;
+						this.originalStampato = _.cloneDeep(this.stampato);
+						this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Stampato pubblicato!' });
+					},
+					error: (err) => {
+						let errorMessage = err?.message || 'Pubblicazione fallita!';
+						this.messageService.add({ severity: 'error', summary: 'Errore', detail: errorMessage });
+					}
+				});
+			} else {
+				this.messageService.add({ severity: 'error', summary: 'Errore', detail: "Abilitare almeno una tipologia di pubblicazione: PDF o XHTML" });
+			}
+		});
 	}
 		
 	unpublish(stampato: StampatoModel) {
-		if(!this.confirmUnsavedChanges()) return;
-		this.stampatoService.unpublish(stampato).subscribe({
-			next: (unpublishedStampato) => {
-				this.stampato = unpublishedStampato;
-				this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Stampato non pubblicato!' });
-			},
-			error: (err) => { this.messageService.add({ severity: 'error', summary: 'Error', detail: 'L\'operazione di rendere lo stampato non pubblico fallita!' }); }
+		this.confirmUnsavedChanges().then((confirmed: boolean) => {
+			if (!confirmed) return;
+			this.stampatoService.unpublish(stampato).subscribe({
+				next: (unpublishedStampato) => {
+					this.stampato = unpublishedStampato;
+					this.originalStampato = _.cloneDeep(this.stampato);
+					this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Stampato non pubblicato!' });
+				},
+				error: (err) => { this.messageService.add({ severity: 'error', summary: 'Error', detail: 'L\'operazione di rendere lo stampato non pubblico fallita!' }); }
+			});
 		});
 	}
 			
 	delete(stampato: StampatoModel) {
-		if (!this.confirmUnsavedChanges()) return;
-		this.ref = this.dialogService.open(DialogAnswerComponent, {
-			header: 'Cancella Stampato', width: '30%', height: '30%', modal: true, contentStyle: { overflow: 'auto', paddingBottom: '1px' }, 
-			data: { text: 'Confermi di cancellare lo stampato con BARCODE: ' + stampato.id.barcode + ' ?'},
-			templates: { footer: AnswerFooterComponent },
-			baseZIndex: 10000, closable: true });
-		this.ref.onClose.subscribe((answer: boolean) => {
-			if (answer) {
-				this.stampatoService.delete(stampato).subscribe({
-				    next: (res) => {
-					    this.stampato = { ...res };
-					   	this.messageService.add({ severity: 'success', summary: 'Stampato cancellato correttamente' });
-					},
-				    error: (err) => { this.messageService.add({ severity: 'error', summary: 'Errore durante la cancellazione dello stampato' }); }
-				});
-			}
+		this.confirmUnsavedChanges().then((confirmed: boolean) => {
+			if (!confirmed) return;
+			this.ref = this.dialogService.open(DialogAnswerComponent, {
+				header: 'Cancella Stampato', width: '30%', height: '30%', modal: true, contentStyle: { overflow: 'auto', paddingBottom: '1px' }, 
+				data: { text: 'Confermi di cancellare lo stampato con BARCODE: ' + stampato.id.barcode + ' ?'},
+				templates: { footer: AnswerFooterComponent },
+				baseZIndex: 10000, closable: true });
+			this.ref.onClose.subscribe((answer: boolean) => {
+				if (answer) {
+					this.stampatoService.delete(stampato).subscribe({
+					    next: (res) => {
+						    this.stampato = res;
+							this.originalStampato = _.cloneDeep(this.stampato);
+						   	this.messageService.add({ severity: 'success', summary: 'Stampato cancellato correttamente' });
+						},
+					    error: (err) => { this.messageService.add({ severity: 'error', summary: 'Errore durante la cancellazione dello stampato' }); }
+					});
+				}
+			});
 		});
 	}
 			
 	restore(stampato: StampatoModel) {
-		if (!this.confirmUnsavedChanges()) return;
-		this.ref = this.dialogService.open(DialogAnswerComponent, {
-			header: 'Ripristina Stampato', width: '30%', height: '30%', modal: true, contentStyle: { overflow: 'auto', paddingBottom: '1px' }, 
-			data: { text: 'Confermi di ripristinare lo stampato con BARCODE: ' + stampato.id.barcode + ' ?'},
-			templates: { footer: AnswerFooterComponent },
-			baseZIndex: 10000, closable: true });
-		this.ref.onClose.subscribe((answer: boolean) => {
-			if (answer) {
-				this.stampatoService.restore(stampato).subscribe({
-					next: (res) => {
-						this.stampato = { ...res };
-						this.messageService.add({ severity: 'success', summary: 'Stampato ripristinato correttamente' });
-					},
-					error: (err) => { this.messageService.add({ severity: 'error', summary: 'Errore durante il ripristino dello stampato' }); }
-				});
-			}
+		this.confirmUnsavedChanges().then((confirmed: boolean) => {
+			if (!confirmed) return;
+			this.ref = this.dialogService.open(DialogAnswerComponent, {
+				header: 'Ripristina Stampato', width: '30%', height: '30%', modal: true, contentStyle: { overflow: 'auto', paddingBottom: '1px' }, 
+				data: { text: 'Confermi di ripristinare lo stampato con BARCODE: ' + stampato.id.barcode + ' ?'},
+				templates: { footer: AnswerFooterComponent },
+				baseZIndex: 10000, closable: true });
+			this.ref.onClose.subscribe((answer: boolean) => {
+				if (answer) {
+					this.stampatoService.restore(stampato).subscribe({
+						next: (res) => {
+							this.stampato = res;
+							this.originalStampato = _.cloneDeep(this.stampato);
+							this.messageService.add({ severity: 'success', summary: 'Stampato ripristinato correttamente' });
+						},
+						error: (err) => { this.messageService.add({ severity: 'error', summary: 'Errore durante il ripristino dello stampato' }); }
+					});
+				}
+			});
 		});
 	}
 		
@@ -222,6 +237,7 @@ export class MenuComponent implements OnInit {
 		this.felService.loadFel(this.stampato).subscribe({
 			next: (eFelStampato) => {
 				this.stampato = eFelStampato;
+				this.originalStampato = _.cloneDeep(this.stampato);
 			},
 			error: (err) => {
 				let errorMessage = err?.message || 'Caricamento dati eFel fallito!';
