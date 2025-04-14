@@ -73,8 +73,9 @@ export class UtilityService {
 	}
 	
 	getStralcio(atto: string): string | null {
-		const pattern = new RegExp(`-(?i:(${this.STRALCIO.join("|")}))`, "i");
-	  	const match = atto?.match(pattern);
-	  	return match ? match[1] : null;
+		const pattern = new RegExp(`(?<=\\d-)(?i:(${this.STRALCIO.join("|")}))`, "i");
+		const match = atto?.match(pattern);
+		return match ? match[1] : null;
 	}
+
 }

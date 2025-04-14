@@ -29,10 +29,8 @@ public class StampatoController {
         try {
             StampatoModel savedModel = stampatiService.save(model);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedModel);
-        } catch (DataIntegrityViolationException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid data: " + e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+        	return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
@@ -41,10 +39,8 @@ public class StampatoController {
         try {
             StampatoModel deletedModel = stampatiService.delete(model);
             return ResponseEntity.status(HttpStatus.OK).body(deletedModel);
-        } catch (DataIntegrityViolationException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid data: " + e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+        	return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
     
@@ -53,10 +49,9 @@ public class StampatoController {
         try {
             StampatoModel restoredModel = stampatiService.restore(model);
             return ResponseEntity.status(HttpStatus.OK).body(restoredModel);
-        } catch (DataIntegrityViolationException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid data: " + e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+        	logger.error("Error restoring stampato", e);
+        	return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
     
@@ -66,7 +61,7 @@ public class StampatoController {
         	StampatoModel publishedModel = stampatiService.publish(model);
             return ResponseEntity.status(HttpStatus.OK).body(publishedModel);
         } catch (Exception e) {
-        	logger.error("Error publish  stampato", e);
+        	logger.error("Error publish stampato", e);
         	return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
@@ -77,8 +72,8 @@ public class StampatoController {
         	StampatoModel unpublishedModel = stampatiService.unpublish(model);
             return ResponseEntity.status(HttpStatus.OK).body(unpublishedModel);
         } catch (Exception e) {
-        	logger.error("Error unpublish  stampato", e);
-        	return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+        	logger.error("Error unpublish stampato", e);
+        	return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
     
@@ -87,10 +82,8 @@ public class StampatoController {
         try {
             StampatoModel rigoneroModel = stampatiService.rigonero(model);
             return ResponseEntity.status(HttpStatus.CREATED).body(rigoneroModel);
-        } catch (DataIntegrityViolationException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid data: " + e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+        	return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
     
@@ -99,10 +92,8 @@ public class StampatoController {
         try {
             StampatoModel erratacorrigeModel = stampatiService.errataCorrige(model);
             return ResponseEntity.status(HttpStatus.CREATED).body(erratacorrigeModel);
-        } catch (DataIntegrityViolationException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid data: " + e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+        	return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 }

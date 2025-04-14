@@ -47,7 +47,7 @@ export class PresentazioneComponent implements OnInit {
 			let relazione = this.stampato.lettera ? "-" + this.stampato.lettera : '';
 			if (this.stampato.rinvioInCommissione) relazione += '/R';
 			if (relazione.trim()) frontespizio = frontespizio + relazione;
-			if(this.stampato.relazioneMin?.trim()) frontespizio += '_' + this.stampato.relazioneMin;				
+			if(this.stampato.relazioneMin?.trim()) frontespizio += '-' + this.stampato.relazioneMin;				
 			if(this.stampato.suffisso?.trim())  frontespizio += "-" + this.stampato.suffisso;
 			this.stampato.nomeFrontespizio = frontespizio;
 		}

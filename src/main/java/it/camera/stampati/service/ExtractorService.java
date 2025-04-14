@@ -2,6 +2,7 @@ package it.camera.stampati.service;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -126,20 +127,19 @@ public class ExtractorService {
             if (!relazione.trim().isEmpty())
                 filename = filename + "_" + relazione;
             if(stampato.getRelazioneMin() != null && !stampato.getRelazioneMin().trim().isEmpty())
-                filename += "_" + stampato.getRelazioneMin();
+                filename += "-" + stampato.getRelazioneMin();
             filename = filename + "." + stampato.getId().getBarcode();
             stampato.setNomeFile(filename);
         }
 	}
 	
 	private String getStralcio(String atto) {
-    	Pattern pattern = Pattern.compile("-(?i)(" + String.join("|", STRALCIO) + ")");
-        Matcher matcher = pattern.matcher(atto);
-        if (matcher.find()) {
-            return matcher.group(1);
-        }
-        return null;
-    }
+	    Pattern pattern = Pattern.compile("(?i)(?<=\\d-)(" + String.join("|", STRALCIO) + ")");
+	    Matcher matcher = pattern.matcher(atto);
+	    if (matcher.find())
+	        return matcher.group(1);
+	    return null;
+	}
 	
 	public static String extractTypeStampato(String input) {
 	    Pattern pattern = Pattern.compile("(PDL|MSG|TU)");
@@ -156,26 +156,30 @@ public class ExtractorService {
         return beanMapper.map(entity, StampatoModel.class);
     }	
 
-	public List<TypographyToProcessModel> getStampatiToProcess(String leg, StampatoFormat format) {
-		logger.info("Starting to process stampati for legislatura {} and format {}", leg, format);
-	    List<Stampato> barcodes = stampatoRepository.findByLegislaturaAndNotDeleted(leg);
-	    logger.debug("Found {} barcodes for legislatura {}", barcodes.size(), leg);
-	    Collection<StampatoModel> barcodeModels = beanMapper.map(barcodes, StampatoModel.class);
-	    List<Stampato> existingBarcodeDataDeleted = stampatoRepository.findByLegislaturaAndDeleted(leg);
-	    Collection<StampatoModel> existingBarcodeDataDeletedModels = beanMapper.map(existingBarcodeDataDeleted, StampatoModel.class);
-	    Map<String, Date> deletedBarcodeDataDeletedMap = existingBarcodeDataDeletedModels.stream().collect(Collectors.toMap(StampatoModel::getBarcode, StampatoModel::getDataDeleted));  
-	    Set<String> existingBarcodeIds = barcodeModels.stream().map(st -> st.getBarcode()).collect(Collectors.toSet());  
-	    List<TypographyToProcessModel> stampatiFromShared = getStampatiFromShared(leg, format);
-	    logger.debug("Found {} stampati from shared path", stampatiFromShared.size());    
-	    List<TypographyToProcessModel> result = stampatiFromShared.stream()
-	  		.filter(stampato -> !existingBarcodeIds.contains(stampato.getBarcode()))
-	  		.map(stampato -> {
-	  			Date dataDeleted = deletedBarcodeDataDeletedMap.get(stampato.getBarcode());
-	            TypographyToProcessModel model = new TypographyToProcessModel(stampato.getBarcode(), leg, format, dataDeleted);
-	            return model; }).collect(Collectors.toList());
-	    logger.info("Processed {} stampati to process", result.size());
-	    result.sort(Comparator.comparing(TypographyToProcessModel::getBarcode));
-	    return result;
+	public List<TypographyToProcessModel> getStampatiToProcess(String leg, StampatoFormat format) throws IOException {
+		try {
+			logger.info("Starting to process stampati for legislatura {} and format {}", leg, format);
+		    List<Stampato> barcodes = stampatoRepository.findByLegislaturaAndNotDeleted(leg);
+		    logger.debug("Found {} barcodes for legislatura {}", barcodes.size(), leg);
+		    Collection<StampatoModel> barcodeModels = beanMapper.map(barcodes, StampatoModel.class);
+		    List<Stampato> existingBarcodeDataDeleted = stampatoRepository.findByLegislaturaAndDeleted(leg);
+		    Collection<StampatoModel> existingBarcodeDataDeletedModels = beanMapper.map(existingBarcodeDataDeleted, StampatoModel.class);
+		    Map<String, Date> deletedBarcodeDataDeletedMap = existingBarcodeDataDeletedModels.stream().collect(Collectors.toMap(StampatoModel::getBarcode, StampatoModel::getDataDeleted));  
+		    Set<String> existingBarcodeIds = barcodeModels.stream().map(st -> st.getBarcode()).collect(Collectors.toSet());  
+		    List<TypographyToProcessModel> stampatiFromShared = getStampatiFromShared(leg, format);
+		    logger.debug("Found {} stampati from shared path", stampatiFromShared.size());    
+		    List<TypographyToProcessModel> result = stampatiFromShared.stream()
+		  		.filter(stampato -> !existingBarcodeIds.contains(stampato.getBarcode()))
+		  		.map(stampato -> {
+		  			Date dataDeleted = deletedBarcodeDataDeletedMap.get(stampato.getBarcode());
+		            TypographyToProcessModel model = new TypographyToProcessModel(stampato.getBarcode(), leg, format, dataDeleted);
+		            return model; }).collect(Collectors.toList());
+		    logger.info("Processed {} stampati to process", result.size());
+		    result.sort(Comparator.comparing(TypographyToProcessModel::getBarcode));
+		    return result;
+		} catch(Exception e) {
+	        throw new IOException("Errore nella ricerca degli stamapti da elaborare");
+        }
 	}
 
 	public List<TypographyToProcessModel> getStampatiFromShared(String leg, StampatoFormat format) {	

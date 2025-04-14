@@ -70,7 +70,6 @@ public class StampatiService {
 	@Value("${img.http.prefix}")
     private String imgPrefix;
 	
-	//private final String BARCODE_REGEXP = "[1-9][0-9]*(PDL|MSG)[0-9]{7}";
 	private final String BARCODE_REGEXP = "[1-9][0-9]*(PDL|MSG|TU)[0-9]{4,7}";
 	
 	public static final List<String> STRALCIO = List.of(
@@ -85,29 +84,33 @@ public class StampatiService {
 	    "octiesetquadragies", "noviesetquadragies", "quinquagies"
 	);
 	
-	public StampatoModel save(StampatoModel model) {
-	    String barcode = model.getId().getBarcode();
-	    if (barcode == null || !barcode.matches("(" + BARCODE_REGEXP + ")"))
-	        throw new IllegalArgumentException("Invalid barcode format");
-	    if (model.getId().getLegislatura() == null) {
-	        String lastLegislature = utlityService.getLastLegislature().getLegArabo().toString();
-	        model.getId().setLegislatura(lastLegislature);
+	public StampatoModel save(StampatoModel model) throws IOException {
+		try {
+			String barcode = model.getId().getBarcode();
+		    if (barcode == null || !barcode.matches("(" + BARCODE_REGEXP + ")"))
+		        throw new IllegalArgumentException("Il codice a barre non è scritto correttamente");
+		    if (model.getId().getLegislatura() == null) {
+		        String lastLegislature = utlityService.getLastLegislature().getLegArabo().toString();
+		        model.getId().setLegislatura(lastLegislature);
+		    }
+		    Stampato stampato = beanMapper.map(model, Stampato.class);
+		    String stralcio = getStralcio(model.getNumeriPDL());
+	        stampato.setNumeroAtto(stralcio != null ? model.getNumeriPDL().split("-")[0] + "-" + stralcio : model.getNumeriPDL().split("-")[0]);
+		    stampato = stampatiRepository.save(stampato);
+		    logger.info("Stampato saved successfully");
+	        return beanMapper.map(stampato, StampatoModel.class);
+		} catch (Exception e) {
+	        logger.error("Error saving Stampato: ", e);
+	        throw new IOException("Errore nel salvataggio dello Stampato " + model.getId().getBarcode());
 	    }
-	    Stampato stampato = beanMapper.map(model, Stampato.class);
-	    //stampato.setNumeroAtto(model.getNumeriPDL().split("-")[0]);
-	    String stralcio = getStralcio(model.getNumeriPDL());
-        stampato.setNumeroAtto(stralcio != null ? model.getNumeriPDL().split("-")[0] + "-" + stralcio : model.getNumeriPDL().split("-")[0]);
-	    stampato = stampatiRepository.save(stampato);
-	    logger.info("Stampato saved successfully");
-        return beanMapper.map(stampato, StampatoModel.class);
 	}
 	
-	public StampatoModel delete(StampatoModel model) {
+	public StampatoModel delete(StampatoModel model) throws IOException {
 	    String barcode = model.getId().getBarcode();
 	    if (barcode == null || !barcode.matches("(" + BARCODE_REGEXP + ")"))
-	        throw new IllegalArgumentException("Invalid barcode format");
+	        throw new IllegalArgumentException("Il codice a barre non è scritto correttamente");
 	    if (model.getId().getLegislatura() == null)
-	        throw new IllegalArgumentException("Legislatura cannot be null");
+	        throw new IllegalArgumentException("La legislatura non può essere vuota");
 	    try {	
 	        Optional<Stampato> stampatoOpt = stampatiRepository.findByIdLegislaturaAndIdBarcode(model.getId().getLegislatura(), model.getId().getBarcode());
 	        if(stampatoOpt.isPresent()) {
@@ -116,20 +119,20 @@ public class StampatiService {
 		        logger.info("Stampato deleted successfully");
 		        return beanMapper.map(stampato, StampatoModel.class);
 	        } else {
-	        	throw new NoSuchElementException("Stampato not found for the given barcode and legislatura");
+	        	throw new NoSuchElementException("Stampato non trovato");
 	        }
 	    } catch (Exception e) {
 	        logger.error("Error deleting Stampato: ", e);
-	        throw new RuntimeException("Error deleting Stampato", e);
+	        throw new IOException("Errore nella canecellazione dello Stampato " + barcode);
 	    }
 	}
 	
-	public StampatoModel restore(StampatoModel model) {
+	public StampatoModel restore(StampatoModel model) throws IOException {
 	    String barcode = model.getId().getBarcode();
 	    if (barcode == null || !barcode.matches("(" + BARCODE_REGEXP + ")"))
-	        throw new IllegalArgumentException("Invalid barcode format");
+	        throw new IllegalArgumentException("Il codice a barre non è scritto correttamente");
 	    if (model.getId().getLegislatura() == null)
-	        throw new IllegalArgumentException("Legislatura cannot be null");
+	        throw new IllegalArgumentException("La legislatura non può essere vuota");
 	    try {
 	    	Optional<Stampato> stampatoOpt = stampatiRepository.findByIdLegislaturaAndIdBarcode(model.getId().getLegislatura(), model.getId().getBarcode());
 	        if(stampatoOpt.isPresent()) {
@@ -138,11 +141,11 @@ public class StampatiService {
 		        logger.info("Stampato restored successfully");
 		        return beanMapper.map(stampato, StampatoModel.class);
 	        } else {
-	        	throw new NoSuchElementException("Stampato not found for the given barcode and legislatura");
+	        	throw new NoSuchElementException("Stampato non trovato per il dato barcode " + barcode);
 	        }
 	    } catch (Exception e) {
-	        logger.error("Error deleting Stampato: ", e);
-	        throw new RuntimeException("Error restoring Stampato", e);
+	    	logger.error("Error restoring  stampato", e);
+	        throw new IOException("Errore nel ripristino dello Stampato " + barcode);
 	    }
 	}
 	
@@ -177,7 +180,6 @@ public class StampatiService {
 		        throw new IOException("Errore nella publicazione XHTML: " + model.getBarcode());
 		    }
 		}	   
-	    //publishAllegato(model, xhtmlSource, pdfSource, xhtmlPublishDir, pdfPublishDir);     
 	    save(model);
 	    logger.info("Stampato published successfully");
 	    return model;
@@ -229,11 +231,6 @@ public class StampatiService {
         }
     }
 
-    /*protected void publishAllegato(StampatoModel model, String xhtmlSource, String pdfSource, String xhtmlPublishDir, String pdfPublishDir) throws IOException {
-        copyAllegati(getAllegati(xhtmlSource, model.getBarcode()), xhtmlPublishDir, model);
-        copyAllegati(getAllegati(pdfSource, model.getBarcode()), pdfPublishDir, model);
-    }*/
-    
     protected void publishAllegato(StampatoModel model, String source, String publishDir) throws IOException {
         copyAllegati(getAllegati(source, model.getBarcode()), publishDir, model);
     }
@@ -271,17 +268,23 @@ public class StampatiService {
         return matchingFiles.toArray(new File[0]);
     }
 
-    public StampatoModel unpublish(StampatoModel model) throws FileNotFoundException {
-        String xhtmlPublishDir = MessageFormat.format(publishPath, model.getId().getLegislatura(), "xhtml");
-        String pdfPublishDir = MessageFormat.format(publishPath, model.getId().getLegislatura(), "pdf");
-        deleteFile(xhtmlPublishDir, model.getNomeFile() + ".html");
-        deleteFile(pdfPublishDir, model.getNomeFile() + ".pdf");
-        deleteAllegati(getAllegati(xhtmlPublishDir, model.getBarcode()));
-        deleteAllegati(getAllegati(pdfPublishDir, model.getBarcode()));
-        model.setPubblicato(false);
-        save(model);
-        logger.info("Stampato unpublished successfully");
-        return model;
+    public StampatoModel unpublish(StampatoModel model) throws IOException {
+        try {
+        	String xhtmlPublishDir = MessageFormat.format(publishPath, model.getId().getLegislatura(), "xhtml");
+            String pdfPublishDir = MessageFormat.format(publishPath, model.getId().getLegislatura(), "pdf");
+            deleteFile(xhtmlPublishDir, model.getNomeFile() + ".html");
+            deleteFile(pdfPublishDir, model.getNomeFile() + ".pdf");
+            deleteAllegati(getAllegati(xhtmlPublishDir, model.getBarcode()));
+            deleteAllegati(getAllegati(pdfPublishDir, model.getBarcode()));
+            model.setPubblicato(false);
+            save(model);
+            logger.info("Stampato unpublished successfully");
+            return model;
+        } catch(Exception e) {
+        	logger.error("Error to delete: " + model.getBarcode());
+	        throw new IOException("Errore nella sospensione della pubblicazione dello stampato: " + model.getBarcode());
+        }
+    	
     }
 
     private void deleteFile(String dir, String filename) throws FileNotFoundException {
@@ -311,43 +314,48 @@ public class StampatiService {
     }
     
     public StampatoModel rigonero(StampatoModel model) throws IOException {
-        StampatoModel rigonero = new StampatoModel();
-        String barcodeRigonero = extractRigoneroBarcode(model.getId().getBarcode());
-        Optional<Stampato> stampatoOpt = stampatiRepository.findByIdLegislaturaAndIdBarcode(model.getId().getLegislatura(), model.getId().getBarcode());
-        Optional<Stampato> rigoneroOpt = stampatiRepository.findByIdLegislaturaAndIdBarcode(model.getId().getLegislatura(), barcodeRigonero);
-        if (rigoneroOpt.isPresent())
-            throw new IOException("Rigo nero già esiste: " + barcodeRigonero);
-        if (stampatoOpt.isEmpty())
-            throw new IOException("Stampato di partenza non trovato: " +model.getId().getBarcode());
-        unpublish(model);
-        delete(model);
-        beanMapper.map(model, rigonero);
-        rigonero.getId().setBarcode(barcodeRigonero);
-        rigonero.setRigoNero(model.getId().getBarcode());
-        rigonero.setHtmlPresente(false);
-        rigonero.setPdfPresente(false);
-        rigonero.setDataDeleted(null);
-        Stampato originalStampato = stampatoOpt.get();
-        List<StampatoRelatoreModel> newRelatoriList = originalStampato.getStampatiRelatori()
-            .stream().map(relatore -> {
-                StampatoRelatoreModel newRelatore = new StampatoRelatoreModel();
-                beanMapper.map(relatore, newRelatore);
-                newRelatore.setId(null); // Ensure new entity creation
-                return newRelatore;
-            }).collect(Collectors.toList());
-        List<StampatoFelModel> newFelList = originalStampato.getStampatiFel()
-            .stream().map(fel -> {
-                StampatoFelModel newFel = new StampatoFelModel();
-                beanMapper.map(fel, newFel);
-                newFel.setId(null); // Ensure new entity creation
-                return newFel;
-            }).collect(Collectors.toList());
-        rigonero.setStampatiRelatori(new ArrayList<>(newRelatoriList));
-        rigonero.setStampatiFel(new ArrayList<>(newFelList));
-        extractorService.updateNomeFile(rigonero);
-        rigonero = save(rigonero);
-        logger.info("Rigo nero created successfully");
-        return beanMapper.map(rigonero, StampatoModel.class);
+        try {
+        	StampatoModel rigonero = new StampatoModel();
+            String barcodeRigonero = extractRigoneroBarcode(model.getId().getBarcode());
+            Optional<Stampato> stampatoOpt = stampatiRepository.findByIdLegislaturaAndIdBarcode(model.getId().getLegislatura(), model.getId().getBarcode());
+            Optional<Stampato> rigoneroOpt = stampatiRepository.findByIdLegislaturaAndIdBarcode(model.getId().getLegislatura(), barcodeRigonero);
+            if (rigoneroOpt.isPresent())
+                throw new IOException("Rigo nero già esiste: " + barcodeRigonero);
+            if (stampatoOpt.isEmpty())
+                throw new IOException("Stampato di partenza non trovato: " +model.getId().getBarcode());
+            unpublish(model);
+            delete(model);
+            beanMapper.map(model, rigonero);
+            rigonero.getId().setBarcode(barcodeRigonero);
+            rigonero.setRigoNero(model.getId().getBarcode());
+            rigonero.setHtmlPresente(false);
+            rigonero.setPdfPresente(false);
+            rigonero.setDataDeleted(null);
+            Stampato originalStampato = stampatoOpt.get();
+            List<StampatoRelatoreModel> newRelatoriList = originalStampato.getStampatiRelatori()
+                .stream().map(relatore -> {
+                    StampatoRelatoreModel newRelatore = new StampatoRelatoreModel();
+                    beanMapper.map(relatore, newRelatore);
+                    newRelatore.setId(null); // Ensure new entity creation
+                    return newRelatore;
+                }).collect(Collectors.toList());
+            List<StampatoFelModel> newFelList = originalStampato.getStampatiFel()
+                .stream().map(fel -> {
+                    StampatoFelModel newFel = new StampatoFelModel();
+                    beanMapper.map(fel, newFel);
+                    newFel.setId(null); // Ensure new entity creation
+                    return newFel;
+                }).collect(Collectors.toList());
+            rigonero.setStampatiRelatori(new ArrayList<>(newRelatoriList));
+            rigonero.setStampatiFel(new ArrayList<>(newFelList));
+            extractorService.updateNomeFile(rigonero);
+            rigonero = save(rigonero);
+            logger.info("Rigo nero created successfully");
+            return beanMapper.map(rigonero, StampatoModel.class);
+        } catch(Exception e) {
+        	logger.error("Error to rigonero: " + model.getBarcode());
+	        throw new IOException("Errore nella creazione del rigonero dello stampato: " + model.getBarcode());
+        }
     }
     
     private String extractRigoneroBarcode(String barcode) {
@@ -361,38 +369,42 @@ public class StampatiService {
         return prefix + newNumberPart;
     }
     
-    public StampatoModel errataCorrige(StampatoModel model) throws FileNotFoundException {
-    	StampatoModel errataCorrige = new StampatoModel();
-    	Optional<Stampato> last = stampatiRepository.findLastInserted();
-    	if(last.isPresent()) {
-    		String lastBarcode = last.get().getId().getBarcode();
-    		String barcodeAvailable = extractErrataBarcode(lastBarcode);
-    		unpublish(model);
-    		delete(model);
-    		errataCorrige = model;
-    		errataCorrige.getId().setBarcode(barcodeAvailable);
-    		errataCorrige.setHtmlPresente(false);
-    		errataCorrige.setPdfPresente(false);
-    		errataCorrige.setDataDeleted(null);
-    		errataCorrige.setErrataCorrige(true);
-    		errataCorrige.setSuffisso("Errata Corrige");
-    		errataCorrige.setNomeFrontespizio(errataCorrige.getNomeFrontespizio() + "-Errata Corrige");
-    		extractorService.updateNomeFile(errataCorrige);
-    		errataCorrige = save(errataCorrige);
-	        logger.info("Errata Corrige created successfully");
-	        return beanMapper.map(errataCorrige, StampatoModel.class);
-    	}
-        return null;
+    public StampatoModel errataCorrige(StampatoModel model) throws IOException {
+    	try {
+    		StampatoModel errataCorrige = new StampatoModel();
+        	Optional<Stampato> last = stampatiRepository.findLastInserted();
+        	if(last.isPresent()) {
+        		String lastBarcode = last.get().getId().getBarcode();
+        		String barcodeAvailable = extractErrataBarcode(lastBarcode);
+        		unpublish(model);
+        		delete(model);
+        		errataCorrige = model;
+        		errataCorrige.getId().setBarcode(barcodeAvailable);
+        		errataCorrige.setHtmlPresente(false);
+        		errataCorrige.setPdfPresente(false);
+        		errataCorrige.setDataDeleted(null);
+        		errataCorrige.setErrataCorrige(true);
+        		errataCorrige.setSuffisso("Errata Corrige");
+        		errataCorrige.setNomeFrontespizio(errataCorrige.getNomeFrontespizio() + "-Errata Corrige");
+        		extractorService.updateNomeFile(errataCorrige);
+        		errataCorrige = save(errataCorrige);
+    	        logger.info("Errata Corrige created successfully");
+    	        return beanMapper.map(errataCorrige, StampatoModel.class);
+        	}
+            return null;
+    	} catch(Exception e) {
+        	logger.error("Error to errata corrige: " + model.getBarcode());
+	        throw new IOException("Errore nella creazione dell'errata corrige dello stampato: " + model.getBarcode());
+        }
     }
     
     private String getStralcio(String atto) {
-    	Pattern pattern = Pattern.compile("-(?i)(" + String.join("|", STRALCIO) + ")");
-        Matcher matcher = pattern.matcher(atto);
-        if (matcher.find()) {
-            return matcher.group(1);
-        }
-        return null;
-    }
+	    Pattern pattern = Pattern.compile("(?i)(?<=\\d-)(" + String.join("|", STRALCIO) + ")");
+	    Matcher matcher = pattern.matcher(atto);
+	    if (matcher.find())
+	        return matcher.group(1);
+	    return null;
+	}
     
     private String extractErrataBarcode(String barcode) {
         int i = barcode.length() - 1;

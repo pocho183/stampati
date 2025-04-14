@@ -49,13 +49,19 @@ export class DialogRicercaComponent implements OnInit {
 	}
 
 	onSelectionChange(selectedValue: string) {
-	    if (selectedValue === 'xhtml') {
-	        this.extractorService.getStampatiXHTML(this.legislature.legArabo).subscribe((data) => { this.stampati = data; });
-	    } else if (selectedValue === 'pdf') {
+	    if(selectedValue === 'xhtml') {
+	        this.extractorService.getStampatiXHTML(this.legislature.legArabo).subscribe({
+				next: (data) => { this.stampati = data; },
+				error: (err) => {
+					let errorMessage = err?.message || 'Caricamento stampato da elaborare fallito!';
+					this.messageService.add({ severity: 'error', summary: 'Errore', detail: errorMessage });
+				}	
+			});
+	    } else if(selectedValue === 'pdf') {
 	        this.extractorService.getStampatiPDF(this.legislature.legArabo).subscribe((data) => { this.stampati = data; });
 	    }
 	}
-	
+
 	getSeverity(dataDeleted: string | null): 'success' | 'danger' {
 	    return dataDeleted ? 'danger' : 'success';
 	}

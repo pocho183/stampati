@@ -40,7 +40,7 @@ public class ExtractorController {
     }
     
 	@GetMapping(path = "/newtoprocess/{leg}/{format}")
-    public ResponseEntity<List<TypographyToProcessModel>> newToProcess(@PathVariable("leg") String leg, @PathVariable("format") String format) {
+    public ResponseEntity<?> newToProcess(@PathVariable("leg") String leg, @PathVariable("format") String format) {
         logger.debug("Entering StampatoController newToProcess method with leg: {}, format: {}", leg, format);
         try {
             StampatoFormat stampatoFormat = StampatoFormat.fromString(format);
@@ -49,12 +49,9 @@ public class ExtractorController {
             if (stampatiToProcess == null || stampatiToProcess.isEmpty())
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             return new ResponseEntity<>(stampatiToProcess, HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
-            logger.error("Invalid format: {}", format);
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             logger.error("Error in StampatoController newToProcess: {}", e.getMessage(), e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 }

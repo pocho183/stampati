@@ -1,5 +1,6 @@
 package it.camera.stampati.service;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -67,7 +68,7 @@ private static final Logger logger = LoggerFactory.getLogger(RicercaService.clas
         return Optional.empty();
 	}
 	
-	public List<RicercaModel> saveOrder(List<RicercaModel> models) {
+	public List<RicercaModel> saveOrder(List<RicercaModel> models) throws IOException {
 		for(RicercaModel result: models) {
 			Optional<StampatoModel> stampatoOpt = load(result.getLegislatura(), result.getBarcode());
 			if(stampatoOpt.isPresent()) {

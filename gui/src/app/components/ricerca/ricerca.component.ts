@@ -85,8 +85,6 @@ export class RicercaComponent implements OnInit {
 	    this.ref.onClose.subscribe(stampatoLoaded => {
 	    	if (stampatoLoaded) {
 				this.stampato = stampatoLoaded;  
-				//this.stampatoChange.emit(this.stampato);
-	        	//this.messageService.add({ severity: 'info', summary: 'Stampato caricato correttamente', detail: this.stampato.id.barcode });
 				this.router.navigate(['/testi/' + this.stampato.id.barcode]);
 			}
 	    });

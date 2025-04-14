@@ -106,7 +106,10 @@ export class MenuComponent implements OnInit {
 							this.originalStampato = _.cloneDeep(this.stampato);
 							this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Stampato con rigo nero salvato correttamente !' });
 						},
-						error: (err) => { this.messageService.add({ severity: 'error', summary: 'Error', detail: 'La creazione del rigo nero è fallita!' }); }
+						error: (err) => { 
+							let errorMessage = err?.message || 'La creazione del rigo nero è fallita!';
+							this.messageService.add({ severity: 'error', summary: 'Errore', detail: errorMessage });
+						}
 					});
 				}
 			});	
@@ -129,7 +132,10 @@ export class MenuComponent implements OnInit {
 							this.originalStampato = _.cloneDeep(this.stampato);
 						   	this.messageService.add({ severity: 'success', summary: 'Errata corrige creata correttamente' });
 						},
-					    error: (err) => { this.messageService.add({ severity: 'error', summary: 'Errore durante la creazione dell\'errata corrige' }); }
+					    error: (err) => { 
+							let errorMessage = err?.message || 'Errore durante la creazione dell\'errata corrige';
+							this.messageService.add({ severity: 'error', summary: 'Errore', detail: errorMessage });
+						}
 					});
 				}
 			});
@@ -144,7 +150,10 @@ export class MenuComponent implements OnInit {
 					this.originalStampato = _.cloneDeep(this.stampato);
 					this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Stampato salvato!' });
 				},
-				error: (err) => { this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Salvataggio fallito!' }); }
+				error: (err) => { 
+					let errorMessage = err?.message || 'Salvataggio fallito!';
+					this.messageService.add({ severity: 'error', summary: 'Errore', detail: errorMessage });
+				}
 			});
 		} else {
 			console.error("Errore: Codice a barre mancante !");
@@ -182,7 +191,10 @@ export class MenuComponent implements OnInit {
 					this.originalStampato = _.cloneDeep(this.stampato);
 					this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Stampato non pubblicato!' });
 				},
-				error: (err) => { this.messageService.add({ severity: 'error', summary: 'Error', detail: 'L\'operazione di rendere lo stampato non pubblico fallita!' }); }
+				error: (err) => { 
+					let errorMessage = err?.message || 'L\'operazione di rendere lo stampato non pubblico fallita!';
+					this.messageService.add({ severity: 'error', summary: 'Errore', detail: errorMessage });
+				}
 			});
 		});
 	}
@@ -203,7 +215,10 @@ export class MenuComponent implements OnInit {
 							this.originalStampato = _.cloneDeep(this.stampato);
 						   	this.messageService.add({ severity: 'success', summary: 'Stampato cancellato correttamente' });
 						},
-					    error: (err) => { this.messageService.add({ severity: 'error', summary: 'Errore durante la cancellazione dello stampato' }); }
+					    error: (err) => {
+							let errorMessage = err?.message || 'Errore durante la cancellazione dello stampato';
+							this.messageService.add({ severity: 'error', summary: 'Errore', detail: errorMessage });
+						}
 					});
 				}
 			});
@@ -226,7 +241,10 @@ export class MenuComponent implements OnInit {
 							this.originalStampato = _.cloneDeep(this.stampato);
 							this.messageService.add({ severity: 'success', summary: 'Stampato ripristinato correttamente' });
 						},
-						error: (err) => { this.messageService.add({ severity: 'error', summary: 'Errore durante il ripristino dello stampato' }); }
+						error: (err) => { 
+							let errorMessage = err?.message || 'Errore durante il ripristino dello stampato';
+							this.messageService.add({ severity: 'error', summary: 'Errore', detail: errorMessage });
+						}
 					});
 				}
 			});

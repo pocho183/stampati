@@ -71,11 +71,10 @@ private static final Logger logger = LoggerFactory.getLogger(UtilityService.clas
 	                legislatura.setDataInizio(legislatureElement.attr("dataInizio"));
 	                legislatura.setDataFine(legislatureElement.attr("dataFine"));               
 	                legislatureList.add(legislatura);
-	                logger.debug("Added legislature: {}", legislatura);
 	            }
 	        }
 	        legislatureList.sort(Comparator.comparingInt(LegislaturaModel::getLegArabo).reversed());
-	        logger.info("Legislatures from 17th: {}", legislatureList);
+	        logger.info("Legislatures from 15th: {}", legislatureList);
 	        return legislatureList;
 	    } catch (Exception e) {
 	        logger.error("Error occurred while fetching legislature data", e);
