@@ -15,8 +15,11 @@ public class FelService {
 	private static final Logger logger = LoggerFactory.getLogger(FelService.class);
 	
 	public StampatoModel load(TypographyToProcessModel model) throws IOException {
-		logger.error("Error load eFel data: " + model.getBarcode());
 		throw new IOException("Errore nel caricamento dei dati eFel: " + model.getBarcode());
+    }
+	
+	public String[] getAttiAbbinati(String atto) throws IOException {
+		throw new IOException("Errore nella ricerca degli atti abbinati eFel: " + atto);
     }
 
 }

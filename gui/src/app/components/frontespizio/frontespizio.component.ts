@@ -74,14 +74,19 @@ export class FrontespizioComponent implements OnInit {
 	}
 	
 	showDialog() {
-		this.ref = this.dialogService.open(DialogFrontespizioComponent, {header: 'Atti Associati', width: '40%', height: '60%',
-				modal: true, contentStyle: { overflow: 'auto' }, baseZIndex: 10000, closable: true });
-		    this.ref.onClose.subscribe((atto: boolean) => {
-		    	if (atto)
-		        	this.messageService.add({ severity: 'info', summary: 'Atto associato' });
+		this.ref = this.dialogService.open(DialogFrontespizioComponent, { header: 'Atti Associati', width: '40%', height: '50%',
+			modal: true, contentStyle: { overflow: 'auto' },
+			data: this.stampato.numeriPDL,
+			baseZIndex: 10000, closable: true 
+		});
+		this.ref.onClose.subscribe((targetProducts: any[]) => {
+			if(targetProducts && targetProducts.length > 0) {
+		    	this.messageService.add({ severity: 'info', summary: 'Atto associato' });
+		        console.log('Selected targetProducts:', targetProducts);
+		    }
 		});
 	}
-	
+
 	onChangeLetter(event: any) {
 		this.updateNomeFrontespizio();
 		this.updateFilename();

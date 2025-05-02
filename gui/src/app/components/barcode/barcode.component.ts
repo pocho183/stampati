@@ -85,8 +85,8 @@ export class BarcodeComponent implements OnInit {
 	}
 	
 	linkPDL() {
-		if(this.stampato && this.stampato.id && this.stampato.id.barcode && this.stampato.numeriPDL) {
-			let url = environment.linkPDL.replace("{legislatura}", ''+this.stampato.id.legislatura).replace("{legislatura}", ''+this.stampato.id.legislatura).replace("{numeroPDL}", ''+this.stampato.numeriPDL);
+		if(this.stampato && this.stampato.id && this.stampato.id.barcode && this.stampato.numeroAtto) {
+			let url = environment.linkPDL.replace("{legislatura}", ''+this.stampato.id.legislatura).replace("{legislatura}", ''+this.stampato.id.legislatura).replace("{numeroAtto}", ''+this.stampato.numeroAtto);
 			// Append a unique cache-busting anchor to avoid cache
 			const now = new Date();
 			const timeString = `${now.getHours()}${now.getMinutes()}${now.getSeconds()}`;

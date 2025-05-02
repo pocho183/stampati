@@ -47,7 +47,7 @@ private static final Logger logger = LoggerFactory.getLogger(RicercaService.clas
 	public Collection<RicercaModel> searchStampato(String leg, String text) {
         logger.info("Searching stampati for legislatura: {}, text: {}", leg, text);
         // Normalize text like "643 bis" to "643-bis"
-        text = normalizeRelMinoranzaFormat(text);
+        text = normalizeStralcioFormat(text);
         List<Stampato> stampati = ricercaRepository.searchStampati(leg, text);
         if (stampati.isEmpty())
             logger.warn("No stampati found for legislatura: {}, text: {}", leg, text);
@@ -84,7 +84,7 @@ private static final Logger logger = LoggerFactory.getLogger(RicercaService.clas
 		return models;
 	}
 	
-	private String normalizeRelMinoranzaFormat(String text) {
+	private String normalizeStralcioFormat(String text) {
 	    for (String stralcio : STRALCIO) {
 	        String pattern = "(\\d+)\\s+" + stralcio;
 	        if (text.toLowerCase().matches(pattern.toLowerCase())) {

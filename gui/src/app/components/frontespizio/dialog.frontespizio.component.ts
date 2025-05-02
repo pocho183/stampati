@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ButtonModule } from "primeng/button";
 import { DialogModule } from 'primeng/dialog';
-import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { TableModule } from 'primeng/table';
 import { BadgeModule } from 'primeng/badge';
@@ -10,7 +10,6 @@ import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { TooltipModule } from 'primeng/tooltip';
 import { PickListModule } from 'primeng/picklist';
-
 import { FrontespizioService } from 'app/services/frontespizio.service';
 import { Product } from "app/models/product";
 
@@ -27,13 +26,16 @@ export class DialogFrontespizioComponent implements OnInit {
 	
 	sourceProducts!: Product[];
 	targetProducts!: Product[];
+	numeriPDL: string;
+	attiAbbinati: string[];
 	
-  	constructor(private dialogService: DialogService,
-		private ref: DynamicDialogRef, 	
+  	constructor(private ref: DynamicDialogRef,
+		public config: DynamicDialogConfig,
 		private frontespizioService: FrontespizioService,
 		private cdr: ChangeDetectorRef) {}
 
 	ngOnInit() {
+		this.numeriPDL = this.config.data || '' 
 		this.frontespizioService.getProductsData().then(products => {
 			this.sourceProducts = products;
 		    this.cdr.markForCheck();
@@ -42,7 +44,13 @@ export class DialogFrontespizioComponent implements OnInit {
 	}
 	
 	save() {
-		this.ref.close(true);
+		this.ref.close(this.targetProducts);
+	}
+	
+	search() {
+		this.frontespizioService.getAttiAbbinati(this.numeriPDL).subscribe((acts) => {
+			this.attiAbbinati = acts;
+		});
 	}
 	
 	duplicateToTarget(event: any) {

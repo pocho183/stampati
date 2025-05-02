@@ -1,13 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Product } from 'app/models/product';
+import { first, Observable } from 'rxjs';
 
     
 @Injectable()
 export class FrontespizioService {
-	
+
 	constructor(private http: HttpClient) {}
-	
+
 	getProductsData(): Promise<Product[]> {
 	    return Promise.resolve([
 	        { id: '1000', code: 'f230fh0g3', name: '1245', description: 'Product Description', image: 'bamboo-watch.jpg', price: 65, category: 'Accessories', quantity: 24, inventoryStatus: 'INSTOCK', rating: 5 },
@@ -19,6 +20,11 @@ export class FrontespizioService {
 	        { id: '1006', code: 'bib36pfvm', name: '98', description: 'Product Description', image: 'chakra-bracelet.jpg', price: 32, category: 'Accessories', quantity: 5, inventoryStatus: 'LOWSTOCK', rating: 3 },
 	        { id: '1007', code: 'mbvjkgip5', name: '101', description: 'Product Description', image: 'galaxy-earrings.jpg', price: 34, category: 'Accessories', quantity: 23, inventoryStatus: 'INSTOCK', rating: 5 }
 	    ]);
+	}
+	
+	getAttiAbbinati(atto: string): Observable<string[]> {
+		const url = `/efel/attiabbinati/${atto}`;
+		return this.http.get<string[]>(url).pipe(first());
 	}
 
 };

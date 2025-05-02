@@ -58,7 +58,7 @@ public class UtilityController {
     }
     
     @GetMapping(path = "/legislature")
-    public ResponseEntity<List<LegislaturaModel>> getLegislature() {
+    public ResponseEntity<?> getLegislature() {
         logger.debug("Entering getLegislature method in UtilityController");
         try {
             List<LegislaturaModel> legislature = utilityService.getLegislature();
@@ -69,8 +69,8 @@ public class UtilityController {
             logger.info("Successfully retrieved legislature data: {}", legislature);
             return ResponseEntity.ok(legislature);
         } catch (Exception ex) {
-            logger.error("Error occurred while fetching the legislature data", ex);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            logger.error("Errore durante il caricamento delle legislature", ex);
+        	return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
         }
     }
     

@@ -1,8 +1,8 @@
 <div>
 	<div class="w-full mb-4">
     	<p-inputgroup class="w-full">
-        	<input pInputText placeholder="Ricerca per numero atto" type="text" class="w-full"/>
-            <p-inputgroup-addon><p-button icon="pi pi-search" severity="secondary" variant="text"/></p-inputgroup-addon>
+        	<input [(ngModel)]="numeriPDL" pInputText placeholder="Ricerca per numero atto" type="text" class="w-full"/>
+            <p-inputgroup-addon><p-button (click)="search()" icon="pi pi-search" severity="secondary" variant="text"/></p-inputgroup-addon>
         </p-inputgroup>
     </div>
     <div class="flex justify-between flex-wrap mt-4">
@@ -13,7 +13,9 @@
         	<ng-template let-item #item>{{ item.name }}</ng-template>
     	</p-picklist>
 	</div>
-	<div class=" flex justify-content-center flex-wrap mt-6">
-		<p-button (click)="save()" label="Salva" severity="info"/>
+	<div class="flex justify-content-end flex-wrap mt-4">
+		<div class="m-2">
+			<p-button (click)="save()" label="Salva" severity="info" [style]="{'background-color': '#285492'}"/>
+		</div>
 	</div>
 </div>

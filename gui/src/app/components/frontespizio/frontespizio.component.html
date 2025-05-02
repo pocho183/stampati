@@ -8,7 +8,7 @@
 				<div>
 					<label class="font-bold block mb-2 required-field">Numeri PDL del frontespizio</label>
            			<p-inputgroup>
-		    			<input [(ngModel)]="stampato.numeriPDL" (ngModelChange)="onChangeNumeriPDL($event)" pInputText/>
+		    			<input [(ngModel)]="stampato.numeriPDL" (ngModelChange)="onChangeNumeriPDL($event)" disabled pInputText/>
 		    			<p-inputgroup-addon><div><p-button (click)="showDialog()" pTooltip="Modifica" tooltipPosition="top" icon="pi pi-pencil" [style]="{'background-color': '#285492'}"/></div></p-inputgroup-addon>
 					</p-inputgroup>
 				</div>
