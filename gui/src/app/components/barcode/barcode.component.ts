@@ -49,8 +49,14 @@ export class BarcodeComponent implements OnInit {
 	    toolbar: [ 'undo', 'redo', '|', 'bold', 'italic', '|' ],
 		removePlugins: ['CKBox', 'EasyImage', 'CloudServices']
 	}
+	public configFel = {
+		licenseKey: 'GPL',
+		readOnly: true,
+	    plugins: [ Essentials, Paragraph, Bold, Italic ],
+	    toolbar: [ 'undo', 'redo', '|' ],
+		removePlugins: ['CKBox', 'EasyImage', 'CloudServices']
+	}
 	compareTitle: boolean = false;
-	text: string = 'Titolo eFel';
 	
 	constructor(private stampatoService: StampatoService,
 		private dialogService: DialogService,
@@ -80,7 +86,7 @@ export class BarcodeComponent implements OnInit {
 	}
 	
 	copyTitle() {
-		this.stampato.titolo = this.text;
+		this.stampato.titolo = this.stampato.titoloFel;
 		this.compareTexts();
 	}
 	
@@ -124,8 +130,8 @@ export class BarcodeComponent implements OnInit {
 	    this.compareTexts();
 	}
 	
-	compareTexts() {
-	  	const cleanOriginalText = this.stripHtml(this.text.trim());
+	compareTexts() {		
+		const cleanOriginalText = this.stripHtml(this.stampato.titoloFel.trim());
 		const cleanModifiedText = this.stripHtml(this.stampato.titolo.trim());
 		if(cleanOriginalText === cleanModifiedText)
 		    this.compareTitle = true;
@@ -158,6 +164,10 @@ export class BarcodeComponent implements OnInit {
 	extractTypeStampato(input?: string): string | null {
 	    const match = input.match(/^\d{2}(PDL|MSG|TU)/);
 	    return match ? match[1].toLowerCase() : null;
+	}
+	
+	onReady(editor: any) {
+	  editor.enableReadOnlyMode('manual');
 	}
 	
 }

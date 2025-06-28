@@ -1,11 +1,11 @@
 package it.camera.stampati.service;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Properties;
+
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
@@ -19,6 +19,7 @@ import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,16 +31,16 @@ import it.camera.stampati.model.SenderModel;
 
 @Service
 public class EmailService {
-	
+
 	private final Logger logger = LoggerFactory.getLogger(EmailService.class);
-	
+
 	@Autowired
 	private Environment env;
-	
+
 	public void send(EmailModel email) throws MessagingException {
 		sendMailMessage(prepareMessage(email), email.getSender());
 	}
-	
+
 	public SenderModel getSenderEmail() {
 		SenderModel sender = new SenderModel();
 		sender.setEmail(env.getProperty("mail.sender"));
@@ -47,7 +48,7 @@ public class EmailService {
 		sender.setPassword(env.getProperty("mail.password"));
 		return sender;
 	}
-	
+
 	private void sendMailMessage(MimeMessage message, SenderModel sender) throws MessagingException {
 		Transport transport = null;
 		try {
@@ -60,17 +61,18 @@ public class EmailService {
 			transport.sendMessage(message, message.getAllRecipients());
 		} catch (NumberFormatException | MessagingException e) {
 			 logger.error("Email sending failed: " + e.getMessage(), e);
-			 throw new MessagingException("Failed to send email", e);		    
+			 throw new MessagingException("Failed to send email", e);
 		} finally {
-			if(transport != null)
+			if(transport != null) {
 				try {
 					transport.close();
 				} catch (MessagingException e) {
 					e.printStackTrace();
 				}
+			}
 		}
 	}
-	
+
 	private MimeMessage prepareMessage(EmailModel email) {
 		Session session = createMailSession();
 		MimeMessage message = new MimeMessage(session);
@@ -84,11 +86,11 @@ public class EmailService {
 			message.setText(email.getBody(), "UTF-8", "html");
 			message.setSentDate(new Date());
 		} catch (MessagingException e) {
-			logger.error(e.getMessage());;
+			logger.error(e.getMessage());
 		}
 		return message;
 	}
-	
+
 	private Session createMailSession() {
 		Properties props = new Properties();
 		props.put("mail.smtp.host", env.getProperty("mail.smtp.host"));
@@ -98,7 +100,7 @@ public class EmailService {
 		props.put("mail.smtp.ssl.trust", env.getProperty("mail.smtp.host"));
 		return Session.getDefaultInstance(props);
 	}
-	
+
 	private void handleRecipients(MimeMessage message, List<String> recipients, Message.RecipientType type) throws MessagingException {
 		if(recipients != null) {
 			checkDomainsExist(recipients);
@@ -121,7 +123,7 @@ public class EmailService {
 		}
 		return recipients;
 	}
-	
+
 	static int doLookup(String email) {
 		int size = 0;
 		Hashtable<String, String> env = new Hashtable<>();
@@ -132,7 +134,9 @@ public class EmailService {
 			Attributes attrs;
 			attrs = ictx.getAttributes(hostName, new String[] { "MX" });
 			Attribute attr = attrs.get( "MX" );
-			if(attr == null) return(0);
+			if(attr == null) {
+				return(0);
+			}
 			size = attr.size();
 		} catch (NamingException e) {
 			e.printStackTrace();

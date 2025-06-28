@@ -45,6 +45,7 @@ export class StampatoModel {
 	@Type(() => Date)
 	dataStampa?: Date;
 	titolo?: string = '';
+	titoloFel?: string = '';
 	format?: StampatoFormat;
 	@Type(() => Date)
 	dataDeleted?: Date;

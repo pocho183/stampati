@@ -36,7 +36,7 @@ import it.esinware.mapping.BeanMapper;
 public class ExtractorService {
 
 	private static final Logger logger = LoggerFactory.getLogger(ExtractorService.class);
-	
+
 	@Autowired
 	private BeanMapper beanMapper;
 	@Autowired
@@ -45,12 +45,12 @@ public class ExtractorService {
 	private StampatoRepository stampatoRepository;
 	@Value("${stampati.shared.input}")
     private String sharedPath;
-	
+
 	private final String BARCODE_REGEXP = "[1-9][0-9]*(PDL|MSG|TU)[0-9]{4,7}";
-	
+
 	public static final List<String> STRALCIO = List.of(
 		"bis", "ter", "quater", "quinquies", "sexies", "septies", "octies", "novies", "decies",
-	    "undecies", "duodecies", "terdecies", "quaterdecies", "quindecies", "sedecies", 
+	    "undecies", "duodecies", "terdecies", "quaterdecies", "quindecies", "sedecies",
 	    "septiesdecies", "duodevicies", "undevicies", "vicies", "semeletvicies", "bisetvicies",
 	    "teretvicies", "quateretvicies", "quinquiesetvicies", "sexiesetvicies", "septiesetvicies",
 	    "octiesetvicies", "noviesetvicies", "tricies", "semelettricies", "bisettricies", "terettricies",
@@ -59,7 +59,7 @@ public class ExtractorService {
 	    "quateretquadragies", "quinquiesetquadragies", "sexiesetquadragies", "septiesetquadragies",
 	    "octiesetquadragies", "noviesetquadragies", "quinquagies"
 	);
-	
+
 	public StampatoModel getStampato(TypographyToProcessModel model) throws FileNotFoundException {
         File file = loadFile(model);
         StampatoModel stampato = parseContent(file, model);
@@ -69,19 +69,21 @@ public class ExtractorService {
         stampato = save(stampato);
         return stampato;
     }
-	
+
 	public File loadFile(TypographyToProcessModel model) throws FileNotFoundException {
         String formattedPath = MessageFormat.format(sharedPath, model.getLegislaturaId(), model.getFormat().name().toLowerCase());
         File baseDir = new File(formattedPath);
-        if (!baseDir.exists() || !baseDir.isDirectory())
-            throw new IllegalStateException("Directory does not exist or is not valid: " + formattedPath);
+        if (!baseDir.exists() || !baseDir.isDirectory()) {
+			throw new IllegalStateException("Directory does not exist or is not valid: " + formattedPath);
+		}
         String regex = Pattern.quote(model.getBarcode()) + "\\." + model.getFormat().name().toLowerCase().replace("x", "");
         String[] files = baseDir.list((dir, name) -> name.matches(regex));
-        if (files == null || files.length == 0)
-            throw new FileNotFoundException("No matching file found for barcode: " + model.getBarcode());
+        if (files == null || files.length == 0) {
+			throw new FileNotFoundException("No matching file found for barcode: " + model.getBarcode());
+		}
         return new File(baseDir, files[0]);
     }
-	
+
 	public StampatoModel parseContent(File file, TypographyToProcessModel model) {
 		if(model.getFormat() == StampatoFormat.XHTML) {
         	XhtmlParser xhtmlParser = new XhtmlParser();
@@ -94,58 +96,66 @@ public class ExtractorService {
             throw new IllegalArgumentException("Unsupported format: " + model.getFormat());
         }
     }
-	
+
 	public void validate(StampatoModel model) {
 		Optional<Stampato> stampato = ricercaRepository.findByIdLegislaturaAndIdBarcode(model.getId().getLegislatura(), model.getId().getBarcode());
 		if(stampato.isPresent()) {
 			throw new IllegalStateException("Stampato with barcode " + model.getId().getBarcode() + " already exists.");
 		}
 	}
-	
+
 	public void updateNomeFrontespizio(StampatoModel stampato) {
-	    if(stampato.getNomeFrontespizio() != null && stampato.getNomeFrontespizio() != " " && stampato.getSuffisso() != null && stampato.getSuffisso() != "")
-	    	stampato.setNomeFrontespizio((stampato.getNomeFrontespizio() + "-" +stampato.getSuffisso()).replace(" ", "-"));
+	    if(stampato.getNomeFrontespizio() != null && stampato.getNomeFrontespizio() != " " && stampato.getSuffisso() != null && stampato.getSuffisso() != "") {
+			stampato.setNomeFrontespizio((stampato.getNomeFrontespizio() + "-" +stampato.getSuffisso()).replace(" ", "-"));
+		}
 	}
 
 	private String trimValue(String value) {
 	    return Optional.ofNullable(value).map(String::trim).orElse("");
 	}
-	
+
 	public void updateNomeFile(StampatoModel stampato) {
 		if (stampato != null && stampato.getId() != null && stampato.getId().getBarcode() != null) {
             String type = extractTypeStampato(stampato.getId().getBarcode());
             String numeriPDL = (stampato.getNumeriPDL() != null && !stampato.getNumeriPDL().isEmpty()) ? stampato.getNumeriPDL().split("-")[0] : "unknown";
             String stralcio = getStralcio(stampato.getNumeriPDL());
-            if(stralcio != null && stralcio != "")
-            	numeriPDL = numeriPDL + "-" + stralcio;
+            if(stralcio != null && stralcio != "") {
+				numeriPDL = numeriPDL + "-" + stralcio;
+			}
             String filename = "leg." + stampato.getId().getLegislatura() + "." + (type != null ? type : "") + ".camera." + numeriPDL;
-            if(stampato.getNavette() != null && !stampato.getNavette().trim().isEmpty())
-                filename += "-" + stampato.getNavette();
+            if(stampato.getNavette() != null && !stampato.getNavette().trim().isEmpty()) {
+				filename += "-" + stampato.getNavette();
+			}
             String relazione = (stampato.getLettera() != null) ? stampato.getLettera() : "";
-            if(stampato.getRinvioInCommissione() != null && stampato.getRinvioInCommissione())
-                relazione += "R";
-            if (!relazione.trim().isEmpty())
-                filename = filename + "_" + relazione;
-            if(stampato.getRelazioneMin() != null && !stampato.getRelazioneMin().trim().isEmpty())
-                filename += "-" + stampato.getRelazioneMin();
+            if(stampato.getRinvioInCommissione() != null && stampato.getRinvioInCommissione()) {
+				relazione += "R";
+			}
+            if (!relazione.trim().isEmpty()) {
+				filename = filename + "_" + relazione;
+			}
+            if(stampato.getRelazioneMin() != null && !stampato.getRelazioneMin().trim().isEmpty()) {
+				filename += "-" + stampato.getRelazioneMin();
+			}
             filename = filename + "." + stampato.getId().getBarcode();
             stampato.setNomeFile(filename);
         }
 	}
-	
+
 	private String getStralcio(String atto) {
 	    Pattern pattern = Pattern.compile("(?i)(?<=\\d-)(" + String.join("|", STRALCIO) + ")");
 	    Matcher matcher = pattern.matcher(atto);
-	    if (matcher.find())
-	        return matcher.group(1);
+	    if (matcher.find()) {
+			return matcher.group(1);
+		}
 	    return null;
 	}
-	
+
 	public static String extractTypeStampato(String input) {
 	    Pattern pattern = Pattern.compile("(PDL|MSG|TU)");
         Matcher matcher = pattern.matcher(input);
-        if (matcher.find())
-            return matcher.group(1).toLowerCase();
+        if (matcher.find()) {
+			return matcher.group(1).toLowerCase();
+		}
         return null;
 	}
 
@@ -154,7 +164,7 @@ public class ExtractorService {
         Stampato entity = beanMapper.map(model, Stampato.class);
         entity = stampatoRepository.save(entity);
         return beanMapper.map(entity, StampatoModel.class);
-    }	
+    }
 
 	public List<TypographyToProcessModel> getStampatiToProcess(String leg, StampatoFormat format) throws IOException {
 		try {
@@ -164,10 +174,10 @@ public class ExtractorService {
 		    Collection<StampatoModel> barcodeModels = beanMapper.map(barcodes, StampatoModel.class);
 		    List<Stampato> existingBarcodeDataDeleted = stampatoRepository.findByLegislaturaAndDeleted(leg);
 		    Collection<StampatoModel> existingBarcodeDataDeletedModels = beanMapper.map(existingBarcodeDataDeleted, StampatoModel.class);
-		    Map<String, Date> deletedBarcodeDataDeletedMap = existingBarcodeDataDeletedModels.stream().collect(Collectors.toMap(StampatoModel::getBarcode, StampatoModel::getDataDeleted));  
-		    Set<String> existingBarcodeIds = barcodeModels.stream().map(st -> st.getBarcode()).collect(Collectors.toSet());  
+		    Map<String, Date> deletedBarcodeDataDeletedMap = existingBarcodeDataDeletedModels.stream().collect(Collectors.toMap(StampatoModel::getBarcode, StampatoModel::getDataDeleted));
+		    Set<String> existingBarcodeIds = barcodeModels.stream().map(st -> st.getBarcode()).collect(Collectors.toSet());
 		    List<TypographyToProcessModel> stampatiFromShared = getStampatiFromShared(leg, format);
-		    logger.debug("Found {} stampati from shared path", stampatiFromShared.size());    
+		    logger.debug("Found {} stampati from shared path", stampatiFromShared.size());
 		    List<TypographyToProcessModel> result = stampatiFromShared.stream()
 		  		.filter(stampato -> !existingBarcodeIds.contains(stampato.getBarcode()))
 		  		.map(stampato -> {
@@ -182,15 +192,17 @@ public class ExtractorService {
         }
 	}
 
-	public List<TypographyToProcessModel> getStampatiFromShared(String leg, StampatoFormat format) {	
+	public List<TypographyToProcessModel> getStampatiFromShared(String leg, StampatoFormat format) {
 		String formattedPath = MessageFormat.format(sharedPath, leg, format.name().toLowerCase());
-        File baseDir = new File(formattedPath);   
-        if (!baseDir.exists() || !baseDir.isDirectory())
-            return new ArrayList<>();
-        String regex = "(" + BARCODE_REGEXP + ")\\." + format.name().toLowerCase().replace("x", "");     
+        File baseDir = new File(formattedPath);
+        if (!baseDir.exists() || !baseDir.isDirectory()) {
+			return new ArrayList<>();
+		}
+        String regex = "(" + BARCODE_REGEXP + ")\\." + format.name().toLowerCase().replace("x", "");
         String[] files = baseDir.list((dir, name) -> name.matches(regex));
-        if (files == null)
-            return new ArrayList<>();
+        if (files == null) {
+			return new ArrayList<>();
+		}
         return List.of(files).stream().map(fileName -> {
         	String fileNameWithoutExtension = fileName.replaceAll("\\.[^.]+$", "");
             return new TypographyToProcessModel(fileNameWithoutExtension, leg, format, null); }).collect(Collectors.toList());

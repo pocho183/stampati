@@ -1,6 +1,6 @@
 export class StampatoFelModel {
 	
-	id: number;
-	idFel: number;
+	codiceEstremiAttoPdl: number;
+	titolo: string;
 	numeroAtto: string;
 }

@@ -1,20 +1,22 @@
 package it.camera.stampati.parser;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import it.camera.stampati.model.StampatoIdModel;
 import it.camera.stampati.model.StampatoModel;
 import it.camera.stampati.model.StampatoRelatoreModel;
-
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.regex.*;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class XhtmlParser {
 
@@ -43,11 +45,15 @@ public class XhtmlParser {
             stampatoId.setLegislatura(getMeta(doc, "legislatura.a"));
             stampatoId.setBarcode(getMeta(doc, "codiceABarre"));
             stampato.setId(stampatoId);
-            if(!"0".equals(getMeta(doc, "rigoNero"))) stampato.setRigoNero(extractRigoNeroParent(stampatoId.getBarcode()));
+            if(!"0".equals(getMeta(doc, "rigoNero"))) {
+				stampato.setRigoNero(extractRigoNeroParent(stampatoId.getBarcode()));
+			}
             //stampato.setErrataCorrige(getMeta(doc, "errataCorrige") == null ? null : !"0".equals(getMeta(doc, "errataCorrige")));
             String errata = getMeta(doc, "errataCorrige");
             stampato.setErrataCorrige(errata != null && !"0".equals(errata));
-            if(stampato.getErrataCorrige()) stampato.setSuffisso("-Errata Corrige");
+            if(stampato.getErrataCorrige()) {
+				stampato.setSuffisso("-Errata Corrige");
+			}
             stampato.setHtmlPresente(true);
             String atto = getAtto(doc);
             stampato.setLettera(getLettera(atto));
@@ -62,7 +68,9 @@ public class XhtmlParser {
 
             // Title
             Element title = doc.selectFirst("p.titolo");
-            if (title != null) stampato.setTitolo(title.text());
+            if (title != null) {
+				stampato.setTitolo(title.text());
+			}
 
             // Presentation
             Elements pres = doc.select("p.dataPresentazione");
@@ -99,7 +107,9 @@ public class XhtmlParser {
 
     private String extractRigoNeroParent(String barcode) {
         int i = barcode.length() - 1;
-        while (i >= 0 && Character.isDigit(barcode.charAt(i))) i--;
+        while (i >= 0 && Character.isDigit(barcode.charAt(i))) {
+			i--;
+		}
         String prefix = barcode.substring(0, i + 1);
         String numberPart = barcode.substring(i + 1);
         int number = Integer.parseInt(numberPart) - 1;
@@ -119,7 +129,9 @@ public class XhtmlParser {
         Element atto = doc.selectFirst("p.numeroAtto");
         if (atto != null) {
             String id = atto.id();
-            if (id.contains(".")) return id.split("\\.")[1];
+            if (id.contains(".")) {
+				return id.split("\\.")[1];
+			}
         }
         return "";
     }
@@ -128,7 +140,9 @@ public class XhtmlParser {
         Element p = doc.selectFirst("p.numeroAtto");
         if (p != null) {
             String text = p.text().replaceAll("\\s+", " ").trim();
-            if (text.startsWith("N. ")) text = text.substring(3).trim();
+            if (text.startsWith("N. ")) {
+				text = text.substring(3).trim();
+			}
             return text;
         }
         return "";
@@ -150,8 +164,9 @@ public class XhtmlParser {
         String[] words = cleaned.split(" ");
         StringBuilder result = new StringBuilder();
         for (String word : words) {
-            if (!word.isEmpty())
-            	result.append(Character.toUpperCase(word.charAt(0))).append(word.substring(1)).append(" ");
+            if (!word.isEmpty()) {
+				result.append(Character.toUpperCase(word.charAt(0))).append(word.substring(1)).append(" ");
+			}
         }
         return result.toString().trim();
     }
@@ -191,8 +206,9 @@ public class XhtmlParser {
         relatore.setIdPersona(Long.valueOf(idPersona));
         relatore.setCognome(node.text());
         relatore.setMaggioranza(!fields[1].equalsIgnoreCase("minoranza"));
-        if (id.contains("commissione"))
-            relatore.setIdCommissione(Integer.parseInt(id.substring(id.lastIndexOf(".") + 1)));
+        if (id.contains("commissione")) {
+			relatore.setIdCommissione(Integer.parseInt(id.substring(id.lastIndexOf(".") + 1)));
+		}
         return relatore;
     }
 }

@@ -22,12 +22,12 @@ import it.camera.stampati.service.ExtractorService;
 @RestController
 @RequestMapping(path = "/extractor")
 public class ExtractorController {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(ExtractorController.class);
 
     @Autowired
     private ExtractorService extractorService;
-    
+
     @PostMapping(path = "/load")
     public ResponseEntity<StampatoModel> getStampato(@RequestBody TypographyToProcessModel model) {
         try {
@@ -38,7 +38,7 @@ public class ExtractorController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new StampatoModel());
         }
     }
-    
+
 	@GetMapping(path = "/newtoprocess/{leg}/{format}")
     public ResponseEntity<?> newToProcess(@PathVariable("leg") String leg, @PathVariable("format") String format) {
         logger.debug("Entering StampatoController newToProcess method with leg: {}, format: {}", leg, format);
@@ -46,8 +46,9 @@ public class ExtractorController {
             StampatoFormat stampatoFormat = StampatoFormat.fromString(format);
             List<TypographyToProcessModel> stampatiToProcess = extractorService.getStampatiToProcess(leg, stampatoFormat);
             logger.debug("Found {} stampati to process.", stampatiToProcess.size());
-            if (stampatiToProcess == null || stampatiToProcess.isEmpty())
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            if (stampatiToProcess == null || stampatiToProcess.isEmpty()) {
+				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+			}
             return new ResponseEntity<>(stampatiToProcess, HttpStatus.OK);
         } catch (Exception e) {
             logger.error("Error in StampatoController newToProcess: {}", e.getMessage(), e);

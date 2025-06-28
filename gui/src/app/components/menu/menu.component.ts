@@ -18,6 +18,7 @@ import { ActivatedRoute } from '@angular/router';
 import { RicercaService } from "app/services/ricerca.service";
 import { NgIf } from '@angular/common';
 import { Subscription } from "rxjs";
+import { StampatoFelModel } from "app/models/stampato.fel.model";
 
 @Component({
 	standalone: true,
@@ -36,6 +37,7 @@ export class MenuComponent implements OnInit {
 	stampatoId: StampatoIdModel = new StampatoIdModel();
 	stampato: StampatoModel = new StampatoModel(this.stampatoId);
 	originalStampato: StampatoModel;
+	efel: StampatoFelModel;
 	private ref: DynamicDialogRef | undefined;
 	
 	constructor(private stampatoService: StampatoService,
@@ -48,9 +50,8 @@ export class MenuComponent implements OnInit {
     ngOnInit() {
 		this.routeSub = this.route.paramMap.subscribe(paramMap => {
 			this.barcode = paramMap.get('barcode');
-			this.handleBarcodeChange(this.barcode);
+			this.handleBarcodeChange(this.barcode);		
 		});
-		this.loadFel();
 	}
 	
 	ngOnDestroy(): void {
@@ -61,9 +62,12 @@ export class MenuComponent implements OnInit {
 	handleBarcodeChange(barcode: string | null): void {
 		if (barcode) {
 			this.ricercaService.load(Number(barcode.substring(0, 2)), barcode).subscribe( res => {
-				this.stampato = res;  
+				this.stampato = res;
 				this.stampatoChange.emit(this.stampato);
 				this.originalStampato = _.cloneDeep(this.stampato);
+				// Call eFel
+				if(this.stampato.numeroAtto)
+					this.loadFel();
 			});
 	    }
 	}
@@ -253,8 +257,9 @@ export class MenuComponent implements OnInit {
 		
 	loadFel() {
 		this.felService.loadFel(this.stampato).subscribe({
-			next: (eFelStampato) => {
-				this.stampato = eFelStampato;
+			next: (eFelStampato) => {	
+				this.efel = eFelStampato;
+				this.stampato.titoloFel = this.efel.titolo + "e";				
 				this.originalStampato = _.cloneDeep(this.stampato);
 			},
 			error: (err) => {

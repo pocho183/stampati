@@ -39,7 +39,7 @@ public class UtilityController {
     private UtilityService utilityService;
     @Autowired
     private EmailService emailService;
-    
+
     @GetMapping(path = "/legislature/last")
     public ResponseEntity<LegislaturaModel> getLastLegislature() {
         logger.debug("Entering UtilityController to process getLastLegislature");
@@ -56,7 +56,7 @@ public class UtilityController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-    
+
     @GetMapping(path = "/legislature")
     public ResponseEntity<?> getLegislature() {
         logger.debug("Entering getLegislature method in UtilityController");
@@ -73,22 +73,23 @@ public class UtilityController {
         	return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
         }
     }
-    
+
     @GetMapping("/commissions/{leg}")
     public ResponseEntity<List<CommissioneModel>> getCommissionsByLeg(@PathVariable("leg") Long leg) {
         try {
             List<CommissioneModel> commissions = utilityService.getCommissions(leg);
-            if (commissions.isEmpty())
-            	return ResponseEntity.status(HttpStatus.NOT_FOUND).build();     
+            if (commissions.isEmpty()) {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+			}
             return ResponseEntity.ok(commissions);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-    
+
     @PostMapping(value = "preview")
     @ResponseBody
-    public void preview(@RequestParam(name = "filename") String path, @RequestParam(name = "leg") String leg, 
+    public void preview(@RequestParam(name = "filename") String path, @RequestParam(name = "leg") String leg,
     		@RequestParam(name = "extension") String extension, HttpServletResponse response) {
     	logger.info("Request preview of: {}", path);
     	try {
@@ -101,7 +102,7 @@ public class UtilityController {
     	     response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
     	 }
     }
-    
+
     @PostMapping(value = "sendEmail")
     @ResponseBody
     public ResponseEntity<Boolean> sendEmail(@RequestBody EmailRequestModel emailRequest) {

@@ -35,13 +35,15 @@ public class CommissioniHandler extends DefaultHandler {
 				commissione.setLegislatura(leg);
 			}
 		} else if(commissione != null && qName.equals("organo")) {
-			if(!attributes.getValue("id").equals("x"))
+			if(!attributes.getValue("id").equals("x")) {
 				commissione.setAulId(Long.parseLong(attributes.getValue("id")));
+			}
 			ramo = attributes.getValue("ramo");
 			if(!ramo.equals("S")) {
 				commissione.setRamo(ramo);
-				if(!commissione.getCodiceTipografia().equals("20"))
+				if(!commissione.getCodiceTipografia().equals("20")) {
 					commissioni.add(commissione);
+				}
 			}
 		} else if(commissione != null && qName.equals("breve")) {
 			bBreve = true;

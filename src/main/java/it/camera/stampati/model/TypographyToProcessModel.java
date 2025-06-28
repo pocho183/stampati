@@ -14,13 +14,13 @@ public class TypographyToProcessModel {
     private String legislaturaId;
     private StampatoFormat format;
     private Date dataDeleted;
-    
+
     public TypographyToProcessModel() {}
-    
+
 	public TypographyToProcessModel(String fileName, String leg, StampatoFormat format, Date dataDeleted) {
 		this.barcode = fileName;
 		this.legislaturaId = leg;
-		this.format = format;		
+		this.format = format;
 		this.dataDeleted = dataDeleted;
 	}
 

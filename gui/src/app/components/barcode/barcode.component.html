@@ -32,7 +32,7 @@
 			<div class="flex-grow-1">
 				<label class="text-xl text-left font-bold mt-4" style="color:red">Titolo eFel</label>
 				<div class="ckeditor-container">
-					<ckeditor [editor]="Editor" [config]="config" [data]="text"></ckeditor>
+					<ckeditor [(ngModel)]="stampato.titoloFel" [editor]="Editor" [config]="configFel" (ready)="onReady($event)"></ckeditor>
 				</div>
 			</div>
 			<div class="flex justify-content-between flex-column m-4">

@@ -38,24 +38,22 @@ import it.esinware.mapping.BeanMapper;
 public class UtilityService {
 
 private static final Logger logger = LoggerFactory.getLogger(UtilityService.class);
-	
-	@Autowired
-	private BeanMapper beanMapper;
+
 	@Value("${url.legislature}")
     private String urlLegislature;
 	@Value("${url.commissions}")
     private String urlCommissions;
 	@Value("${stampati.shared.input}")
 	private String urlPreview;
-	
+
 	public LegislaturaModel getLastLegislature() {
         List<LegislaturaModel> legislatures = getLegislature();
-        return legislatures.stream().max(Comparator.comparingInt(l -> l.getLegArabo())).orElse(null); 
+        return legislatures.stream().max(Comparator.comparingInt(l -> l.getLegArabo())).orElse(null);
     }
-	
+
 	public List<LegislaturaModel> getLegislature() {
 	    try {
-	        logger.debug("Fetching legislature data from URL: {}", urlLegislature);        
+	        logger.debug("Fetching legislature data from URL: {}", urlLegislature);
 	        RestTemplate restTemplate = new RestTemplate();
 	        String xmlResponse = restTemplate.getForObject(urlLegislature, String.class);
 	        Document doc = Jsoup.parse(xmlResponse, "", org.jsoup.parser.Parser.xmlParser());
@@ -69,7 +67,7 @@ private static final Logger logger = LoggerFactory.getLogger(UtilityService.clas
 	                legislatura.setLegRomano(legislatureElement.attr("legRomano"));
 	                legislatura.setLegArabo(legArabo);
 	                legislatura.setDataInizio(legislatureElement.attr("dataInizio"));
-	                legislatura.setDataFine(legislatureElement.attr("dataFine"));               
+	                legislatura.setDataFine(legislatureElement.attr("dataFine"));
 	                legislatureList.add(legislatura);
 	            }
 	        }
@@ -81,7 +79,7 @@ private static final Logger logger = LoggerFactory.getLogger(UtilityService.clas
 	        throw new RuntimeException("Failed to fetch legislature data", e);
 	    }
 	}
-	
+
 	public List<CommissioneModel> getCommissions(Long leg) {
         Set<CommissioneModel> commissioni = new HashSet<>();
         try {
@@ -90,7 +88,7 @@ private static final Logger logger = LoggerFactory.getLogger(UtilityService.clas
             String url = MessageFormat.format(urlCommissions, leg);
             CommissioniHandler handlerCamera = new CommissioniHandler(commissioni, leg);
             saxParser.parse(url, handlerCamera);
-            return commissioni.stream().filter(c -> c.isPermanent() == true)
+            return commissioni.stream().filter(c -> c.isPermanent())
             		.sorted(Comparator.comparing(CommissioneModel::getAulId)).collect(Collectors.toList());
         } catch (ParserConfigurationException | SAXException | IOException e) {
             logger.error("Error parsing commissions for legislature {}: {}", leg, e.getMessage());
@@ -101,8 +99,9 @@ private static final Logger logger = LoggerFactory.getLogger(UtilityService.clas
 	public byte[] getPreview(String filePath, String leg, String extension) throws IOException {
 	    String url = MessageFormat.format(urlPreview, leg, extension) + "/" + filePath.replace("x", "");
 	    Path file = Paths.get(url);
-	    if (!Files.exists(file))
-	        throw new IOException("File not found: " + url);
+	    if (!Files.exists(file)) {
+			throw new IOException("File not found: " + url);
+		}
 	    try {
 	        return Files.readAllBytes(file);
 	    } catch (IOException ioex) {

@@ -6,10 +6,15 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.ApplicationPidFileWriter;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import it.camera.stampati.repository.CustomRepositoryImpl;
+
 @SpringBootApplication
+// We need this declaration otherwise, Spring doesn't see the the method clear();
+@EnableJpaRepositories(basePackages = "it.camera.stampati.repository", repositoryBaseClass = CustomRepositoryImpl.class)
 public class Starter {
 
 	@Value("${origins.allowed}")
@@ -25,7 +30,7 @@ public class Starter {
 	@Bean
 	public WebMvcConfigurer corsConfigurer() {
 		return new WebMvcConfigurer() {
-			
+
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
 				registry.addMapping("/**")
@@ -34,6 +39,7 @@ public class Starter {
 				.allowCredentials(true)
 				.exposedHeaders("Authorization")
 				.allowedOrigins(origins.split(","));
+				//.allowedOriginPatterns("*"); 
 			}
 		};
 	}

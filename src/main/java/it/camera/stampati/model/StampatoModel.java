@@ -11,7 +11,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class StampatoModel {
-	
+
 	@NotNull
 	private StampatoIdModel id;
 	private Long progressivo;
@@ -44,7 +44,7 @@ public class StampatoModel {
     private Date updatedAt;
     private List<StampatoFelModel> stampatiFel;
     private List<StampatoRelatoreModel> stampatiRelatori;
-    
+
     public String getBarcode() {
         return id != null ? id.getBarcode() : null;
     }

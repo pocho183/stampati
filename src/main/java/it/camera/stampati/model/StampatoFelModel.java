@@ -8,6 +8,8 @@ import lombok.Setter;
 public class StampatoFelModel {
 
 	private Long id;
-	private Long idFel;
+	private Long codiceEstremiAttoPdl;
+	private String titolo;
 	private String numeroAtto;
+	
 }

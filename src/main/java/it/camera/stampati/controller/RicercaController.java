@@ -29,15 +29,15 @@ public class RicercaController {
 
     @Autowired
     private RicercaService searchService;
-    
+
     @GetMapping("stampato")
     public Collection<RicercaModel> searchStampato(@RequestParam(name = "leg") String leg, @RequestParam(name = "text") String text) {
     	return searchService.searchStampato(leg, text);
     }
-    
+
     @GetMapping(path = "/stampato/{leg}/{barcode}")
     public ResponseEntity<StampatoModel> load(@PathVariable("leg") String leg, @PathVariable("barcode") String barcode) {
-        logger.debug("Entering RicercaController load method with leg: {}, barcode: {}", leg, barcode);  
+        logger.debug("Entering RicercaController load method with leg: {}, barcode: {}", leg, barcode);
         try {
         	Optional<StampatoModel> model = searchService.load(leg, barcode);
         	if(model.isPresent()) {
@@ -51,16 +51,16 @@ public class RicercaController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-    
+
     @PostMapping(path = "saveorder")
-    public ResponseEntity<?> saveOrder(@RequestBody List<RicercaModel> models) {	
+    public ResponseEntity<?> saveOrder(@RequestBody List<RicercaModel> models) {
     	try {
     		List<RicercaModel> results = searchService.saveOrder(models);
     		return new ResponseEntity<>(results, HttpStatus.OK);
         } catch (Exception e) {
         	logger.error("Error in RicercaController saveOrder: {}", e.getMessage(), e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }          
-    } 
+        }
+    }
 
 }

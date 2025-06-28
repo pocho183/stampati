@@ -12,11 +12,12 @@ public class LegislaturaModel implements Comparable<LegislaturaModel> {
 	private Integer legArabo;
 	private String dataInizio;
 	private String dataFine;
-	
+
 	@Override
 	public int compareTo(LegislaturaModel l) {
-		if(getLegArabo() == null || l.getLegArabo() == null)
+		if(getLegArabo() == null || l.getLegArabo() == null) {
 			return 0;
+		}
 		return getLegArabo().compareTo(l.getLegArabo());
 	}
 }

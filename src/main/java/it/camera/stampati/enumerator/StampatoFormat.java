@@ -15,20 +15,22 @@ public enum StampatoFormat {
 
     public static StampatoFormat fromValue(int value) {
         for (StampatoFormat format : values()) {
-            if (format.value == value)
-                return format;
+            if (format.value == value) {
+				return format;
+			}
         }
         throw new IllegalArgumentException("Invalid format value: " + value);
     }
-    
+
     public static StampatoFormat fromString(String name) {
         for (StampatoFormat format : values()) {
-            if (format.name().equalsIgnoreCase(name))
-                return format;
+            if (format.name().equalsIgnoreCase(name)) {
+				return format;
+			}
         }
         throw new IllegalArgumentException("Invalid format name: " + name);
     }
-    
+
     public String getExtension() {
         return "." + this.name().toLowerCase();
     }
