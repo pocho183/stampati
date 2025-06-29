@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output } from "@angular/core";
+import { Component, OnInit, EventEmitter, Output, ViewChild } from "@angular/core";
 import { SplitterModule } from 'primeng/splitter';
 import { BarcodeComponent } from '../barcode/barcode.component';
 import { FrontespizioComponent } from "../frontespizio/frontespizio.component";
@@ -32,6 +32,9 @@ import { StampatoFelModel } from "app/models/stampato.fel.model";
 export class MenuComponent implements OnInit {
 
 	@Output() stampatoChange = new EventEmitter<StampatoModel>();
+
+	@ViewChild(BarcodeComponent)
+	barcodeComponent: BarcodeComponent;
 	barcode: string | null = null;
 	private routeSub: Subscription;
 	stampatoId: StampatoIdModel = new StampatoIdModel();
@@ -259,8 +262,11 @@ export class MenuComponent implements OnInit {
 		this.felService.loadFel(this.stampato).subscribe({
 			next: (eFelStampato) => {	
 				this.efel = eFelStampato;
-				this.stampato.titoloFel = this.efel.titolo + "e";				
+				this.stampato.titoloFel = this.efel.titolo;				
 				this.originalStampato = _.cloneDeep(this.stampato);
+				setTimeout(() => {
+				  this.barcodeComponent?.tryCompareTexts();
+				});
 			},
 			error: (err) => {
 				let errorMessage = err?.message || 'Caricamento dati eFel fallito!';

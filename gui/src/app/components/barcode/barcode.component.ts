@@ -39,7 +39,16 @@ import { environment } from "environments/environment.develop";
 })
 export class BarcodeComponent implements OnInit {
 
-	@Input() stampato: StampatoModel;
+	//@Input() stampato: StampatoModel;
+	
+	private _stampato: StampatoModel;
+	@Input()
+	set stampato(value: StampatoModel) {
+		this._stampato = value;
+		this.tryCompareTexts();
+	}
+	get stampato(): StampatoModel { return this._stampato; }
+	
 	legislature: LegislaturaModel = null;
 	private ref: DynamicDialogRef | undefined;
 	public Editor = ClassicEditor;
@@ -131,12 +140,27 @@ export class BarcodeComponent implements OnInit {
 	}
 	
 	compareTexts() {		
-		const cleanOriginalText = this.stripHtml(this.stampato.titoloFel.trim());
-		const cleanModifiedText = this.stripHtml(this.stampato.titolo.trim());
+		const cleanOriginalText = this.normalizeQuotes(this.stripHtml(this.stampato.titoloFel.trim()));
+		const cleanModifiedText = this.normalizeQuotes(this.stripHtml(this.stampato.titolo.trim()));
 		if(cleanOriginalText === cleanModifiedText)
-		    this.compareTitle = true;
+			this.compareTitle = true;
 		else
 			this.compareTitle = false;
+	}
+	
+	/* Sostituire tutti gli apostrofi “tipografici” con quello semplice prima del confronto
+		La differenza è:
+		’ (apostrofo tipografico, codice Unicode U+2019) proveniente da eFel
+		' (apostrofo semplice, codice Unicode U+0027) proveniente da stampati
+	*/
+	normalizeQuotes(text: string): string {
+	  return text.replace(/[‘’‛`´]/g, "'");
+	}
+	
+	tryCompareTexts() {
+		if (this.stampato?.titolo && this.stampato?.titoloFel) {
+			this.compareTexts();
+		}
 	}
 	
 	stripHtml(html: string): string {
