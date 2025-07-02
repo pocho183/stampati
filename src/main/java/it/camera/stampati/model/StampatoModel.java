@@ -14,6 +14,7 @@ public class StampatoModel {
 
 	@NotNull
 	private StampatoIdModel id;
+	private Long codiceEstremiAttoPdl;
 	private Long progressivo;
 	private Boolean pubblicato;
 	private Boolean errataCorrige;

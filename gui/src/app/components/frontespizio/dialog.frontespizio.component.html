@@ -1,16 +1,16 @@
 <div>
 	<div class="w-full mb-4">
     	<p-inputgroup class="w-full">
-        	<input [(ngModel)]="numeriPDL" pInputText placeholder="Ricerca per numero atto" type="text" class="w-full"/>
-            <p-inputgroup-addon><p-button (click)="search()" icon="pi pi-search" severity="secondary" variant="text"/></p-inputgroup-addon>
+        	<input #searchInput (keyup.enter)="search(searchInput.value)" pInputText placeholder="Ricerca per numero atto" type="text" class="w-full"/>
+            <p-inputgroup-addon><p-button (click)="search(searchInput.value)" icon="pi pi-search" severity="secondary" variant="text"/></p-inputgroup-addon>
         </p-inputgroup>
     </div>
     <div class="flex justify-between flex-wrap mt-4">
-    	<label class="text-xl text-left font-bold mb-2">Atti abbinati eFel verso Stampati</label>   
-    	<p-picklist [source]="sourceProducts" [target]="targetProducts" [dragdrop]="true" [responsive]="true" 
+    	<label class="text-xl text-left font-bold mb-2">Atti abbinati in eFel</label>   
+    	<p-picklist [source]="sourceActs" [target]="targetActs" [dragdrop]="true" [responsive]="true" 
         	[sourceStyle]="{ height: '30rem' }" [targetStyle]="{ height: '30rem' }" breakpoint="1400px" selectionMode="multiple" 
         	inputId="sourceList" class="w-full md:w-10/12 lg:w-8/12" (onMoveToTarget)="duplicateToTarget($event)" >
-        	<ng-template let-item #item>{{ item.name }}</ng-template>
+        	<ng-template let-item #item>{{ item.numeroAtto }}</ng-template>
     	</p-picklist>
 	</div>
 	<div class="flex justify-content-end flex-wrap mt-4">

@@ -1,5 +1,7 @@
 package it.camera.stampati.controller;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,10 +39,10 @@ public class FelController {
         }
     }
 
-    @GetMapping("/attiabbinatis/{atto}")
-    public ResponseEntity<?> getCommissionsByLeg(@PathVariable("atto") String atto) {
+    @GetMapping("/attiabbinati/{leg}/{atto}")
+    public ResponseEntity<?> getCommissionsByLeg(@PathVariable("leg") String leg, @PathVariable("atto") String atto) {
         try {
-            String[] attiAbbinati = felService.getAttiAbbinati(atto);
+        	List<StampatoModel> attiAbbinati = felService.getAttiAbbinati(leg, atto);
             return ResponseEntity.ok(attiAbbinati);
         } catch (Exception e) {
         	logger.error("Error loading eFel atti abbinati ", e);

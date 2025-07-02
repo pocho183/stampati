@@ -18,6 +18,7 @@ export class StampatoIdModel {
 export class StampatoModel {
 	@Type(() => StampatoIdModel)
 	id: StampatoIdModel;
+	codiceEstremiAttoPdl?: number;
 	progressivo?: number;
 	pubblicato?:boolean;
 	errataCorrige: boolean;

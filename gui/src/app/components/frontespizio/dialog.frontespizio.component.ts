@@ -11,7 +11,9 @@ import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { TooltipModule } from 'primeng/tooltip';
 import { PickListModule } from 'primeng/picklist';
 import { FrontespizioService } from 'app/services/frontespizio.service';
-import { Product } from "app/models/product";
+import { StampatoModel } from "app/models/stampato.model";
+import { LegislaturaModel } from "app/models/legislatura.model";
+import { UtilityService } from "app/services/utility.service";
 
 @Component({
 	standalone: true,
@@ -23,46 +25,48 @@ import { Product } from "app/models/product";
 	styleUrl: './dialog.frontespizio.component.css'
 })
 export class DialogFrontespizioComponent implements OnInit {
-	
-	sourceProducts!: Product[];
-	targetProducts!: Product[];
-	numeriPDL: string;
+
+	stampato: StampatoModel;
+	sourceActs!: StampatoModel[];
+	targetActs!: StampatoModel[];
 	attiAbbinati: string[];
+	legislature: LegislaturaModel = null;
 	
   	constructor(private ref: DynamicDialogRef,
 		public config: DynamicDialogConfig,
+		private utilityService: UtilityService,
 		private frontespizioService: FrontespizioService,
 		private cdr: ChangeDetectorRef) {}
 
 	ngOnInit() {
-		this.numeriPDL = this.config.data || '' 
-		this.frontespizioService.getProductsData().then(products => {
-			this.sourceProducts = products;
-		    this.cdr.markForCheck();
+		this.stampato = this.config.data || null;
+		this.utilityService.getWorkingLegislature().subscribe((leg) => {
+			this.legislature = leg;
 		});
-		this.targetProducts = [];
+		this.targetActs = Array.isArray(this.stampato) ? [...this.stampato] : [this.stampato];
+		this.cdr.markForCheck();
 	}
 	
 	save() {
-		this.ref.close(this.targetProducts);
+		this.ref.close(this.targetActs);
 	}
 	
-	search() {
-		this.frontespizioService.getAttiAbbinati(this.numeriPDL).subscribe((acts) => {
-			this.attiAbbinati = acts;
+	search(searchInput: string) {
+		this.frontespizioService.getAttiAbbinati(this.legislature.legArabo, searchInput).subscribe((abbinati) => {
+			this.sourceActs = abbinati;
 		});
 	}
 	
 	duplicateToTarget(event: any) {
 	    const itemsToAdd = event.items;
 	    itemsToAdd.forEach((item: any) => {
-	        if (!this.targetProducts.some(p => p.id === item.id)) 
-	            this.targetProducts.push(item);
+	        if (!this.targetActs.some(p => p.codiceEstremiAttoPdl === item.codiceEstremiAttoPdl)) 
+	            this.targetActs.push(item);
 	    });
-	    this.sourceProducts = [...this.sourceProducts, ...itemsToAdd.filter(item =>
-	        !this.sourceProducts.some(p => p.id === item.id)
-	    )];
-	    this.targetProducts.sort((a, b) => a.name.localeCompare(b.name));
-	    this.sourceProducts.sort((a, b) => a.name.localeCompare(b.name));
+		this.sourceActs = this.sourceActs.filter(item =>
+	    	!itemsToAdd.some(moved => moved.codiceEstremiAttoPdl === item.codiceEstremiAttoPdl)
+		);		
+	    this.targetActs.sort((a, b) => a.numeroAtto.localeCompare(b.numeroAtto));
+	    this.sourceActs.sort((a, b) => a.numeroAtto.localeCompare(b.numeroAtto));
 	}
 }

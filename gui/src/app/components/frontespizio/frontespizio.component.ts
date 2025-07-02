@@ -76,13 +76,18 @@ export class FrontespizioComponent implements OnInit {
 	showDialog() {
 		this.ref = this.dialogService.open(DialogFrontespizioComponent, { header: 'Atti Associati', width: '40%', height: '50%',
 			modal: true, contentStyle: { overflow: 'auto' },
-			data: this.stampato.numeriPDL,
+			data: this.stampato,
 			baseZIndex: 10000, closable: true 
 		});
-		this.ref.onClose.subscribe((targetProducts: any[]) => {
-			if(targetProducts && targetProducts.length > 0) {
+		this.ref.onClose.subscribe((targetActs: any[]) => {
+			if(targetActs && targetActs.length > 0) {
+				const PDLChain = targetActs.map(act => act.numeroAtto).join('-');
+		
+				this.updateNomeFrontespizioForDialog(PDLChain);
+				
 		    	this.messageService.add({ severity: 'info', summary: 'Atto associato' });
-		        console.log('Selected targetProducts:', targetProducts);
+				console.log('Selected PDLChain:', PDLChain);
+				console.log('Selected targetProducts:', targetActs);
 		    }
 		});
 	}
@@ -115,8 +120,22 @@ export class FrontespizioComponent implements OnInit {
 	updateNomeFrontespizio(): void {
 		if(this.stampato.numeriPDL) {
 			let stralcio = this.utilityService.getStralcio(this.stampato.numeriPDL);   
-			let numeriPDL = stralcio != null ? this.stampato.numeriPDL.split("-")[0] + "-" + stralcio : this.stampato.numeriPDL.split("-")[0]
-			//let numeriPDL = this.stampato.numeriPDL ? this.stampato.numeriPDL.split('-')[0] : '';
+			let numeriPDL = stralcio != null ? this.stampato.numeriPDL.split("-")[0] + "-" + stralcio : this.stampato.numeriPDL.split("-")[0];
+			let frontespizio = numeriPDL;
+			if (this.stampato.navette?.trim()) frontespizio += '-' + this.stampato.navette;
+			let relazione = this.stampato.lettera ? "-" + this.stampato.lettera : '';
+			if (this.stampato.rinvioInCommissione) relazione += '/R';
+			if (relazione.trim()) frontespizio = frontespizio + relazione;
+			if(this.stampato.relazioneMin?.trim()) frontespizio += '-' + this.stampato.relazioneMin;				
+			if(this.stampato.suffisso?.trim())  frontespizio += "-" + this.stampato.suffisso;
+			this.stampato.nomeFrontespizio = frontespizio;
+		}
+	}
+	
+	updateNomeFrontespizioForDialog(PDLChain): void {
+		if(this.stampato.numeriPDL) {
+			let stralcio = this.utilityService.getStralcio(PDLChain);   
+			let numeriPDL = stralcio != null ? PDLChain + "-" + stralcio : PDLChain;
 			let frontespizio = numeriPDL;
 			if (this.stampato.navette?.trim()) frontespizio += '-' + this.stampato.navette;
 			let relazione = this.stampato.lettera ? "-" + this.stampato.lettera : '';

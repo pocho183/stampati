@@ -262,7 +262,8 @@ export class MenuComponent implements OnInit {
 		this.felService.loadFel(this.stampato).subscribe({
 			next: (eFelStampato) => {	
 				this.efel = eFelStampato;
-				this.stampato.titoloFel = this.efel.titolo;				
+				this.stampato.titoloFel = this.efel.titolo;		
+				this.stampato.codiceEstremiAttoPdl = this.efel.codiceEstremiAttoPdl;		
 				this.originalStampato = _.cloneDeep(this.stampato);
 				setTimeout(() => {
 				  this.barcodeComponent?.tryCompareTexts();
