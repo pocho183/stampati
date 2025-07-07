@@ -39,8 +39,6 @@ import { environment } from "environments/environment.develop";
 })
 export class BarcodeComponent implements OnInit {
 
-	//@Input() stampato: StampatoModel;
-	
 	private _stampato: StampatoModel;
 	@Input()
 	set stampato(value: StampatoModel) {

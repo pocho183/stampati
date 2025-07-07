@@ -188,7 +188,7 @@ public class ExtractorService {
 		    result.sort(Comparator.comparing(TypographyToProcessModel::getBarcode));
 		    return result;
 		} catch(Exception e) {
-	        throw new IOException("Errore nella ricerca degli stamapti da elaborare");
+	        throw new IOException("Errore nella ricerca degli stampati da elaborare");
         }
 	}
 

@@ -19,9 +19,9 @@ public class StampatoRelatore {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private Long idPersona;
+	private String desccognome;
 	private Boolean maggioranza;
 	private Integer idCommissione;
-	private String altro;
 	@ManyToOne
     @JoinColumns({
         @JoinColumn(name = "barcode", referencedColumnName = "barcode"),

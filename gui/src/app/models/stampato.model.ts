@@ -1,6 +1,6 @@
 import { Type } from "class-transformer";
 import "reflect-metadata";
-import { StampatoFelModel } from "./stampato.fel.model";
+import { FelRelatoreModel } from "./stampato.fel.model";
 import { StampatoRelatoreModel } from "./stampato.relatore.model";
 
 export enum StampatoFormat {
@@ -54,8 +54,8 @@ export class StampatoModel {
 	createdAt?: Date;
 	@Type(() => Date)
 	updatedAt?: Date;
-	@Type(() => StampatoFelModel)
-	stampatiFel?: StampatoFelModel[];
+	@Type(() => FelRelatoreModel)
+	relatoriFel?: FelRelatoreModel[];
 	@Type(() => StampatoRelatoreModel)
 	stampatiRelatori?: StampatoRelatoreModel[];
 

@@ -204,7 +204,7 @@ public class XhtmlParser {
         int endIndex = id.contains("commissione") ? id.indexOf(".commissione") : id.length();
         String idPersona = id.substring(id.indexOf(".idpersona") + 11, endIndex);
         relatore.setIdPersona(Long.valueOf(idPersona));
-        relatore.setCognome(node.text());
+        relatore.setDesccognome(node.text());
         relatore.setMaggioranza(!fields[1].equalsIgnoreCase("minoranza"));
         if (id.contains("commissione")) {
 			relatore.setIdCommissione(Integer.parseInt(id.substring(id.lastIndexOf(".") + 1)));

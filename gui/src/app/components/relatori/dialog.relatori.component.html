@@ -1,8 +1,24 @@
 <div>
-	<div><p-listbox  optionLabel="name" class="w-full md:w-56" /></div>
+	<div>
+		<p-listbox [options]="stampato.stampatiRelatori" [disabled]="true" scrollHeight="20rem" class="w-full">
+    		<ng-template let-relatore pTemplate="item">
+		        <div>
+		            {{ relatore.desccognome }} {{ relatore.descnome }} 
+			        <span *ngIf="relatore.commissione">({{ relatore.commissione.descgcommissionebreve }} {{ relatore.commissione.desccecommissione }})</span>
+		        </div>
+			</ng-template>
+		</p-listbox>
+	</div>
 	<div class="mt-4">
 		<label class="text-xl text-left font-bold mb-2">Menu di modifica dei Relatori</label> 
-		<p-select  optionLabel="name" placeholder="Seleziona un relatore" class="w-full md:w-56" />
+		<p-select  [options]="stampato.relatoriFel" [(ngModel)]="selectedRelatore" placeholder="Seleziona un relatore" class="w-full md:w-56" >	
+			<ng-template let-relatore pTemplate="item">
+				<div>{{ relatore.desccognome }} {{ relatore.descnome }}</div>
+			</ng-template>
+			<ng-template let-relatore pTemplate="selectedItem">
+		        <div *ngIf="relatore"> {{ relatore.desccognome }} {{ relatore.descnome }}</div>
+		    </ng-template>
+		</p-select>
 	</div>
 	<div class="flex justify-content-start flex-wrap mt-4 gap-4">
 		<div>
@@ -24,7 +40,7 @@
   		</div>
 	</div>
 	<div class="flex justify-content-between flex-wrap mt-4">
-		<div class="m-2"><p-button label="Aggiungi" severity="info" [style]="{'background-color': '#285492'}"/></div>
+		<div class="m-2"><p-button (click)="add()" label="Aggiungi" severity="info" [style]="{'background-color': '#285492'}"/></div>
 		<div class="m-2"><p-button label="Modifica" severity="info" [style]="{'background-color': '#285492'}"/></div>
 		<div class="m-2"><p-button label="Cancella" severity="info" [style]="{'background-color': '#285492'}"/></div>
 		<div class="m-2"><p-button label="Pulisci" severity="info" [style]="{'background-color': '#285492'}"/></div> 			

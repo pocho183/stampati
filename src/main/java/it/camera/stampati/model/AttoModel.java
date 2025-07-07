@@ -21,6 +21,7 @@ public class AttoModel implements Serializable {
 	private PdlTitoloModel currentPresentationTitle;
 	private Date dataconclusione;
 	private SortedSet<PdlTitoloModel> titoli;
+	private SortedSet<PdlAssegnazioneModel> assegnazione;
 	private List<PdlAbbinamentoModel> abbinamenti;
 
 	public List<PdlAbbinamentoModel> getAbbinamenti() {

@@ -3,11 +3,26 @@
 		<div class="flex justify-content-start flex-wrap mt-2 gap-4">
     		<div class="flex flex-column w-30rem">
     			<label class="text-xl text-left font-bold" style="color:red">Relatori proposti</label>
-    			<p-listbox optionLabel="name" scrollHeight="20rem" class="w-full"/>
+    			<p-listbox [options]="stampato.relatoriFel" scrollHeight="20rem" [disabled]="true" class="w-full">
+    				<ng-template let-relatore pTemplate="item">
+				        <div>
+				            {{ relatore.desccognome }} {{ relatore.descnome }} 
+				            <span *ngIf="relatore.commissione">({{ relatore.commissione.descgcommissionebreve }} {{ relatore.commissione.desccecommissione }})</span>
+				        </div>
+				    </ng-template>
+				</p-listbox>
     		</div>
     		<div class="flex flex-column w-30rem">
     			<label class="text-xl text-left font-bold">Relatori selezionati</label>
-    			<p-listbox [(ngModel)]="stampato.stampatiRelatori" optionLabel="name" scrollHeight="20rem" class="w-full"/>
+    			<p-listbox [options]="stampato.stampatiRelatori" scrollHeight="20rem" [disabled]="true" class="w-full">
+    				<ng-template let-relatore pTemplate="item">
+				        <div>
+				        	{{ relatore.desccognome }}
+				        	<span *ngIf="relatore.maggioranza == true">Relatore per la maggioranza</span>
+				        	<span *ngIf="relatore.maggioranza == false">Relatore per la minoranza</span>
+				        </div>
+				    </ng-template>
+				</p-listbox>
     		</div>
     		<div>
     			<label class="text-xl text-left font-bold">Gestione Relatori</label>

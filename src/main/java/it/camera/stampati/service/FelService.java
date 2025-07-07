@@ -32,6 +32,7 @@ public class FelService {
 			model.setCodiceEstremiAttoPdl(efel.getCodiceestremiattopdl());
 			model.setNumeroAtto(efel.getNumeroEsteso());
 			model.setTitolo(efel.getCurrentPresentationTitle().getDescMTitoloAttoPdl());
+			model.setRelatori(efel.getAssegnazione().getFirst().getRelatori());
 			return model;
 		} catch(Exception ex) {
 			logger.error(ex.getMessage());

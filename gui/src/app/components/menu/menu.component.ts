@@ -264,6 +264,10 @@ export class MenuComponent implements OnInit {
 				this.efel = eFelStampato;
 				this.stampato.titoloFel = this.efel.titolo;		
 				this.stampato.codiceEstremiAttoPdl = this.efel.codiceEstremiAttoPdl;		
+				this.stampato.relatoriFel = this.efel.relatori;
+				// Create a new reference for stampato to trigger the input setter
+				// This creates a shallow copy, changing the reference
+				this.stampato = { ...this.stampato };
 				this.originalStampato = _.cloneDeep(this.stampato);
 				setTimeout(() => {
 				  this.barcodeComponent?.tryCompareTexts();

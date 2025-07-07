@@ -1,5 +1,7 @@
 package it.camera.stampati.model;
 
+import java.util.SortedSet;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,5 +13,6 @@ public class StampatoFelModel {
 	private Long codiceEstremiAttoPdl;
 	private String titolo;
 	private String numeroAtto;
+	private SortedSet<RelatoreCommissioneModel> relatori;
 	
 }
