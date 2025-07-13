@@ -67,9 +67,9 @@ public class Stampato {
 	@Column(name = "updated_at")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date updatedAt;
-	@OneToMany(mappedBy = "stampato", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "stampato", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
 	private List<StampatoFel> stampatiFel;
-	@OneToMany(mappedBy = "stampato", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "stampato", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
 	private List<StampatoRelatore> stampatiRelatori;
 
 	public void setStampatiFel(List<StampatoFel> stampatiFel) {

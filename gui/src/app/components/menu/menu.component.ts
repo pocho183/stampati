@@ -149,6 +149,12 @@ export class MenuComponent implements OnInit {
 		});
 	}
 	
+	onStampatoRelatoriUpdated(updatedStampato: StampatoModel) {
+	    this.stampato = { ...this.stampato, ...updatedStampato }; // Merge updates, retaining existing data
+		this.save(this.stampato);
+		this.messageService.add({ severity: 'info', summary: 'Relatori associati' });
+	}
+	
 	save(stampato: StampatoModel) {
 		if(this.stampato.id.barcode != null) {
 			this.stampatoService.save(stampato).subscribe({
@@ -156,6 +162,7 @@ export class MenuComponent implements OnInit {
 					this.stampato = savedStampato;
 					this.originalStampato = _.cloneDeep(this.stampato);
 					this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Stampato salvato!' });
+					this.loadFel();
 				},
 				error: (err) => { 
 					let errorMessage = err?.message || 'Salvataggio fallito!';
@@ -177,6 +184,7 @@ export class MenuComponent implements OnInit {
 						this.stampato = publishedStampato;
 						this.originalStampato = _.cloneDeep(this.stampato);
 						this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Stampato pubblicato!' });
+						this.loadFel();
 					},
 					error: (err) => {
 						let errorMessage = err?.message || 'Pubblicazione fallita!';
@@ -197,6 +205,7 @@ export class MenuComponent implements OnInit {
 					this.stampato = unpublishedStampato;
 					this.originalStampato = _.cloneDeep(this.stampato);
 					this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Stampato non pubblicato!' });
+					this.loadFel();
 				},
 				error: (err) => { 
 					let errorMessage = err?.message || 'L\'operazione di rendere lo stampato non pubblico fallita!';
@@ -221,6 +230,7 @@ export class MenuComponent implements OnInit {
 						    this.stampato = res;
 							this.originalStampato = _.cloneDeep(this.stampato);
 						   	this.messageService.add({ severity: 'success', summary: 'Stampato cancellato correttamente' });
+							this.loadFel();
 						},
 					    error: (err) => {
 							let errorMessage = err?.message || 'Errore durante la cancellazione dello stampato';
@@ -247,6 +257,7 @@ export class MenuComponent implements OnInit {
 							this.stampato = res;
 							this.originalStampato = _.cloneDeep(this.stampato);
 							this.messageService.add({ severity: 'success', summary: 'Stampato ripristinato correttamente' });
+							this.loadFel();
 						},
 						error: (err) => { 
 							let errorMessage = err?.message || 'Errore durante il ripristino dello stampato';
@@ -269,9 +280,7 @@ export class MenuComponent implements OnInit {
 				// This creates a shallow copy, changing the reference
 				this.stampato = { ...this.stampato };
 				this.originalStampato = _.cloneDeep(this.stampato);
-				setTimeout(() => {
-				  this.barcodeComponent?.tryCompareTexts();
-				});
+				setTimeout(() => { this.barcodeComponent?.tryCompareTexts(); });
 			},
 			error: (err) => {
 				let errorMessage = err?.message || 'Caricamento dati eFel fallito!';

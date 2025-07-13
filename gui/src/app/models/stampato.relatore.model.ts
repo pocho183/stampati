@@ -2,7 +2,8 @@ export class StampatoRelatoreModel {
 	
 	id: number;
 	idPersona: number;
-	desccognome:string;
+	cognome:string;
+	nome: string;
 	maggioranza: boolean;
 	idCommissione: number;
 }

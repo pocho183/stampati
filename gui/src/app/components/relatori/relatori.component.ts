@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ButtonModule } from "primeng/button";
 import { CardModule } from 'primeng/card';
@@ -6,6 +6,7 @@ import { ToastModule } from 'primeng/toast';
 import { ListboxModule } from 'primeng/listbox';
 import { TooltipModule } from 'primeng/tooltip';
 import { NgIf } from '@angular/common';
+import * as _ from 'lodash';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { DialogRelatoriComponent } from "./dialog.relatori.component";
@@ -23,6 +24,7 @@ import { StampatoModel } from "app/models/stampato.model";
 export class RelatoriComponent implements OnInit {
 	
 	private _stampato: StampatoModel;
+	@Output() stampatoUpdated = new EventEmitter<StampatoModel>();
 	@Input()
 	set stampato(value: StampatoModel) {
 		this._stampato = value;
@@ -34,38 +36,21 @@ export class RelatoriComponent implements OnInit {
 			private messageService: MessageService,
 			private confirmationService: ConfirmationService) {}
 
-    ngOnInit() {
-
-    }
+    ngOnInit() { }
 	
 	showDialog() {
-		this.ref = this.dialogService.open(DialogRelatoriComponent, {header: 'Gestione Relatori', width: '30%', height: '60%',
+		this.ref = this.dialogService.open(DialogRelatoriComponent, {
+			header: 'Gestione Relatori', width: '30%',
 			modal: true,
-			data: this.stampato,
-			contentStyle: { overflow: 'auto' }, 
-			baseZIndex: 10000, closable: true 
+	        data: _.cloneDeep(this.stampato),
+			contentStyle: { overflow: 'auto' },
+			baseZIndex: 10000, closable: true
 		});
-		this.ref.onClose.subscribe((atto: boolean) => {
-			if (atto)
-		       	this.messageService.add({ severity: 'info', summary: 'Relatori associati' });
+		this.ref.onClose.subscribe((updatedStampatoFromDialog: StampatoModel) => {
+			if (updatedStampatoFromDialog) {
+				this.stampatoUpdated.emit(updatedStampatoFromDialog);
+				this.messageService.add({ severity: 'info', summary: 'Relatori modificati', detail: 'Ricorda di salvare le modifiche dallo stampato principale.' });
+			}
 		});
 	}
-	
-
-
-	/*
-	
-			this.ref.onClose.subscribe((targetActs: any[]) => {
-				if(targetActs && targetActs.length > 0) {
-					const PDLChain = targetActs.map(act => act.numeroAtto).join('-');
-			
-					this.updateNomeFrontespizioForDialog(PDLChain);
-					
-			    	this.messageService.add({ severity: 'info', summary: 'Atto associato' });
-					console.log('Selected PDLChain:', PDLChain);
-					console.log('Selected targetProducts:', targetActs);
-			    }
-			});
-		}*/
-
 }

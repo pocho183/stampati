@@ -1,12 +1,19 @@
 <div>
 	<div>
-		<p-listbox [options]="stampato.stampatiRelatori" [disabled]="true" scrollHeight="20rem" class="w-full">
-    		<ng-template let-relatore pTemplate="item">
-		        <div>
-		            {{ relatore.desccognome }} {{ relatore.descnome }} 
-			        <span *ngIf="relatore.commissione">({{ relatore.commissione.descgcommissionebreve }} {{ relatore.commissione.desccecommissione }})</span>
+		<p-listbox *ngIf="stampato.stampatiRelatori && stampato.stampatiRelatori.length" [options]="stampato.stampatiRelatori" scrollHeight="20rem" class="w-full">
+		    <ng-template let-relatore pTemplate="item">
+		        <div class="flex align-items-center justify-content-between w-full">
+		            <div>
+		                <div>
+				        	{{ relatore.cognome }}
+				        	<span *ngIf="relatore.maggioranza == true">Relatore per la maggioranza</span>
+				        	<span *ngIf="relatore.maggioranza == false">Relatore per la minoranza</span>
+				        </div>
+		                <span *ngIf="relatore.commissione">({{ relatore.commissione.descgcommissionebreve }} {{ relatore.commissione.desccecommissione }})</span>
+		            </div>
+		            <button (click)="deleteRelatore(relatore)" pButton type="button" icon="pi pi-times" class="p-button-rounded p-button-text p-button-danger"></button>
 		        </div>
-			</ng-template>
+		    </ng-template>
 		</p-listbox>
 	</div>
 	<div class="mt-4">
@@ -31,18 +38,10 @@
 		</div>
 	</div>
 	<div class="mt-4">
-		<p-select [options]="commissions"  optionLabel="denominazione" [showClear]="true" placeholder="Seleziona la commissione" class="w-full md:w-56" />
+		<p-select [options]="commissions" [(ngModel)]="selectedCommissione" optionLabel="denominazione" [showClear]="true" placeholder="Seleziona la commissione" class="w-full md:w-56" />
 	</div>
-	<div class="w-full mt-4">
-  		<label class="text-lg text-left mb-2">altro</label> 
-  		<div class="w-full">
-    		<textarea rows="3" class="w-full" pTextarea [(ngModel)]="value"></textarea>
-  		</div>
-	</div>
-	<div class="flex justify-content-between flex-wrap mt-4">
+	<div class="flex justify-content-between flex-wrap mt-8">
 		<div class="m-2"><p-button (click)="add()" label="Aggiungi" severity="info" [style]="{'background-color': '#285492'}"/></div>
-		<div class="m-2"><p-button label="Modifica" severity="info" [style]="{'background-color': '#285492'}"/></div>
-		<div class="m-2"><p-button label="Cancella" severity="info" [style]="{'background-color': '#285492'}"/></div>
-		<div class="m-2"><p-button label="Pulisci" severity="info" [style]="{'background-color': '#285492'}"/></div> 			
+		<div class="m-2"><p-button (click)="save()" label="Salva" severity="info" [style]="{'background-color': '#285492'}"/></div>			
 	</div>
 </div>

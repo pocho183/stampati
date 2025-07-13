@@ -21,8 +21,8 @@ export class StampatoModel {
 	codiceEstremiAttoPdl?: number;
 	progressivo?: number;
 	pubblicato?:boolean;
-	errataCorrige: boolean;
-	rigoNero: string;
+	errataCorrige?: boolean;
+	rigoNero?: string;
 	pdfPresente?: boolean;
 	htmlPresente?: boolean;
 	numeroAtto?: string;

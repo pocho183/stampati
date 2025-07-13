@@ -74,7 +74,7 @@ export class FrontespizioComponent implements OnInit {
 	}
 	
 	showDialog() {
-		this.ref = this.dialogService.open(DialogFrontespizioComponent, { header: 'Atti Associati', width: '40%', height: '50%',
+		this.ref = this.dialogService.open(DialogFrontespizioComponent, { header: 'Atti Associati', width: '40%',
 			modal: true, contentStyle: { overflow: 'auto' },
 			data: this.stampato,
 			baseZIndex: 10000, closable: true 

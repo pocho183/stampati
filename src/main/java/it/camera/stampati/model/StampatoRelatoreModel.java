@@ -9,7 +9,8 @@ public class StampatoRelatoreModel {
 
 	private Long id;
 	private Long idPersona;
-	private String desccognome;
+	private String cognome;
+	private String nome;
 	private Boolean maggioranza;
 	private Integer idCommissione;
 }

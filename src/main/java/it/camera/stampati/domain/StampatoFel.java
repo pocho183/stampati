@@ -19,6 +19,9 @@ public class StampatoFel {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private Long idFel;
+	
+	// Da fare, prendersi il valore di sequenza di efel
+	//private Integer sequenza;
 	private String numeroAtto;
 	@ManyToOne
 	@JoinColumns({ @JoinColumn(name = "barcode", referencedColumnName = "barcode"), @JoinColumn(name = "legislatura", referencedColumnName = "legislatura") })

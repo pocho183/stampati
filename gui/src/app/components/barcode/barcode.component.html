@@ -32,7 +32,9 @@
 			<div class="flex-grow-1">
 				<label class="text-xl text-left font-bold mt-4" style="color:red">Titolo eFel</label>
 				<div class="ckeditor-container">
-					<ckeditor [(ngModel)]="stampato.titoloFel" [editor]="Editor" [config]="configFel" (ready)="onReady($event)"></ckeditor>
+					<ckeditor [(ngModel)]="stampato.titoloFel" 
+						*ngIf="stampato && stampato.titoloFel !== null && stampato.titoloFel !== undefined"
+   						[editor]="Editor" [config]="configFel" (ready)="onReady($event)"></ckeditor>
 				</div>
 			</div>
 			<div class="flex justify-content-between flex-column m-4">
@@ -45,7 +47,7 @@
 			</div>
 			<div class="flex-grow-1">
 				<label class="text-xl text-left font-bold mt-4 required-field">Titolo Tipografia</label>
-				<ckeditor [(ngModel)]="stampato.titolo" (ngModelChange)="onTitoloChange($event)" [editor]="Editor" [config]="config"></ckeditor>
+				<ckeditor [(ngModel)]="stampato.titolo" [editor]="Editor" (ngModelChange)="onTitoloChange($event)" [editor]="Editor" [config]="config"></ckeditor>
 			</div>
 		</div>
 	</p-card>
