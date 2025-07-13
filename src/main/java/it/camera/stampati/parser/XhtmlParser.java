@@ -62,7 +62,7 @@ public class XhtmlParser {
             stampato.setRinvioInCommissione(getRinvio(atto));
             String stralcio = getStralcio(atto);
             stampato.setNumeroAtto(stralcio != null ? atto.split("-")[0] + "-" + stralcio : atto.split("-")[0]);
-            stampato.setNumeriPDL(atto);
+            stampato.setNumeriPDL(getNumeriPDL(doc));
             stampato.setNomeFrontespizio(getNomeFrontespizio(doc));
             stampato.setSuffisso(getSuffisso(doc));
 
@@ -195,6 +195,23 @@ public class XhtmlParser {
     private Boolean getRinvio(String atto) {
         Matcher matcher = Pattern.compile("\\b[A-Z]R\\b").matcher(atto);
         return matcher.find();
+    }
+    
+    public String getNumeriPDL(Document doc) {
+    	Element p = doc.selectFirst("p.numeroAtto");
+        if (p != null) {
+        	String cleanedAtto = p.text().trim();
+            cleanedAtto = cleanedAtto.replaceAll("(?i)^N\\.\\s*", "");
+            Pattern pattern = Pattern.compile("^(\\d+(?:-\\d+)*)");
+            Matcher matcher = pattern.matcher(cleanedAtto);
+            if (matcher.find()) {
+                return matcher.group(1);
+            } else {
+            	logger.error("Error parsing XHTML: {}", cleanedAtto);
+                throw new RuntimeException("Parse failed " + cleanedAtto);
+            }
+        }
+        return null;
     }
 
     private StampatoRelatoreModel getRelatore(Element node, String leg, String barCode) {

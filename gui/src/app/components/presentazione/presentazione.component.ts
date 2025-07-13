@@ -40,8 +40,8 @@ export class PresentazioneComponent implements OnInit {
 	updateNomeFrontespizio(): void {
 		if(this.stampato.numeriPDL) {
 			let stralcio = this.utilityService.getStralcio(this.stampato.numeriPDL);   
-			let numeriPDL = stralcio != null ? this.stampato.numeriPDL.split("-")[0] + "-" + stralcio : this.stampato.numeriPDL.split("-")[0]
-			//let numeriPDL = this.stampato.numeriPDL ? this.stampato.numeriPDL.split('-')[0] : '';
+			//let numeriPDL = stralcio != null ? this.stampato.numeriPDL.split("-")[0] + "-" + stralcio : this.stampato.numeriPDL.split("-")[0]
+			let numeriPDL = stralcio != null ? this.stampato.numeriPDL + "-" + stralcio : this.stampato.numeriPDL;					
 			let frontespizio = numeriPDL;
 			if (this.stampato.navette?.trim()) frontespizio += '-' + this.stampato.navette;
 			let relazione = this.stampato.lettera ? "-" + this.stampato.lettera : '';

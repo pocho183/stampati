@@ -172,7 +172,6 @@ export class BarcodeComponent implements OnInit {
 			let stralcio = this.utilityService.getStralcio(this.stampato.numeriPDL);   
 			let numeriPDL = stralcio != null ? this.stampato.numeriPDL.split("-")[0] + "-" + stralcio : this.stampato.numeriPDL.split("-")[0]
 			let type = this.extractTypeStampato(this.stampato.id.barcode);
-			//let numeriPDL = this.stampato.numeriPDL ? this.stampato.numeriPDL.split('-')[0] : 'unknown';
 			let filename = 'leg.' + this.legislature.legArabo + "." + (type ? type : '') + '.camera.' + numeriPDL;
 			if (this.stampato.navette?.trim()) filename += '-' + this.stampato.navette;
 			let relazione = this.stampato.lettera ? this.stampato.lettera : '';
