@@ -57,7 +57,7 @@ public class FelService {
 					});
 				});
 				// Removing itself
-				attiAbbinati.remove(0);
+				//attiAbbinati.remove(0);
 				return attiAbbinati;
 			} else {
 				throw new NoSuchElementException("L'atto: " + atto + " non trovato sul database eFel");

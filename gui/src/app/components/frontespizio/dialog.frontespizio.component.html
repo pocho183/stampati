@@ -10,7 +10,7 @@
     	<p-picklist [source]="sourceActs" [target]="targetActs" [dragdrop]="true" [responsive]="true" 
         	[sourceStyle]="{ height: '30rem' }" [targetStyle]="{ height: '30rem' }" breakpoint="1400px" selectionMode="multiple" 
         	inputId="sourceList" class="w-full md:w-10/12 lg:w-8/12" (onMoveToTarget)="duplicateToTarget($event)" >
-        	<ng-template let-item #item>{{ item.numeriPDL }}</ng-template>
+        	<ng-template let-item #item>{{ item.numeroAtto }}</ng-template>
     	</p-picklist>
 	</div>
 	<div class="flex justify-content-end flex-wrap mt-4">

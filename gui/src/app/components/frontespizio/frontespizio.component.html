@@ -8,18 +8,18 @@
 				<div>
 					<label class="font-bold block mb-2 required-field">Numeri PDL del frontespizio</label>
            			<p-inputgroup>
-		    			<input [(ngModel)]="stampato.numeriPDL" (ngModelChange)="onChangeNumeriPDL($event)" disabled pInputText/>
+		    			<input [(ngModel)]="stampato.numeriPDL" (ngModelChange)="onChangeNumeriPDL($event)" disabled pInputText class="w-18rem" />
 		    			<p-inputgroup-addon><div><p-button (click)="showDialog()" pTooltip="Modifica" tooltipPosition="top" icon="pi pi-pencil" [style]="{'background-color': '#285492'}"/></div></p-inputgroup-addon>
 					</p-inputgroup>
 				</div>
            	</div>
        		<div>
            		<label class="font-bold block mb-2">Lettera</label>
-           		<p-select [options]="letters" [(ngModel)]="stampato.lettera" (onChange)="onChangeLetter($event)" (onClear)="onClearLetter()" [showClear]="true" placeholder="Seleziona Lettera" class="w-14rem" />
+           		<p-select [options]="letters" [(ngModel)]="stampato.lettera" (onChange)="onChangeLetter($event)" (onClear)="onClearLetter()" [showClear]="true" placeholder="Seleziona Lettera" class="w-6rem" />
 			</div>
 			<div>
            		<label class="font-bold block mb-2">Navette</label>
-           		<p-select [options]="navettes" [(ngModel)]="stampato.navette" (onChange)="onChangeNavette($event)" [disabled]="isDisabled"  [showClear]="true" class="w-14rem" />
+           		<p-select [options]="navettes" [(ngModel)]="stampato.navette" (onChange)="onChangeNavette($event)" [disabled]="isDisabled"  [showClear]="true" class="w-6rem" />
 			</div>
 			<div class="flex flex-column items-center">
            		<div class="flex align-items-center justify-content-center"><label class="font-bold block mb-2">Testo Unificato</label></div>
@@ -41,7 +41,7 @@
        		</div>
        		<div>
            		<label class="font-bold block mb-2">Minoranza</label>
-           		<p-select [options]="minoranza" [(ngModel)]="stampato.relazioneMin" (onChange)="onChangeRelMin($event)" [showClear]="true" placeholder="Seleziona Minoranza" [disabled]="!stampato.lettera" class="w-14rem"/>
+           		<p-select [options]="minoranza" [(ngModel)]="stampato.relazioneMin" (onChange)="onChangeRelMin($event)" [showClear]="true" placeholder="Seleziona ..." [disabled]="!stampato.lettera" class="w-12rem"/>
 			</div>
        		<div>
            		<label class="font-bold block mb-2">Numero Pagine PDF</label>

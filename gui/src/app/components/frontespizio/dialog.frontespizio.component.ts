@@ -11,7 +11,7 @@ import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { TooltipModule } from 'primeng/tooltip';
 import { PickListModule } from 'primeng/picklist';
 import { FrontespizioService } from 'app/services/frontespizio.service';
-import { StampatoModel } from "app/models/stampato.model";
+import { StampatoIdModel, StampatoModel } from "app/models/stampato.model";
 import { LegislaturaModel } from "app/models/legislatura.model";
 import { UtilityService } from "app/services/utility.service";
 
@@ -37,13 +37,27 @@ export class DialogFrontespizioComponent implements OnInit {
 		private utilityService: UtilityService,
 		private frontespizioService: FrontespizioService,
 		private cdr: ChangeDetectorRef) {}
-
+	
+	
 	ngOnInit() {
 		this.stampato = this.config.data || null;
 		this.utilityService.getWorkingLegislature().subscribe((leg) => {
 			this.legislature = leg;
 		});
-		this.targetActs = Array.isArray(this.stampato) ? [...this.stampato] : [this.stampato];
+		if (this.stampato?.numeriPDL) {
+			const numeri = this.stampato.numeriPDL.split('-');
+			this.targetActs = numeri.map((numero: string) => {
+				const id: StampatoIdModel = {
+					barcode: '',
+					legislatura: this.legislature.legArabo
+				};
+				const nuovo = new StampatoModel(id);
+				nuovo.numeroAtto = numero;
+				return nuovo;
+			});
+		} else {
+			this.targetActs = [];
+		}
 		this.cdr.markForCheck();
 	}
 	

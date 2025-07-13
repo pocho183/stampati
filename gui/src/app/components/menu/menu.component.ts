@@ -155,6 +155,12 @@ export class MenuComponent implements OnInit {
 		this.messageService.add({ severity: 'info', summary: 'Relatori associati' });
 	}
 	
+	onStampatoFrontespizioUpdated(updatedStampato: StampatoModel) {
+		this.stampato = { ...this.stampato, ...updatedStampato }; // Merge updates, retaining existing data
+		this.save(this.stampato);
+		this.messageService.add({ severity: 'info', summary: 'Atti abbinati' });
+	}
+	
 	save(stampato: StampatoModel) {
 		if(this.stampato.id.barcode != null) {
 			this.stampatoService.save(stampato).subscribe({

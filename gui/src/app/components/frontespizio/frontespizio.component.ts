@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 import { TableModule } from "primeng/table";
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
@@ -31,6 +31,7 @@ import { LegislaturaModel } from "app/models/legislatura.model";
 export class FrontespizioComponent implements OnInit {
 	
 	@Input() stampato: StampatoModel;
+	@Output() stampatoUpdated = new EventEmitter<StampatoModel>();
 	private ref: DynamicDialogRef | undefined;
 	letters = [ { label: 'A', value: 'A' }, { label: 'C', value: 'C' }, { label: 'E', value: 'E' },
 		{ label: 'G', value: 'G' }, { label: 'I', value: 'I' }, { label: 'M', value: 'M' },
@@ -82,12 +83,13 @@ export class FrontespizioComponent implements OnInit {
 		this.ref.onClose.subscribe((targetActs: any[]) => {
 			if(targetActs && targetActs.length > 0) {
 				this.stampato.numeriPDL = targetActs.map(act => act.numeroAtto).join('-');		
-				this.updateNomeFrontespizio();				
+				this.updateNomeFrontespizio();		
+				this.stampatoUpdated.emit(this.stampato);		
 		    	this.messageService.add({ severity: 'info', summary: 'Atto associato' });
 		    }
 		});
 	}
-
+	
 	onChangeLetter(event: any) {
 		this.updateNomeFrontespizio();
 		this.updateFilename();

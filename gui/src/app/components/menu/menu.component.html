@@ -15,7 +15,7 @@
 		</div>
 	</div>
     <barcode [stampato]="stampato" class="w-full"></barcode>
-    <frontespizio [stampato]="stampato" class="w-full"></frontespizio>
+    <frontespizio [stampato]="stampato" (stampatoUpdated)="onStampatoFrontespizioUpdated($event)" class="w-full"></frontespizio>
     <relatori *ngIf="!stampato?.id?.barcode?.includes('MSG')" [stampato]="stampato" (stampatoUpdated)="onStampatoRelatoriUpdated($event)" class="w-full"></relatori>
     <presentazione [stampato]="stampato" class="w-full"></presentazione>
 </div>
