@@ -37,7 +37,6 @@ export class DialogEmailComponent implements OnInit {
 		removePlugins: ['CKBox', 'EasyImage', 'CloudServices']
 	}
 	diffHtml: string = '';
-	text: string = 'Titolo eFel';
 	
   	constructor(private dialogService: DialogService, 
 		public config: DynamicDialogConfig,
@@ -58,7 +57,7 @@ export class DialogEmailComponent implements OnInit {
 	    	this.diffHtml = '';
 	    	return;
 	  	}
-	  	const cleanOriginalText = this.stripHtml(this.text.trim());
+	  	const cleanOriginalText = this.stripHtml(this.stampato.titoloFel.trim());
 	  	const cleanModifiedText = this.stripHtml(this.stampato.titolo.trim());
 	  	if(cleanOriginalText === cleanModifiedText) {
 	    	this.diffHtml = ''; 
@@ -91,7 +90,7 @@ export class DialogEmailComponent implements OnInit {
 			this.messageService.add({ severity: 'warn', summary: 'Missing Email', detail: 'Please enter an email before sending.' });
 		    return;
 		}
-	    this.utilityService.sendEmail(this.text, this.stampato.titolo, this.stampato.numeriPDL, this.emails).subscribe({
+	    this.utilityService.sendEmail(this.stampato.titoloFel, this.stampato.titolo, this.stampato.numeriPDL, this.emails).subscribe({
 	        next: () => {
 	            this.messageService.add({ severity: 'success', summary: 'Email Sent', detail: 'The email was successfully sent.' });
 	            this.ref.close(true);

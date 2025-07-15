@@ -9,7 +9,9 @@
     	<label class="text-xl text-left font-bold mb-2">Atti abbinati in eFel</label>   
     	<p-picklist [source]="sourceActs" [target]="targetActs" [dragdrop]="true" [responsive]="true" 
         	[sourceStyle]="{ height: '30rem' }" [targetStyle]="{ height: '30rem' }" breakpoint="1400px" selectionMode="multiple" 
-        	inputId="sourceList" class="w-full md:w-10/12 lg:w-8/12" (onMoveToTarget)="duplicateToTarget($event)" >
+        	inputId="sourceList" class="w-full md:w-10/12 lg:w-8/12" 
+        	(onMoveToTarget)="duplicateToTarget($event)" 
+        	(onMoveToSource)="duplicateToSource($event)">
         	<ng-template let-item #item>{{ item.numeroAtto }}</ng-template>
     	</p-picklist>
 	</div>

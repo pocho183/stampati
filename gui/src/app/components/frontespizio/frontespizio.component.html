@@ -15,11 +15,11 @@
            	</div>
        		<div>
            		<label class="font-bold block mb-2">Lettera</label>
-           		<p-select [options]="letters" [(ngModel)]="stampato.lettera" (onChange)="onChangeLetter($event)" (onClear)="onClearLetter()" [showClear]="true" placeholder="Seleziona Lettera" class="w-6rem" />
+           		<p-select [options]="letters" [(ngModel)]="stampato.lettera" (onChange)="onChangeLetter($event)" (onClear)="onClearLetter()" [showClear]="true" placeholder="Seleziona..." class="w-10rem" />
 			</div>
 			<div>
            		<label class="font-bold block mb-2">Navette</label>
-           		<p-select [options]="navettes" [(ngModel)]="stampato.navette" (onChange)="onChangeNavette($event)" [disabled]="isDisabled"  [showClear]="true" class="w-6rem" />
+           		<p-select [options]="navettes" [(ngModel)]="stampato.navette" (onChange)="onChangeNavette($event)" [disabled]="isDisabled"  [showClear]="true" class="w-5rem" />
 			</div>
 			<div class="flex flex-column items-center">
            		<div class="flex align-items-center justify-content-center"><label class="font-bold block mb-2">Testo Unificato</label></div>
@@ -41,7 +41,7 @@
        		</div>
        		<div>
            		<label class="font-bold block mb-2">Minoranza</label>
-           		<p-select [options]="minoranza" [(ngModel)]="stampato.relazioneMin" (onChange)="onChangeRelMin($event)" [showClear]="true" placeholder="Seleziona ..." [disabled]="!stampato.lettera" class="w-12rem"/>
+           		<p-select [options]="minoranza" [(ngModel)]="stampato.relazioneMin" (onChange)="onChangeRelMin($event)" [showClear]="true" placeholder="Seleziona..." [disabled]="!stampato.lettera" class="w-10rem"/>
 			</div>
        		<div>
            		<label class="font-bold block mb-2">Numero Pagine PDF</label>

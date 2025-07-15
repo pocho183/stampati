@@ -27,8 +27,8 @@ import { UtilityService } from "app/services/utility.service";
 export class DialogFrontespizioComponent implements OnInit {
 
 	stampato: StampatoModel;
-	sourceActs!: StampatoModel[];
-	targetActs!: StampatoModel[];
+	sourceActs: StampatoModel[] = [];
+	targetActs: StampatoModel[] = [];;
 	attiAbbinati: string[];
 	legislature: LegislaturaModel = null;
 	
@@ -74,13 +74,26 @@ export class DialogFrontespizioComponent implements OnInit {
 	duplicateToTarget(event: any) {
 	    const itemsToAdd = event.items;
 	    itemsToAdd.forEach((item: any) => {
-	        if (!this.targetActs.some(p => p.codiceEstremiAttoPdl === item.codiceEstremiAttoPdl)) 
+	        if (!this.targetActs.some(p => p.numeroAtto === item.numeroAtto)) 
 	            this.targetActs.push(item);
 	    });
 		this.sourceActs = this.sourceActs.filter(item =>
-	    	!itemsToAdd.some(moved => moved.codiceEstremiAttoPdl === item.codiceEstremiAttoPdl)
+	    	!itemsToAdd.some(moved => moved.numeroAtto === item.numeroAtto)
 		);		
 	    this.targetActs.sort((a, b) => a.numeroAtto.localeCompare(b.numeroAtto));
 	    this.sourceActs.sort((a, b) => a.numeroAtto.localeCompare(b.numeroAtto));
+	}
+	
+	duplicateToSource(event: any) {
+		const itemsToReturn = event.items;
+	  	itemsToReturn.forEach((item: any) => {
+		    if (!this.sourceActs.some(p => p.numeroAtto === item.numeroAtto))
+		    	this.sourceActs.push(item);
+	  	});
+	  	this.targetActs = this.targetActs.filter(item => 
+			!itemsToReturn.some(moved => moved.numeroAtto === item.numeroAtto)
+	    );
+	    this.sourceActs.sort((a, b) => a.numeroAtto.localeCompare(b.numeroAtto));
+		this.targetActs.sort((a, b) => a.numeroAtto.localeCompare(b.numeroAtto));
 	}
 }

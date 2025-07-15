@@ -202,7 +202,8 @@ public class XhtmlParser {
         if (p != null) {
         	String cleanedAtto = p.text().trim();
             cleanedAtto = cleanedAtto.replaceAll("(?i)^N\\.\\s*", "");
-            Pattern pattern = Pattern.compile("^(\\d+(?:-\\d+)*)");
+            //Pattern pattern = Pattern.compile("^(\\d+(?:-\\d+)*)");
+            Pattern pattern = Pattern.compile("^(\\d+(?:-\\d+)*(?:-[a-zA-Z]+)?)");            
             Matcher matcher = pattern.matcher(cleanedAtto);
             if (matcher.find()) {
                 return matcher.group(1);
