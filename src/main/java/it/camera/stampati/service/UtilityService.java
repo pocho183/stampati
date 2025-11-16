@@ -39,7 +39,7 @@ public class UtilityService {
 
 private static final Logger logger = LoggerFactory.getLogger(UtilityService.class);
 
-	@Value("${url.legislature}")
+	@Value("${legislature.url}")
     private String urlLegislature;
 	@Value("${url.commissions}")
     private String urlCommissions;
