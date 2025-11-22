@@ -18,3 +18,4 @@ node_modules/
 /.apt_generated/
 /temp/**
 /eFelDatabase/
+src/main/resources/application-local.properties
